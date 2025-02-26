@@ -25,7 +25,7 @@ class workout_sections(Base):
        
     ID: Mapped[int] = mapped_column(primary_key=True)
     WOID: Mapped[int] = mapped_column(ForeignKey("WorkOuts.ID"))
-    SectionName: Mapped[str] = mapped_column(String(10))
+    SectionName: Mapped[str] = mapped_column(String(50))
     SectionOrder: Mapped[int]
     
     T2 = relationship("workouts", back_populates="T1")
@@ -36,7 +36,7 @@ class workoutRoutine(Base):
     __tablename__ = "Workout_Routine"
     
     ID: Mapped[int] = mapped_column(primary_key=True)
-    SectionID = Mapped[int] = mapped_column(ForeignKey("Workout_Sections.ID"))
+    SectionID: Mapped[int] = mapped_column(ForeignKey("Workout_Sections.ID"))
     Name: Mapped[str] = mapped_column(String(50))
     RepsDuration: Mapped[str] = mapped_column(String(20))
     RoutineDescription = Mapped[str]
@@ -44,7 +44,7 @@ class workoutRoutine(Base):
     
     T4 = relationship("workout_sections", back_populates="T3")
     
-load_dotenv()
+load_dotenv(dotenv_path="sens.env")
 
 DB_USER = os.environ.get("DB_USER")
 DB_NAME = os.environ.get("DB_NAME")
@@ -52,3 +52,4 @@ DB_HOST = os.environ.get("DB_HOST")
 DB_PORT = os.environ.get("DB_PORT")
 
 engine = create_engine(f"postgresql+psycopg2://{DB_USER}:@{DB_HOST}:{DB_PORT}/{DB_NAME}", echo=True)
+#Base.metadata.create_all(engine)
