@@ -1,12 +1,5 @@
-import os
-from dotenv import load_dotenv
-from sqlalchemy import ForeignKey
-from sqlalchemy import String
-from sqlalchemy import create_engine
-from sqlalchemy.orm import DeclarativeBase
-from sqlalchemy.orm import Mapped
-from sqlalchemy.orm import mapped_column
-from sqlalchemy.orm import relationship
+from sqlalchemy import ForeignKey, String, Integer
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 class Base(DeclarativeBase):
     pass
@@ -14,7 +7,7 @@ class Base(DeclarativeBase):
 class workouts(Base):
     __tablename__ = "WorkOuts"
     
-    ID: Mapped[int] = mapped_column(primary_key=True)
+    ID: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     Name: Mapped[str] = mapped_column(String(50))
     Description: Mapped[str]
     
@@ -23,7 +16,7 @@ class workouts(Base):
 class workout_sections(Base):
     __tablename__ = "Workout_Sections" 
        
-    ID: Mapped[int] = mapped_column(primary_key=True)
+    ID: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     WOID: Mapped[int] = mapped_column(ForeignKey("WorkOuts.ID"))
     SectionName: Mapped[str] = mapped_column(String(50))
     SectionOrder: Mapped[int]
@@ -35,21 +28,14 @@ class workout_sections(Base):
 class workoutRoutine(Base):
     __tablename__ = "Workout_Routine"
     
-    ID: Mapped[int] = mapped_column(primary_key=True)
+    ID: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     SectionID: Mapped[int] = mapped_column(ForeignKey("Workout_Sections.ID"))
     Name: Mapped[str] = mapped_column(String(50))
     RepsDuration: Mapped[str] = mapped_column(String(20))
-    RoutineDescription = Mapped[str]
-    ExerciseOrder = Mapped[int]
+    RoutineDescription: Mapped[str] = mapped_column(String(255))
+    ExerciseOrder: Mapped[int] = mapped_column(Integer)
     
     T4 = relationship("workout_sections", back_populates="T3")
     
-load_dotenv(dotenv_path="sens.env")
 
-DB_USER = os.environ.get("DB_USER")
-DB_NAME = os.environ.get("DB_NAME")
-DB_HOST = os.environ.get("DB_HOST")
-DB_PORT = os.environ.get("DB_PORT")
 
-engine = create_engine(f"postgresql+psycopg2://{DB_USER}:@{DB_HOST}:{DB_PORT}/{DB_NAME}", echo=True)
-#Base.metadata.create_all(engine)
