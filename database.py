@@ -1,3 +1,21 @@
+import os
+from urllib.parse import quote_plus
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from dotenv import load_dotenv
+
+load_dotenv("sens.env")
+
+DB_USER = os.environ.get("DB_USER")
+DB_PASSWORD = quote_plus(os.getenv("DB_PASSWORD"))
+DB_NAME = os.environ.get("DB_NAME")
+DB_HOST = os.environ.get("DB_HOST")
+DB_PORT = os.environ.get("DB_PORT")
+
+engine = create_engine(f"postgresql+psycopg2://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}", echo=True)
+#Base.metadata.create_all(engine)
+SessionLocal = sessionmaker(bind=engine)
+
 from sqlalchemy import ForeignKey, String, Integer
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
@@ -36,6 +54,3 @@ class workoutRoutine(Base):
     ExerciseOrder: Mapped[int] = mapped_column(Integer)
     
     T4 = relationship("workout_sections", back_populates="T3")
-    
-
-
