@@ -31,13 +31,55 @@ from database import SessionLocal, Base, workouts, workout_sections, workoutRout
     workout28 = workouts(Name="Agility Workout", Description="Quick footwork and directional drills to improve coordination and speed")
     workout29 = workouts(Name="Isometric Training Workout", Description="Static holds that build strength, stability, and muscle endurance")
     workout30 = workouts(Name="Strength Training Workout", Description="Progressive resistance workouts to build muscle and body power")
+    
+    session.add_all([workout1, workout2, workout3, workout4, workout5, workout6, workout7, workout8, workout9, workout10, workout11, workout12, workout13, workout14, workout15, workout16, workout17, workout18, workout19, workout20, workout21, workout22, workout23, workout24, workout25, workout26, workout27, workout28, workout29, workout30])
+
 """
 
-       
 with SessionLocal.begin() as session:
-    workout1_warm_up = ()
-    workout1_circuit = ()
-    workout1_cool_down = ()
+    beginner = session.query(workouts).filter_by(Name="Beginner Workout")
+    intermediate = session.query(workouts).filter_by(Name="Intermediate Workout")
+    advanced = session.query(workouts).filter_by(Name="Advanced Workout")
+    athlete = session.query(workouts).filter_by(Name="Athlete Workout")
+    child = session.query(workouts).filter_by(Name="Child 6-12 yrs Workout")
+    young_adult = session.query(workouts).filter_by(Name="Young Adult Workout")
+    midlife = session.query(workouts).filter_by(Name="Midlife Workout")
+    senior = session.query(workouts).filter_by(Name="Senior Workout")
+    
+    sections = [
+        workout_sections(SectionName="Beginner Warm Up", SectionOrder=1, T2=beginner),
+        workout_sections(SectionName="Beginner Circuit", SectionOrder=2, T2=beginner),
+        workout_sections(SectionName="Beginner Cool Down", SectionOrder=3, T2=beginner),
+        
+        workout_sections(SectionName="Intermediate Warm Up", SectionOrder=1, T2=intermediate),
+        workout_sections(SectionName="Intermediate Circuit", SectionOrder=2, T2=intermediate),
+        workout_sections(SectionName="Intermediate Cool Down", SectionOrder=3, T2=intermediate),
+        
+        workout_sections(SectionName="Advanced Warm Up", SectionOrder=1, T2=advanced),
+        workout_sections(SectionName="Advanced Circuit", SectionOrder=2, T2=advanced),
+        workout_sections(SectionName="Advanced Cool Down", SectionOrder=3, T2=advanced),
+        
+        workout_sections(SectionName="Athlete Warm Up", SectionOrder=1, T2=athlete),
+        workout_sections(SectionName="Athlete Circuit", SectionOrder=2, T2=athlete),
+        workout_sections(SectionName="Athlete Cool Down", SectionOrder=3, T2=athlete),
+        
+        workout_sections(SectionName="Child Warm Up", SectionOrder=1, T2=child),
+        workout_sections(SectionName="Child Circuit", SectionOrder=2, T2=child),
+        workout_sections(SectionName="Child Cool Down", SectionOrder=3, T2=child),
+        
+        workout_sections(SectionName="Young Adult Warm Up", SectionOrder=1, T2=young_adult),
+        workout_sections(SectionName="Young Adult Circuit", SectionOrder=2, T2=young_adult),
+        workout_sections(SectionName="Young Adult Cool Down", SectionOrder=3, T2=young_adult),
+        
+        workout_sections(SectionName="Midlife Warm Up", SectionOrder=1, T2=midlife),
+        workout_sections(SectionName="Midlife Circuit", SectionOrder=2, T2=midlife),
+        workout_sections(SectionName="Midlife Cool Down", SectionOrder=3, T2=midlife),
+        
+        workout_sections(SectionName="Senior Warm Up", SectionOrder=1, T2=senior),
+        workout_sections(SectionName="Senior Circuit", SectionOrder=2, T2=senior),
+        workout_sections(SectionName="Senior Cool Down", SectionOrder=3, T2=senior),
+    ]
 
+session.add_all(sections)
 
 
