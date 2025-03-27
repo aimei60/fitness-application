@@ -45,6 +45,22 @@ with SessionLocal.begin() as session:
     young_adult = session.query(workouts).filter_by(Name="Young Adult Workout")
     midlife = session.query(workouts).filter_by(Name="Midlife Workout")
     senior = session.query(workouts).filter_by(Name="Senior Workout")
+    recovery_rehabilitation = session.query(workouts).filter_by(Name="Recovery rehabilitation Workout")
+    chronic_condition = session.query(workouts).filter_by(Name="Chronic condition Workout")
+    post_partum = session.query(workouts).filter_by(Name="Post Paturm Workout")
+    antenatal = session.query(workouts).filter_by(Name="Antenatal Workout Workout")
+    sustainable_weight_care = session.query(workouts).filter_by(Name="Sustainable weight care Workout")
+    accessible_fitness = session.query(workouts).filter_by(Name="Accessible fitness Workout")
+    time_constrained = session.query(workouts).filter_by(Name="Time constrained Workout")
+    home_based = session.query(workouts).filter_by(Name="Home based Workout")
+    minimal_equipment = session.query(workouts).filter_by(Name="Minimal Equipment Workout")
+    outdoor = session.query(workouts).filter_by(Name="Outdoor Training  Workout")
+    gym_equipment = session.query(workouts).filter_by(Name="Gym Equipment Workout")
+    weightloss = session.query(workouts).filter_by(Name="Weightloss Workout")
+    endurance = session.query(workouts).filter_by(Name="Endurance Workout")
+    flexibility_mobility = session.query(workouts).filter_by(Name="Flexibility and mobility Workout")
+    everyday_movement = session.query(workouts).filter_by(Name="Everyday movement Workout")
+    reducing_fall_risk = session.query(workouts).filter_by(Name="Reducing fall risk Workout")
     
     sections = [
         workout_sections(SectionName="Beginner Warm Up", SectionOrder=1, T2=beginner),
@@ -78,7 +94,68 @@ with SessionLocal.begin() as session:
         workout_sections(SectionName="Senior Warm Up", SectionOrder=1, T2=senior),
         workout_sections(SectionName="Senior Circuit", SectionOrder=2, T2=senior),
         workout_sections(SectionName="Senior Cool Down", SectionOrder=3, T2=senior),
+        
+        workout_sections(SectionName="Recovery rehabilitation Warm Up", SectionOrder=1, T2=recovery_rehabilitation),
+        workout_sections(SectionName="Recovery rehabilitation Circuit", SectionOrder=2, T2=recovery_rehabilitation),
+        workout_sections(SectionName="Recovery rehabilitation Cool Down", SectionOrder=3, T2=recovery_rehabilitation),
+        
+        workout_sections(SectionName="Chronic condition Warm Up", SectionOrder=1, T2=chronic_condition),
+        workout_sections(SectionName="Chronic condition Circuit", SectionOrder=2, T2=chronic_condition),
+        workout_sections(SectionName="Chronic condition Cool Down", SectionOrder=3, T2=chronic_condition),
+        
+        workout_sections(SectionName="Post Partum Warm Up", SectionOrder=1, T2=post_partum),
+        workout_sections(SectionName="Post Partum Circuit", SectionOrder=2, T2=post_partum),
+        workout_sections(SectionName="Post Partum Cool Down", SectionOrder=3, T2=post_partum),
+        
+        workout_sections(SectionName="Antenatal Warm Up", SectionOrder=1, T2=antenatal),
+        workout_sections(SectionName="Antenatal Circuit", SectionOrder=2, T2=antenatal),
+        workout_sections(SectionName="Antenatal Cool Down", SectionOrder=3, T2=antenatal),
+        
+        workout_sections(SectionName="Sustainable Weight Care Warm Up", SectionOrder=1, T2=sustainable_weight_care),
+        workout_sections(SectionName="Sustainable Weight Care Circuit", SectionOrder=2, T2=sustainable_weight_care),
+        workout_sections(SectionName="Sustainable Weight Care Cool Down", SectionOrder=3, T2=sustainable_weight_care),
+        
+        workout_sections(SectionName="Accessible fitness Warm Up", SectionOrder=1, T2=accessible_fitness),
+        workout_sections(SectionName="Accessible fitness Circuit", SectionOrder=2, T2=accessible_fitness),
+        workout_sections(SectionName="Accessible fitness Cool Down", SectionOrder=3, T2=accessible_fitness),
+        
+        workout_sections(SectionName="Time constrained Warm Up", SectionOrder=1, T2=time_constrained),
+        workout_sections(SectionName="Time constrained Circuit", SectionOrder=2, T2=time_constrained),
+        workout_sections(SectionName="Time constrained Cool Down", SectionOrder=3, T2=time_constrained),
+        
+        workout_sections(SectionName="Home based Warm Up", SectionOrder=1, T2=home_based),
+        workout_sections(SectionName="Home based Circuit", SectionOrder=2, T2=home_based),
+        workout_sections(SectionName="Home based Workout Cool Down", SectionOrder=3, T2=home_based),
+        
+        workout_sections(SectionName="Minimal Equipment Warm Up", SectionOrder=1, T2=minimal_equipment),
+        workout_sections(SectionName="Minimal Equipment Circuit", SectionOrder=2, T2=minimal_equipment),
+        workout_sections(SectionName="Minimal Equipment Cool Down", SectionOrder=3, T2=minimal_equipment),
+        
+        workout_sections(SectionName="Outdoor Training Warm Up", SectionOrder=1, T2=outdoor),
+        workout_sections(SectionName="Outdoor Training Circuit", SectionOrder=2, T2=outdoor),
+        workout_sections(SectionName="Outdoor Training Cool Down", SectionOrder=3, T2=outdoor),
+        
+        workout_sections(SectionName="Gym Equipment Warm Up", SectionOrder=1, T2=gym_equipment),
+        workout_sections(SectionName="Gym Equipment Circuit", SectionOrder=2, T2=gym_equipment),
+        workout_sections(SectionName="Gym Equipment Cool Down", SectionOrder=3, T2=gym_equipment),
+        
+        workout_sections(SectionName="Endurance Warm Up", SectionOrder=1, T2=endurance),
+        workout_sections(SectionName="Endurance Circuit", SectionOrder=2, T2=endurance),
+        workout_sections(SectionName="Endurance Cool Down", SectionOrder=3, T2=endurance),
+        
+        workout_sections(SectionName="Flexibility and Mobility Warm Up", SectionOrder=1, T2=flexibility_mobility),
+        workout_sections(SectionName="Flexibility and Mobility Circuit", SectionOrder=2, T2=flexibility_mobility),
+        workout_sections(SectionName="Flexibility and Mobility Cool Down", SectionOrder=3, T2=flexibility_mobility),
+        
+        workout_sections(SectionName="Everyday Movement Warm Up", SectionOrder=1, T2=everyday_movement),
+        workout_sections(SectionName="Everyday Movement Circuit", SectionOrder=2, T2=everyday_movement),
+        workout_sections(SectionName="Everyday Movement Cool Down", SectionOrder=3, T2=everyday_movement),
+        
+        workout_sections(SectionName="Reducing Fall Warm Up", SectionOrder=1, T2=reducing_fall_risk),
+        workout_sections(SectionName="Reducing Fall Circuit", SectionOrder=2, T2=reducing_fall_risk),
+        workout_sections(SectionName="Reducing Fall Cool Down", SectionOrder=3, T2=reducing_fall_risk),
     ]
+
 
 session.add_all(sections)
 
