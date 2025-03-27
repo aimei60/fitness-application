@@ -61,6 +61,12 @@ with SessionLocal.begin() as session:
     flexibility_mobility = session.query(workouts).filter_by(Name="Flexibility and mobility Workout")
     everyday_movement = session.query(workouts).filter_by(Name="Everyday movement Workout")
     reducing_fall_risk = session.query(workouts).filter_by(Name="Reducing fall risk Workout")
+    power_training = session.query(workouts).filter_by(Name="Power training  Workout")
+    hiit = session.query(workouts).filter_by(Name="HIIT Workout")
+    mind_and_body = session.query(workouts).filter_by(Name="Mind and Body Workout")
+    agility = session.query(workouts).filter_by(Name="Agility Workout")
+    isometric = session.query(workouts).filter_by(Name="Isometric Training Workout")
+    strength = session.query(workouts).filter_by(Name="Strength Training Workout")
     
     sections = [
         workout_sections(SectionName="Beginner Warm Up", SectionOrder=1, T2=beginner),
@@ -154,6 +160,30 @@ with SessionLocal.begin() as session:
         workout_sections(SectionName="Reducing Fall Warm Up", SectionOrder=1, T2=reducing_fall_risk),
         workout_sections(SectionName="Reducing Fall Circuit", SectionOrder=2, T2=reducing_fall_risk),
         workout_sections(SectionName="Reducing Fall Cool Down", SectionOrder=3, T2=reducing_fall_risk),
+        
+        workout_sections(SectionName="Power Training Warm Up", SectionOrder=1, T2=power_training),
+        workout_sections(SectionName="Power Training Circuit", SectionOrder=2, T2=power_training),
+        workout_sections(SectionName="Power Training Cool Down", SectionOrder=3, T2=power_training),
+        
+        workout_sections(SectionName="HIIT Warm Up", SectionOrder=1, T2=hiit),
+        workout_sections(SectionName="HIIT Circuit", SectionOrder=2, T2=hiit),
+        workout_sections(SectionName="HIIT Cool Down", SectionOrder=3, T2=hiit),
+        
+        workout_sections(SectionName="Mind and Body Warm Up", SectionOrder=1, T2=mind_and_body),
+        workout_sections(SectionName="Mind and Body Circuit", SectionOrder=2, T2=mind_and_body),
+        workout_sections(SectionName="Mind and Body Cool Down", SectionOrder=3, T2=mind_and_body),
+        
+        workout_sections(SectionName="Agility Warm Up", SectionOrder=1, T2=agility),
+        workout_sections(SectionName="Agility Circuit", SectionOrder=2, T2=agility),
+        workout_sections(SectionName="Agility Cool Down", SectionOrder=3, T2=agility),
+        
+        workout_sections(SectionName="Isometric Training Warm Up", SectionOrder=1, T2=isometric),
+        workout_sections(SectionName="Isometric Training Circuit", SectionOrder=2, T2=isometric),
+        workout_sections(SectionName="Isometric Training Cool Down", SectionOrder=3, T2=isometric),
+        
+        workout_sections(SectionName="Strength Training Warm Up", SectionOrder=1, T2=strength),
+        workout_sections(SectionName="Strength Training Circuit", SectionOrder=2, T2=strength),
+        workout_sections(SectionName="Strength Training Cool Down", SectionOrder=3, T2=strength),
     ]
 
 
