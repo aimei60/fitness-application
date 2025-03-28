@@ -35,38 +35,37 @@ from database import SessionLocal, Base, workouts, workout_sections, workoutRout
     session.add_all([workout1, workout2, workout3, workout4, workout5, workout6, workout7, workout8, workout9, workout10, workout11, workout12, workout13, workout14, workout15, workout16, workout17, workout18, workout19, workout20, workout21, workout22, workout23, workout24, workout25, workout26, workout27, workout28, workout29, workout30])
 
 """
-
 with SessionLocal.begin() as session:
-    beginner = session.query(workouts).filter_by(Name="Beginner Workout")
-    intermediate = session.query(workouts).filter_by(Name="Intermediate Workout")
-    advanced = session.query(workouts).filter_by(Name="Advanced Workout")
-    athlete = session.query(workouts).filter_by(Name="Athlete Workout")
-    child = session.query(workouts).filter_by(Name="Child 6-12 yrs Workout")
-    young_adult = session.query(workouts).filter_by(Name="Young Adult Workout")
-    midlife = session.query(workouts).filter_by(Name="Midlife Workout")
-    senior = session.query(workouts).filter_by(Name="Senior Workout")
-    recovery_rehabilitation = session.query(workouts).filter_by(Name="Recovery rehabilitation Workout")
-    chronic_condition = session.query(workouts).filter_by(Name="Chronic condition Workout")
-    post_partum = session.query(workouts).filter_by(Name="Post Paturm Workout")
-    antenatal = session.query(workouts).filter_by(Name="Antenatal Workout Workout")
-    sustainable_weight_care = session.query(workouts).filter_by(Name="Sustainable weight care Workout")
-    accessible_fitness = session.query(workouts).filter_by(Name="Accessible fitness Workout")
-    time_constrained = session.query(workouts).filter_by(Name="Time constrained Workout")
-    home_based = session.query(workouts).filter_by(Name="Home based Workout")
-    minimal_equipment = session.query(workouts).filter_by(Name="Minimal Equipment Workout")
-    outdoor = session.query(workouts).filter_by(Name="Outdoor Training  Workout")
-    gym_equipment = session.query(workouts).filter_by(Name="Gym Equipment Workout")
-    weightloss = session.query(workouts).filter_by(Name="Weightloss Workout")
-    endurance = session.query(workouts).filter_by(Name="Endurance Workout")
-    flexibility_mobility = session.query(workouts).filter_by(Name="Flexibility and mobility Workout")
-    everyday_movement = session.query(workouts).filter_by(Name="Everyday movement Workout")
-    reducing_fall_risk = session.query(workouts).filter_by(Name="Reducing fall risk Workout")
-    power_training = session.query(workouts).filter_by(Name="Power training  Workout")
-    hiit = session.query(workouts).filter_by(Name="HIIT Workout")
-    mind_and_body = session.query(workouts).filter_by(Name="Mind and Body Workout")
-    agility = session.query(workouts).filter_by(Name="Agility Workout")
-    isometric = session.query(workouts).filter_by(Name="Isometric Training Workout")
-    strength = session.query(workouts).filter_by(Name="Strength Training Workout")
+    beginner = session.query(workouts).filter_by(Name="Beginner Workout").first()
+    intermediate = session.query(workouts).filter_by(Name="Intermediate Workout").first()
+    advanced = session.query(workouts).filter_by(Name="Advanced Workout").first()
+    athlete = session.query(workouts).filter_by(Name="Athlete Workout").first()
+    child = session.query(workouts).filter_by(Name="Child 6-12 yrs Workout").first()
+    young_adult = session.query(workouts).filter_by(Name="Young Adult Workout").first()
+    midlife = session.query(workouts).filter_by(Name="Midlife Workout").first()
+    senior = session.query(workouts).filter_by(Name="Senior Workout").first()
+    recovery_rehabilitation = session.query(workouts).filter_by(Name="Recovery rehabilitation Workout").first()
+    chronic_condition = session.query(workouts).filter_by(Name="Chronic condition Workout").first()
+    post_partum = session.query(workouts).filter_by(Name="Post Paturm Workout").first()
+    antenatal = session.query(workouts).filter_by(Name="Antenatal Workout").first()
+    sustainable_weight_care = session.query(workouts).filter_by(Name="Sustainable weight care Workout").first()
+    accessible_fitness = session.query(workouts).filter_by(Name="Accessible fitness Workout").first()
+    time_constrained = session.query(workouts).filter_by(Name="Time constrained  Workout").first()
+    home_based = session.query(workouts).filter_by(Name="Home based Workout").first()
+    minimal_equipment = session.query(workouts).filter_by(Name="Minimal Equipment Workout").first()
+    outdoor = session.query(workouts).filter_by(Name="Outdoor Training  Workout").first()
+    gym_equipment = session.query(workouts).filter_by(Name="Gym Equipment Workout").first()
+    weightloss = session.query(workouts).filter_by(Name="Weightloss Workout").first()
+    endurance = session.query(workouts).filter_by(Name="Endurance Workout").first()
+    flexibility_mobility = session.query(workouts).filter_by(Name="Flexibility and mobility Workout").first()
+    everyday_movement = session.query(workouts).filter_by(Name="Everyday movement Workout").first()
+    reducing_fall_risk = session.query(workouts).filter_by(Name="Reducing fall risk Workout").first()
+    power_training = session.query(workouts).filter_by(Name="Power training  Workout").first()
+    hiit = session.query(workouts).filter_by(Name="HIIT Workout").first()
+    mind_and_body = session.query(workouts).filter_by(Name="Mind and Body Workout").first()
+    agility = session.query(workouts).filter_by(Name="Agility Workout").first()
+    isometric = session.query(workouts).filter_by(Name="Isometric Training Workout").first()
+    strength = session.query(workouts).filter_by(Name="Strength Training Workout").first()
     
     sections = [
         workout_sections(SectionName="Beginner Warm Up", SectionOrder=1, T2=beginner),
@@ -131,7 +130,7 @@ with SessionLocal.begin() as session:
         
         workout_sections(SectionName="Home based Warm Up", SectionOrder=1, T2=home_based),
         workout_sections(SectionName="Home based Circuit", SectionOrder=2, T2=home_based),
-        workout_sections(SectionName="Home based Workout Cool Down", SectionOrder=3, T2=home_based),
+        workout_sections(SectionName="Home based Cool Down", SectionOrder=3, T2=home_based),
         
         workout_sections(SectionName="Minimal Equipment Warm Up", SectionOrder=1, T2=minimal_equipment),
         workout_sections(SectionName="Minimal Equipment Circuit", SectionOrder=2, T2=minimal_equipment),
@@ -185,8 +184,7 @@ with SessionLocal.begin() as session:
         workout_sections(SectionName="Strength Training Circuit", SectionOrder=2, T2=strength),
         workout_sections(SectionName="Strength Training Cool Down", SectionOrder=3, T2=strength),
     ]
-
-
-session.add_all(sections)
+    
+    session.add_all(sections)
 
 
