@@ -35,7 +35,7 @@ from database import SessionLocal, Base, workouts, workout_sections, workoutRout
     session.add_all([workout1, workout2, workout3, workout4, workout5, workout6, workout7, workout8, workout9, workout10, workout11, workout12, workout13, workout14, workout15, workout16, workout17, workout18, workout19, workout20, workout21, workout22, workout23, workout24, workout25, workout26, workout27, workout28, workout29, workout30])
 
 """
-with SessionLocal.begin() as session:
+""""with SessionLocal.begin() as session:
     beginner = session.query(workouts).filter_by(Name="Beginner Workout").first()
     intermediate = session.query(workouts).filter_by(Name="Intermediate Workout").first()
     advanced = session.query(workouts).filter_by(Name="Advanced Workout").first()
@@ -185,6 +185,20 @@ with SessionLocal.begin() as session:
         workout_sections(SectionName="Strength Training Cool Down", SectionOrder=3, T2=strength),
     ]
     
-    session.add_all(sections)
+    session.add_all(sections)"""
+    
+with SessionLocal.begin() as session:
+    #session.query(workout_sections).filter(workout_sections.WOID==21).delete(synchronize_session=False)
+    session.query(workout_sections).filter(workout_sections.WOID==22).delete(synchronize_session=False)
+    session.query(workout_sections).filter(workout_sections.WOID==23).delete(synchronize_session=False)
+    session.query(workout_sections).filter(workout_sections.WOID==24).delete(synchronize_session=False)
+    session.query(workout_sections).filter(workout_sections.WOID==25).delete(synchronize_session=False)
+    session.query(workout_sections).filter(workout_sections.WOID==26).delete(synchronize_session=False)
+    session.query(workout_sections).filter(workout_sections.WOID==27).delete(synchronize_session=False)
+    session.query(workout_sections).filter(workout_sections.WOID==28).delete(synchronize_session=False)
+    session.query(workout_sections).filter(workout_sections.WOID==29).delete(synchronize_session=False)
+    session.query(workout_sections).filter(workout_sections.WOID==30).delete(synchronize_session=False)
+    
+    
 
 
