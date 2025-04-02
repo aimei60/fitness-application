@@ -1,4 +1,5 @@
 from database import SessionLocal, Base, workouts, workout_sections, workoutRoutine
+from sqlalchemy import text
 
 """with SessionLocal.begin() as session:
     workout1 = workouts(Name="Beginner Workout", Description="Simple movements building strength, stamina, and workout confidence")
@@ -33,9 +34,9 @@ from database import SessionLocal, Base, workouts, workout_sections, workoutRout
     workout30 = workouts(Name="Strength Training Workout", Description="Progressive resistance workouts to build muscle and body power")
     
     session.add_all([workout1, workout2, workout3, workout4, workout5, workout6, workout7, workout8, workout9, workout10, workout11, workout12, workout13, workout14, workout15, workout16, workout17, workout18, workout19, workout20, workout21, workout22, workout23, workout24, workout25, workout26, workout27, workout28, workout29, workout30])
-
 """
-""""with SessionLocal.begin() as session:
+
+with SessionLocal.begin() as session:
     beginner = session.query(workouts).filter_by(Name="Beginner Workout").first()
     intermediate = session.query(workouts).filter_by(Name="Intermediate Workout").first()
     advanced = session.query(workouts).filter_by(Name="Advanced Workout").first()
@@ -144,6 +145,10 @@ from database import SessionLocal, Base, workouts, workout_sections, workoutRout
         workout_sections(SectionName="Gym Equipment Circuit", SectionOrder=2, T2=gym_equipment),
         workout_sections(SectionName="Gym Equipment Cool Down", SectionOrder=3, T2=gym_equipment),
         
+        workout_sections(SectionName="Weightloss Warm Up", SectionOrder=1, T2=weightloss),
+        workout_sections(SectionName="Weightloss Circuit", SectionOrder=2, T2=weightloss),
+        workout_sections(SectionName="Weightloss Cool Down", SectionOrder=3, T2=weightloss),
+        
         workout_sections(SectionName="Endurance Warm Up", SectionOrder=1, T2=endurance),
         workout_sections(SectionName="Endurance Circuit", SectionOrder=2, T2=endurance),
         workout_sections(SectionName="Endurance Cool Down", SectionOrder=3, T2=endurance),
@@ -185,10 +190,11 @@ from database import SessionLocal, Base, workouts, workout_sections, workoutRout
         workout_sections(SectionName="Strength Training Cool Down", SectionOrder=3, T2=strength),
     ]
     
-    session.add_all(sections)"""
+    session.add_all(sections)
+
     
-with SessionLocal.begin() as session:
-    #session.query(workout_sections).filter(workout_sections.WOID==21).delete(synchronize_session=False)
+"""with SessionLocal.begin() as session:
+    session.query(workout_sections).filter(workout_sections.WOID==21).delete(synchronize_session=False)
     session.query(workout_sections).filter(workout_sections.WOID==22).delete(synchronize_session=False)
     session.query(workout_sections).filter(workout_sections.WOID==23).delete(synchronize_session=False)
     session.query(workout_sections).filter(workout_sections.WOID==24).delete(synchronize_session=False)
@@ -198,6 +204,108 @@ with SessionLocal.begin() as session:
     session.query(workout_sections).filter(workout_sections.WOID==28).delete(synchronize_session=False)
     session.query(workout_sections).filter(workout_sections.WOID==29).delete(synchronize_session=False)
     session.query(workout_sections).filter(workout_sections.WOID==30).delete(synchronize_session=False)
+"""
+"""with SessionLocal.begin() as session:
+    weightloss = session.query(workouts).filter_by(Name="Weightloss Workout").first()
+    endurance = session.query(workouts).filter_by(Name="Endurance Workout").first()
+    flexibility_mobility = session.query(workouts).filter_by(Name="Flexibility and mobility Workout").first()
+    everyday_movement = session.query(workouts).filter_by(Name="Everyday movement Workout").first()
+    reducing_fall_risk = session.query(workouts).filter_by(Name="Reducing fall risk Workout").first()
+    power_training = session.query(workouts).filter_by(Name="Power training  Workout").first()
+    hiit = session.query(workouts).filter_by(Name="HIIT Workout").first()
+    mind_and_body = session.query(workouts).filter_by(Name="Mind and Body Workout").first()
+    agility = session.query(workouts).filter_by(Name="Agility Workout").first()
+    isometric = session.query(workouts).filter_by(Name="Isometric Training Workout").first()
+    strength = session.query(workouts).filter_by(Name="Strength Training Workout").first()
+    
+    sections = [
+        workout_sections(SectionName="Weightloss Warm Up", SectionOrder=1, T2=weightloss),
+        workout_sections(SectionName="Weightloss Circuit", SectionOrder=2, T2=weightloss),
+        workout_sections(SectionName="Weightloss Cool Down", SectionOrder=3, T2=weightloss),
+        
+        workout_sections(SectionName="Endurance Warm Up", SectionOrder=1, T2=endurance),
+        workout_sections(SectionName="Endurance Circuit", SectionOrder=2, T2=endurance),
+        workout_sections(SectionName="Endurance Cool Down", SectionOrder=3, T2=endurance),
+        
+        workout_sections(SectionName="Flexibility and Mobility Warm Up", SectionOrder=1, T2=flexibility_mobility),
+        workout_sections(SectionName="Flexibility and Mobility Circuit", SectionOrder=2, T2=flexibility_mobility),
+        workout_sections(SectionName="Flexibility and Mobility Cool Down", SectionOrder=3, T2=flexibility_mobility),
+        
+        workout_sections(SectionName="Everyday Movement Warm Up", SectionOrder=1, T2=everyday_movement),
+        workout_sections(SectionName="Everyday Movement Circuit", SectionOrder=2, T2=everyday_movement),
+        workout_sections(SectionName="Everyday Movement Cool Down", SectionOrder=3, T2=everyday_movement),
+        
+        workout_sections(SectionName="Reducing Fall Warm Up", SectionOrder=1, T2=reducing_fall_risk),
+        workout_sections(SectionName="Reducing Fall Circuit", SectionOrder=2, T2=reducing_fall_risk),
+        workout_sections(SectionName="Reducing Fall Cool Down", SectionOrder=3, T2=reducing_fall_risk),
+        
+        workout_sections(SectionName="Power Training Warm Up", SectionOrder=1, T2=power_training),
+        workout_sections(SectionName="Power Training Circuit", SectionOrder=2, T2=power_training),
+        workout_sections(SectionName="Power Training Cool Down", SectionOrder=3, T2=power_training),
+        
+        workout_sections(SectionName="HIIT Warm Up", SectionOrder=1, T2=hiit),
+        workout_sections(SectionName="HIIT Circuit", SectionOrder=2, T2=hiit),
+        workout_sections(SectionName="HIIT Cool Down", SectionOrder=3, T2=hiit),
+        
+        workout_sections(SectionName="Mind and Body Warm Up", SectionOrder=1, T2=mind_and_body),
+        workout_sections(SectionName="Mind and Body Circuit", SectionOrder=2, T2=mind_and_body),
+        workout_sections(SectionName="Mind and Body Cool Down", SectionOrder=3, T2=mind_and_body),
+        
+        workout_sections(SectionName="Agility Warm Up", SectionOrder=1, T2=agility),
+        workout_sections(SectionName="Agility Circuit", SectionOrder=2, T2=agility),
+        workout_sections(SectionName="Agility Cool Down", SectionOrder=3, T2=agility),
+        
+        workout_sections(SectionName="Isometric Training Warm Up", SectionOrder=1, T2=isometric),
+        workout_sections(SectionName="Isometric Training Circuit", SectionOrder=2, T2=isometric),
+        workout_sections(SectionName="Isometric Training Cool Down", SectionOrder=3, T2=isometric),
+        
+        workout_sections(SectionName="Strength Training Warm Up", SectionOrder=1, T2=strength),
+        workout_sections(SectionName="Strength Training Circuit", SectionOrder=2, T2=strength),
+        workout_sections(SectionName="Strength Training Cool Down", SectionOrder=3, T2=strength),
+        
+    ]
+    
+    session.add_all(sections)
+"""
+
+"""with SessionLocal.begin() as session:
+    session.execute(text('ALTER SEQUENCE "Workout_Sections_ID_seq" RESTART WITH 1'))
+    session.commit()"""
+    
+  
+"""with SessionLocal.begin() as session:
+    session.query(workout_sections).filter(workout_sections.WOID==1).delete(synchronize_session=False)
+    session.query(workout_sections).filter(workout_sections.WOID==2).delete(synchronize_session=False)
+    session.query(workout_sections).filter(workout_sections.WOID==3).delete(synchronize_session=False)
+    session.query(workout_sections).filter(workout_sections.WOID==4).delete(synchronize_session=False)
+    session.query(workout_sections).filter(workout_sections.WOID==5).delete(synchronize_session=False)
+    session.query(workout_sections).filter(workout_sections.WOID==6).delete(synchronize_session=False)
+    session.query(workout_sections).filter(workout_sections.WOID==7).delete(synchronize_session=False)
+    session.query(workout_sections).filter(workout_sections.WOID==8).delete(synchronize_session=False)
+    session.query(workout_sections).filter(workout_sections.WOID==9).delete(synchronize_session=False)
+    session.query(workout_sections).filter(workout_sections.WOID==10).delete(synchronize_session=False)
+    session.query(workout_sections).filter(workout_sections.WOID==11).delete(synchronize_session=False)
+    session.query(workout_sections).filter(workout_sections.WOID==12).delete(synchronize_session=False)
+    session.query(workout_sections).filter(workout_sections.WOID==13).delete(synchronize_session=False)
+    session.query(workout_sections).filter(workout_sections.WOID==14).delete(synchronize_session=False)
+    session.query(workout_sections).filter(workout_sections.WOID==15).delete(synchronize_session=False)
+    session.query(workout_sections).filter(workout_sections.WOID==16).delete(synchronize_session=False)
+    session.query(workout_sections).filter(workout_sections.WOID==17).delete(synchronize_session=False)
+    session.query(workout_sections).filter(workout_sections.WOID==18).delete(synchronize_session=False)
+    session.query(workout_sections).filter(workout_sections.WOID==19).delete(synchronize_session=False) 
+    session.query(workout_sections).filter(workout_sections.WOID==20).delete(synchronize_session=False)
+    session.query(workout_sections).filter(workout_sections.WOID==21).delete(synchronize_session=False)
+    session.query(workout_sections).filter(workout_sections.WOID==22).delete(synchronize_session=False)
+    session.query(workout_sections).filter(workout_sections.WOID==23).delete(synchronize_session=False)
+    session.query(workout_sections).filter(workout_sections.WOID==24).delete(synchronize_session=False)
+    session.query(workout_sections).filter(workout_sections.WOID==25).delete(synchronize_session=False)
+    session.query(workout_sections).filter(workout_sections.WOID==26).delete(synchronize_session=False)
+    session.query(workout_sections).filter(workout_sections.WOID==27).delete(synchronize_session=False)
+    session.query(workout_sections).filter(workout_sections.WOID==28).delete(synchronize_session=False)
+    session.query(workout_sections).filter(workout_sections.WOID==29).delete(synchronize_session=False)
+    session.query(workout_sections).filter(workout_sections.WOID==30).delete(synchronize_session=False)
+    
+session.commit()"""
     
     
 
