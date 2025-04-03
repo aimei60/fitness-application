@@ -36,7 +36,7 @@ from sqlalchemy import text
     session.add_all([workout1, workout2, workout3, workout4, workout5, workout6, workout7, workout8, workout9, workout10, workout11, workout12, workout13, workout14, workout15, workout16, workout17, workout18, workout19, workout20, workout21, workout22, workout23, workout24, workout25, workout26, workout27, workout28, workout29, workout30])
 """
 
-with SessionLocal.begin() as session:
+"""with SessionLocal.begin() as session:
     beginner = session.query(workouts).filter_by(Name="Beginner Workout").first()
     intermediate = session.query(workouts).filter_by(Name="Intermediate Workout").first()
     advanced = session.query(workouts).filter_by(Name="Advanced Workout").first()
@@ -190,123 +190,34 @@ with SessionLocal.begin() as session:
         workout_sections(SectionName="Strength Training Cool Down", SectionOrder=3, T2=strength),
     ]
     
-    session.add_all(sections)
-
+    session.add_all(sections)"""
     
-"""with SessionLocal.begin() as session:
-    session.query(workout_sections).filter(workout_sections.WOID==21).delete(synchronize_session=False)
-    session.query(workout_sections).filter(workout_sections.WOID==22).delete(synchronize_session=False)
-    session.query(workout_sections).filter(workout_sections.WOID==23).delete(synchronize_session=False)
-    session.query(workout_sections).filter(workout_sections.WOID==24).delete(synchronize_session=False)
-    session.query(workout_sections).filter(workout_sections.WOID==25).delete(synchronize_session=False)
-    session.query(workout_sections).filter(workout_sections.WOID==26).delete(synchronize_session=False)
-    session.query(workout_sections).filter(workout_sections.WOID==27).delete(synchronize_session=False)
-    session.query(workout_sections).filter(workout_sections.WOID==28).delete(synchronize_session=False)
-    session.query(workout_sections).filter(workout_sections.WOID==29).delete(synchronize_session=False)
-    session.query(workout_sections).filter(workout_sections.WOID==30).delete(synchronize_session=False)
-"""
-"""with SessionLocal.begin() as session:
-    weightloss = session.query(workouts).filter_by(Name="Weightloss Workout").first()
-    endurance = session.query(workouts).filter_by(Name="Endurance Workout").first()
-    flexibility_mobility = session.query(workouts).filter_by(Name="Flexibility and mobility Workout").first()
-    everyday_movement = session.query(workouts).filter_by(Name="Everyday movement Workout").first()
-    reducing_fall_risk = session.query(workouts).filter_by(Name="Reducing fall risk Workout").first()
-    power_training = session.query(workouts).filter_by(Name="Power training  Workout").first()
-    hiit = session.query(workouts).filter_by(Name="HIIT Workout").first()
-    mind_and_body = session.query(workouts).filter_by(Name="Mind and Body Workout").first()
-    agility = session.query(workouts).filter_by(Name="Agility Workout").first()
-    isometric = session.query(workouts).filter_by(Name="Isometric Training Workout").first()
-    strength = session.query(workouts).filter_by(Name="Strength Training Workout").first()
+with SessionLocal.begin() as session:
+    beginner_warmup = session.query(workout_sections).filter_by(SectionName="Beginner Warm Up").first()
+    beginner_circuit = session.query(workout_sections).filter_by(SectionName="Beginner Circuit").first()
+    beginner_cooldown = session.query(workout_sections).filter_by(SectionName="Beginner Cool Down").first()
     
-    sections = [
-        workout_sections(SectionName="Weightloss Warm Up", SectionOrder=1, T2=weightloss),
-        workout_sections(SectionName="Weightloss Circuit", SectionOrder=2, T2=weightloss),
-        workout_sections(SectionName="Weightloss Cool Down", SectionOrder=3, T2=weightloss),
+    beginner_section = [
         
-        workout_sections(SectionName="Endurance Warm Up", SectionOrder=1, T2=endurance),
-        workout_sections(SectionName="Endurance Circuit", SectionOrder=2, T2=endurance),
-        workout_sections(SectionName="Endurance Cool Down", SectionOrder=3, T2=endurance),
+        workoutRoutine(Name="Arm Circles", RepsDuration="Repeat twice", RoutineDescription="30 sec each direction. Rotate arms, then roll shoulders forward and back", ExerciseOrder=1, SectionID=beginner_warmup.ID),
+        workoutRoutine(Name="Bodyweight Squats", RepsDuration="10 reps", RoutineDescription="Lower hips, bend knees, stand up", ExerciseOrder=2, SectionID=beginner_warmup.ID),
+        workoutRoutine(Name="Lunges", RepsDuration="5 reps each leg", RoutineDescription="Alternate legs. Step forward, lower knee, push back up", ExerciseOrder=3, SectionID=beginner_warmup.ID),
+        workoutRoutine(Name="Jumping Jacks", RepsDuration="30 seconds", RoutineDescription="Jump, spread legs, raise arms, return repeatedly", ExerciseOrder=4, SectionID=beginner_warmup.ID),
+        workoutRoutine(Name="Plank hold", RepsDuration="20 seconds", RoutineDescription="Keep body straight, engage core, hold position", ExerciseOrder=5, SectionID=beginner_warmup.ID),
         
-        workout_sections(SectionName="Flexibility and Mobility Warm Up", SectionOrder=1, T2=flexibility_mobility),
-        workout_sections(SectionName="Flexibility and Mobility Circuit", SectionOrder=2, T2=flexibility_mobility),
-        workout_sections(SectionName="Flexibility and Mobility Cool Down", SectionOrder=3, T2=flexibility_mobility),
+        workoutRoutine(Name="Goblet Squats", RepsDuration="10-12 reps", RoutineDescription="Hold weight at chest, squat down, rise", ExerciseOrder=6, SectionID=beginner_circuit.ID),
+        workoutRoutine(Name="Push ups", RepsDuration="8-10 reps", RoutineDescription="Modify by doing them on knees if needed", ExerciseOrder=7, SectionID=beginner_circuit.ID),
+        workoutRoutine(Name="Dumbbell Deadlifts", RepsDuration="10 reps", RoutineDescription="Hinge hips, lower dumbbells, stand up strong", ExerciseOrder=8, SectionID=beginner_circuit.ID),
+        workoutRoutine(Name="Bent-Over Rows", RepsDuration="10 reps", RoutineDescription="Hinge forward, pull weights to torso, lower slowly", ExerciseOrder=9, SectionID=beginner_circuit.ID),
+        workoutRoutine(Name="Glute Bridges", RepsDuration="10-12 reps", RoutineDescription="Lift hips, squeeze glutes, lower back down", ExerciseOrder=10, SectionID=beginner_circuit.ID),
+        workoutRoutine(Name="Shoulder Press", RepsDuration="8-10 reps", RoutineDescription="Use light dumbbells. Press weights overhead, extend arms, lower controlled", ExerciseOrder=11, SectionID=beginner_circuit.ID),
+        workoutRoutine(Name="Plank Shoulder Taps", RepsDuration="10 reps per side", RoutineDescription="Hold plank, tap shoulders alternately.", ExerciseOrder=12, SectionID=beginner_circuit.ID),
+        workoutRoutine(Name="Russian Twists", RepsDuration="10 reps per side", RoutineDescription="Bodyweight or Dumbbell. Sit, twist torso side to side, engage core", ExerciseOrder=13, SectionID=beginner_circuit.ID),
         
-        workout_sections(SectionName="Everyday Movement Warm Up", SectionOrder=1, T2=everyday_movement),
-        workout_sections(SectionName="Everyday Movement Circuit", SectionOrder=2, T2=everyday_movement),
-        workout_sections(SectionName="Everyday Movement Cool Down", SectionOrder=3, T2=everyday_movement),
-        
-        workout_sections(SectionName="Reducing Fall Warm Up", SectionOrder=1, T2=reducing_fall_risk),
-        workout_sections(SectionName="Reducing Fall Circuit", SectionOrder=2, T2=reducing_fall_risk),
-        workout_sections(SectionName="Reducing Fall Cool Down", SectionOrder=3, T2=reducing_fall_risk),
-        
-        workout_sections(SectionName="Power Training Warm Up", SectionOrder=1, T2=power_training),
-        workout_sections(SectionName="Power Training Circuit", SectionOrder=2, T2=power_training),
-        workout_sections(SectionName="Power Training Cool Down", SectionOrder=3, T2=power_training),
-        
-        workout_sections(SectionName="HIIT Warm Up", SectionOrder=1, T2=hiit),
-        workout_sections(SectionName="HIIT Circuit", SectionOrder=2, T2=hiit),
-        workout_sections(SectionName="HIIT Cool Down", SectionOrder=3, T2=hiit),
-        
-        workout_sections(SectionName="Mind and Body Warm Up", SectionOrder=1, T2=mind_and_body),
-        workout_sections(SectionName="Mind and Body Circuit", SectionOrder=2, T2=mind_and_body),
-        workout_sections(SectionName="Mind and Body Cool Down", SectionOrder=3, T2=mind_and_body),
-        
-        workout_sections(SectionName="Agility Warm Up", SectionOrder=1, T2=agility),
-        workout_sections(SectionName="Agility Circuit", SectionOrder=2, T2=agility),
-        workout_sections(SectionName="Agility Cool Down", SectionOrder=3, T2=agility),
-        
-        workout_sections(SectionName="Isometric Training Warm Up", SectionOrder=1, T2=isometric),
-        workout_sections(SectionName="Isometric Training Circuit", SectionOrder=2, T2=isometric),
-        workout_sections(SectionName="Isometric Training Cool Down", SectionOrder=3, T2=isometric),
-        
-        workout_sections(SectionName="Strength Training Warm Up", SectionOrder=1, T2=strength),
-        workout_sections(SectionName="Strength Training Circuit", SectionOrder=2, T2=strength),
-        workout_sections(SectionName="Strength Training Cool Down", SectionOrder=3, T2=strength),
-        
+        workoutRoutine(Name="Childs Pose", RepsDuration="30 seconds", RoutineDescription="Hold the stretch for 30-40 seconds. Kneel, stretch arms forward, relax back", ExerciseOrder=14, SectionID=beginner_cooldown.ID),
+        workoutRoutine(Name="Seated Forward Fold", RepsDuration="30 seconds", RoutineDescription="Seated Forward Fold", ExerciseOrder=15, SectionID=beginner_cooldown.ID),
+        workoutRoutine(Name="Chest Opener Stretch", RepsDuration="30 seconds", RoutineDescription="Expand chest by pulling arms back", ExerciseOrder=16, SectionID=beginner_cooldown.ID),
+        workoutRoutine(Name="Quad Stretch", RepsDuration="30 seconds", RoutineDescription="Stretch front thigh by pulling foot back", ExerciseOrder=17, SectionID=beginner_cooldown.ID),
+        workoutRoutine(Name="Deep Breathing", RepsDuration="3-5 deep breaths", RoutineDescription="Inhale deeply, exhale slowly, and relax", ExerciseOrder=18, SectionID=beginner_cooldown.ID)
     ]
-    
-    session.add_all(sections)
-"""
-
-"""with SessionLocal.begin() as session:
-    session.execute(text('ALTER SEQUENCE "Workout_Sections_ID_seq" RESTART WITH 1'))
-    session.commit()"""
-    
-  
-"""with SessionLocal.begin() as session:
-    session.query(workout_sections).filter(workout_sections.WOID==1).delete(synchronize_session=False)
-    session.query(workout_sections).filter(workout_sections.WOID==2).delete(synchronize_session=False)
-    session.query(workout_sections).filter(workout_sections.WOID==3).delete(synchronize_session=False)
-    session.query(workout_sections).filter(workout_sections.WOID==4).delete(synchronize_session=False)
-    session.query(workout_sections).filter(workout_sections.WOID==5).delete(synchronize_session=False)
-    session.query(workout_sections).filter(workout_sections.WOID==6).delete(synchronize_session=False)
-    session.query(workout_sections).filter(workout_sections.WOID==7).delete(synchronize_session=False)
-    session.query(workout_sections).filter(workout_sections.WOID==8).delete(synchronize_session=False)
-    session.query(workout_sections).filter(workout_sections.WOID==9).delete(synchronize_session=False)
-    session.query(workout_sections).filter(workout_sections.WOID==10).delete(synchronize_session=False)
-    session.query(workout_sections).filter(workout_sections.WOID==11).delete(synchronize_session=False)
-    session.query(workout_sections).filter(workout_sections.WOID==12).delete(synchronize_session=False)
-    session.query(workout_sections).filter(workout_sections.WOID==13).delete(synchronize_session=False)
-    session.query(workout_sections).filter(workout_sections.WOID==14).delete(synchronize_session=False)
-    session.query(workout_sections).filter(workout_sections.WOID==15).delete(synchronize_session=False)
-    session.query(workout_sections).filter(workout_sections.WOID==16).delete(synchronize_session=False)
-    session.query(workout_sections).filter(workout_sections.WOID==17).delete(synchronize_session=False)
-    session.query(workout_sections).filter(workout_sections.WOID==18).delete(synchronize_session=False)
-    session.query(workout_sections).filter(workout_sections.WOID==19).delete(synchronize_session=False) 
-    session.query(workout_sections).filter(workout_sections.WOID==20).delete(synchronize_session=False)
-    session.query(workout_sections).filter(workout_sections.WOID==21).delete(synchronize_session=False)
-    session.query(workout_sections).filter(workout_sections.WOID==22).delete(synchronize_session=False)
-    session.query(workout_sections).filter(workout_sections.WOID==23).delete(synchronize_session=False)
-    session.query(workout_sections).filter(workout_sections.WOID==24).delete(synchronize_session=False)
-    session.query(workout_sections).filter(workout_sections.WOID==25).delete(synchronize_session=False)
-    session.query(workout_sections).filter(workout_sections.WOID==26).delete(synchronize_session=False)
-    session.query(workout_sections).filter(workout_sections.WOID==27).delete(synchronize_session=False)
-    session.query(workout_sections).filter(workout_sections.WOID==28).delete(synchronize_session=False)
-    session.query(workout_sections).filter(workout_sections.WOID==29).delete(synchronize_session=False)
-    session.query(workout_sections).filter(workout_sections.WOID==30).delete(synchronize_session=False)
-    
-session.commit()"""
-    
-    
-
-
+    session.add_all(beginner_section)
