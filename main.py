@@ -193,18 +193,19 @@ from sqlalchemy import text
     session.add_all(sections)"""
     
 with SessionLocal.begin() as session:
-    beginner_warmup = session.query(workout_sections).filter_by(SectionName="Beginner Warm Up").first()
+    """beginner_warmup = session.query(workout_sections).filter_by(SectionName="Beginner Warm Up").first()
     beginner_circuit = session.query(workout_sections).filter_by(SectionName="Beginner Circuit").first()
     beginner_cooldown = session.query(workout_sections).filter_by(SectionName="Beginner Cool Down").first()
     
     beginner_section = [
-        
+        #Warm up
         workoutRoutine(Name="Arm Circles", RepsDuration="Repeat twice", RoutineDescription="30 sec each direction. Rotate arms, then roll shoulders forward and back", ExerciseOrder=1, SectionID=beginner_warmup.ID),
         workoutRoutine(Name="Bodyweight Squats", RepsDuration="10 reps", RoutineDescription="Lower hips, bend knees, stand up", ExerciseOrder=2, SectionID=beginner_warmup.ID),
         workoutRoutine(Name="Lunges", RepsDuration="5 reps each leg", RoutineDescription="Alternate legs. Step forward, lower knee, push back up", ExerciseOrder=3, SectionID=beginner_warmup.ID),
         workoutRoutine(Name="Jumping Jacks", RepsDuration="30 seconds", RoutineDescription="Jump, spread legs, raise arms, return repeatedly", ExerciseOrder=4, SectionID=beginner_warmup.ID),
         workoutRoutine(Name="Plank hold", RepsDuration="20 seconds", RoutineDescription="Keep body straight, engage core, hold position", ExerciseOrder=5, SectionID=beginner_warmup.ID),
         
+        #Circuit
         workoutRoutine(Name="Goblet Squats", RepsDuration="10-12 reps", RoutineDescription="Hold weight at chest, squat down, rise", ExerciseOrder=6, SectionID=beginner_circuit.ID),
         workoutRoutine(Name="Push ups", RepsDuration="8-10 reps", RoutineDescription="Modify by doing them on knees if needed", ExerciseOrder=7, SectionID=beginner_circuit.ID),
         workoutRoutine(Name="Dumbbell Deadlifts", RepsDuration="10 reps", RoutineDescription="Hinge hips, lower dumbbells, stand up strong", ExerciseOrder=8, SectionID=beginner_circuit.ID),
@@ -214,10 +215,42 @@ with SessionLocal.begin() as session:
         workoutRoutine(Name="Plank Shoulder Taps", RepsDuration="10 reps per side", RoutineDescription="Hold plank, tap shoulders alternately.", ExerciseOrder=12, SectionID=beginner_circuit.ID),
         workoutRoutine(Name="Russian Twists", RepsDuration="10 reps per side", RoutineDescription="Bodyweight or Dumbbell. Sit, twist torso side to side, engage core", ExerciseOrder=13, SectionID=beginner_circuit.ID),
         
+        #Cool down
         workoutRoutine(Name="Childs Pose", RepsDuration="30 seconds", RoutineDescription="Hold the stretch for 30-40 seconds. Kneel, stretch arms forward, relax back", ExerciseOrder=14, SectionID=beginner_cooldown.ID),
         workoutRoutine(Name="Seated Forward Fold", RepsDuration="30 seconds", RoutineDescription="Seated Forward Fold", ExerciseOrder=15, SectionID=beginner_cooldown.ID),
         workoutRoutine(Name="Chest Opener Stretch", RepsDuration="30 seconds", RoutineDescription="Expand chest by pulling arms back", ExerciseOrder=16, SectionID=beginner_cooldown.ID),
         workoutRoutine(Name="Quad Stretch", RepsDuration="30 seconds", RoutineDescription="Stretch front thigh by pulling foot back", ExerciseOrder=17, SectionID=beginner_cooldown.ID),
         workoutRoutine(Name="Deep Breathing", RepsDuration="3-5 deep breaths", RoutineDescription="Inhale deeply, exhale slowly, and relax", ExerciseOrder=18, SectionID=beginner_cooldown.ID)
+    ]"""
+    
+    intermediate_warmup = session.query(workout_sections).filter_by(SectionName="Intermediate Warm Up").first()
+    intermediate_circuit = session.query(workout_sections).filter_by(SectionName="Intermediate Circuit").first()
+    intermediate_cooldown = session.query(workout_sections).filter_by(SectionName="Intermediate Cool Down").first()
+    
+    intermediate_section = [
+        #Warm up
+        workoutRoutine(Name="Jump rope", RepsDuration="30 seconds", RoutineDescription="Jump continuously over a swinging rope", ExerciseOrder=1, SectionID=intermediate_warmup.ID),
+        workoutRoutine(Name="Arm Circles", RepsDuration="30 seconds", RoutineDescription="30 sec each direction. Rotate arms, then roll shoulders forward and back", ExerciseOrder=2, SectionID=intermediate_warmup.ID),
+        workoutRoutine(Name="Leg Swings", RepsDuration="30 seconds", RoutineDescription="Front & Side 30 seconds each", ExerciseOrder=3, SectionID=intermediate_warmup.ID),
+        workoutRoutine(Name="Inchworms to Push-up", RepsDuration="30 seconds", RoutineDescription="Walk hands forward, do push-up, return standing", ExerciseOrder=4, SectionID=intermediate_warmup.ID),
+        workoutRoutine(Name="Bodyweight Squats", RepsDuration="30 seconds", RoutineDescription="Lower hips, bend knees, stand up", ExerciseOrder=5, SectionID=intermediate_warmup.ID),
+
+        #Circuit
+        workoutRoutine(Name="Jump Squats", RepsDuration="40s, rest 20s", RoutineDescription="Squat down, explode up, land softly, repeat", ExerciseOrder=6, SectionID=intermediate_circuit.ID),
+        workoutRoutine(Name="Push-ups to Shoulder Taps", RepsDuration="40s, rest 20s", RoutineDescription="Perform push-up, tap opposite shoulder, alternate sides", ExerciseOrder=7, SectionID=intermediate_circuit.ID),
+        workoutRoutine(Name="Dumbbell Lunges", RepsDuration="40s, rest 20s", RoutineDescription="Alternate legs. Step forward, lower knee, push back up. Add weights on each arm", ExerciseOrder=8, SectionID=intermediate_circuit.ID),
+        workoutRoutine(Name="Mountain Climbers", RepsDuration="40s, rest 20s", RoutineDescription="Run knees toward chest in a plank position", ExerciseOrder=9, SectionID=intermediate_circuit.ID),
+        workoutRoutine(Name="Dumbbell Deadlifts to Bent-over Row", RepsDuration="40s, rest 20s", RoutineDescription="Hinge down, lift dumbbells, row, lower back", ExerciseOrder=10, SectionID=intermediate_circuit.ID),
+        workoutRoutine(Name="Plank to Knee Tucks", RepsDuration="40s, rest 20s", RoutineDescription="Hold plank, drive knees toward chest, alternate sides", ExerciseOrder=11, SectionID=intermediate_circuit.ID),
+        workoutRoutine(Name="Kettlebell Swings", RepsDuration="40s, rest 20s", RoutineDescription="Hinge hips, swing kettlebell up, control down", ExerciseOrder=12, SectionID=intermediate_circuit.ID),
+        workoutRoutine(Name="Burpees", RepsDuration="40s, rest 20s", RoutineDescription="Squat, jump back, push-up, jump up explosively", ExerciseOrder=13, SectionID=intermediate_circuit.ID),
+
+        #Cool down
+        workoutRoutine(Name="Childs Pose", RepsDuration="30 seconds", RoutineDescription="Kneel, stretch arms forward, relax back", ExerciseOrder=14, SectionID=intermediate_cooldown.ID),
+        workoutRoutine(Name="Seated Hamstring Stretch", RepsDuration="30 seconds", RoutineDescription="Sit, extend legs, reach toward toes, hold stretch. 30 seconds per leg", ExerciseOrder=15, SectionID=intermediate_cooldown.ID),
+        workoutRoutine(Name="Hip Flexor Stretch", RepsDuration="30 seconds", RoutineDescription="Lunge forward, press hips down, stretch deeply", ExerciseOrder=16, SectionID=intermediate_cooldown.ID),
+        workoutRoutine(Name="Chest Opener Stretch", RepsDuration="30 seconds", RoutineDescription="Expand chest by pulling arms back", ExerciseOrder=17, SectionID=intermediate_cooldown.ID),
+        workoutRoutine(Name="Deep Breathing", RepsDuration="3-5 deep breaths", RoutineDescription="Inhale deeply, exhale slowly, and relax", ExerciseOrder=18, SectionID=intermediate_cooldown.ID),
     ]
-    session.add_all(beginner_section)
+    
+    session.add_all(intermediate_section)
