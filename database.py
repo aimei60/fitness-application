@@ -54,3 +54,27 @@ class workoutRoutine(Base):
     ExerciseOrder: Mapped[int] = mapped_column(Integer)
     
     T4 = relationship("workout_sections", back_populates="T3")
+
+class User(Base):
+    __tablename__ = "users"
+    
+    ID: Mapped[int] = mapped_column(primary_key=True)
+    Email: Mapped[str] = mapped_column(String(100), unique=True, index=True)
+    HashedPassword: Mapped[str]
+    IsActive: Mapped[bool] = mapped_column(default=True)
+    
+    workout_requests = relationship("UserWorkoutRequest", back_populates="users")
+    
+class UserWorkoutRequest(Base):
+    __tablename__ = "user_workout_requests"
+    
+    ID: Mapped[int] = mapped_column(primary_key=True)
+    UserID: Mapped[int] = mapped_column(ForeignKey("users.id"))
+    WorkoutID = Mapped[int] = mapped_column(ForeignKey("WorkOuts.ID"))
+    RequestType = Mapped[str] = mapped_column(String(100))
+    Status = Mapped[str] = mapped_column(String(50), default="pending")
+    
+    users = relationship("User", back_populates="workout_requests")
+    workout = relationship("workouts")
+    
+
