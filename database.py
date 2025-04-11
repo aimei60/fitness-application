@@ -69,12 +69,11 @@ class UserWorkoutRequest(Base):
     __tablename__ = "user_workout_requests"
     
     ID: Mapped[int] = mapped_column(primary_key=True)
-    UserID: Mapped[int] = mapped_column(ForeignKey("users.id"))
-    WorkoutID = Mapped[int] = mapped_column(ForeignKey("WorkOuts.ID"))
-    RequestType = Mapped[str] = mapped_column(String(100))
-    Status = Mapped[str] = mapped_column(String(50), default="pending")
+    UserID: Mapped[int] = mapped_column(ForeignKey("users.ID"))
+    WorkoutID: Mapped[int] = mapped_column(ForeignKey("WorkOuts.ID"))
+    RequestType: Mapped[str] = mapped_column(String(100))
+    Status: Mapped[str] = mapped_column(String(50), default="pending")
     
     users = relationship("User", back_populates="workout_requests")
     workout = relationship("workouts")
     
-
