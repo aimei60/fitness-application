@@ -65,6 +65,9 @@ class User(Base):
     
     workout_requests = relationship("UserWorkoutRequest", back_populates="users")
     
+    profiles = relationship("UserProfile", uselist=False, back_populates="user")
+    
+    
 class UserWorkoutRequest(Base):
     __tablename__ = "user_workout_requests"
     
@@ -77,3 +80,17 @@ class UserWorkoutRequest(Base):
     users = relationship("User", back_populates="workout_requests")
     workout = relationship("workouts")
     
+class UserProfile(Base):
+    __tablename__ = "user_profiles"
+    
+    ID: Mapped[int] = mapped_column(primary_key=True)
+    UserID: Mapped[int] = mapped_column(ForeignKey("users.ID"), unique=True)
+    FullName: Mapped[str] = mapped_column(String(100))
+    Age: Mapped[int] = mapped_column(nullable=True)
+    HeightCM: Mapped[int] = mapped_column(nullable=True)
+    WeightKG: Mapped[int] = mapped_column(nullable=True)
+    FitnessLevel: Mapped[str] = mapped_column(String(100), nullable=True)
+    Goal: Mapped[str] = mapped_column(String(200), nullable=True)
+    InjuriesOrLimitations: Mapped[str] = mapped_column(String(255), nullable=True)
+    
+    user = relationship("User", back_populates="profiles")
