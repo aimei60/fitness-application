@@ -1,3 +1,5 @@
 venv/
 sens.env
 .vscode/settings.json
+__pycache__/
+.pytest_cache
