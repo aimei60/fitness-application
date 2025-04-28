@@ -17,3 +17,6 @@ SessionLocal = sessionmaker(bind=engine)
 class Base(DeclarativeBase):
     pass
 
+from database import workouts, workout_sections, workoutRoutine, User, UserWorkoutRequest, UserProfile
+
+
