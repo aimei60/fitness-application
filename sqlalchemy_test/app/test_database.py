@@ -1,5 +1,6 @@
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, DeclarativeBase
+from sqlalchemy.orm import sessionmaker
+from database import Base
 import os
 from dotenv import load_dotenv
 from urllib.parse import quote_plus
@@ -13,9 +14,6 @@ DB_PORT = os.getenv("DB_PORT")
 
 engine = create_engine(f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/test_db")
 SessionLocal = sessionmaker(bind=engine)
-
-class Base(DeclarativeBase):
-    pass
 
 from database import workouts, workout_sections, workoutRoutine, User, UserWorkoutRequest, UserProfile
 
