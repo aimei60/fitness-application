@@ -114,3 +114,108 @@ def test_insert_invalid_foreign_key_workout_section():
     session.rollback()
     session.close()
     
+def test_data_insertion_retrieval_workout_routines():
+    session = SessionLocal()
+    
+    new_workout = workouts(
+        Name="Temporary Workout",
+        Description="Temporary workout for section test"
+    )
+    session.add(new_workout)
+    session.commit()
+    session.refresh(new_workout)
+    
+    new_workout_section = workout_sections(
+        WOID=new_workout.ID,
+        SectionName="Test warm up",
+        SectionOrder=2
+    )
+    
+    session.add(new_workout_section)
+    session.commit()
+    session.refresh(new_workout_section)
+    
+    new_workout_routine = workoutRoutine(
+        SectionID=new_workout_section.ID,
+        Name="Test Arm Circles",
+        RepsDuration="Test Duration",
+        RoutineDescription="Test Description",
+        ExerciseOrder=5
+    )
+    
+    session.add(new_workout_routine)
+    session.commit()
+    session.refresh(new_workout_routine)
+    
+    assert new_workout_routine.ID is not None
+    assert new_workout_routine.SectionID == new_workout_section.ID #tests valid foreign key insertion
+    assert new_workout_routine.Name == "Test Arm Circles"
+    assert new_workout_routine.RepsDuration == "Test Duration"
+    assert new_workout_routine.RoutineDescription == "Test Description"
+    assert new_workout_routine.ExerciseOrder == 5
+    
+    session.delete(new_workout_routine)
+    session.delete(new_workout_section)
+    session.delete(new_workout)
+    session.commit()
+    session.close()
+    
+def test_insert_invalid_workout_routine():
+    session = SessionLocal()
+    
+    new_workout = workouts(
+        Name="Temporary Workout",
+        Description="Temporary workout for section test"
+    )
+    session.add(new_workout)
+    session.commit()
+    session.refresh(new_workout)
+    
+    new_workout_section = workout_sections(
+        WOID=new_workout.ID,
+        SectionName="Test warm up",
+        SectionOrder=2
+    )
+    
+    session.add(new_workout_section)
+    session.commit()
+    session.refresh(new_workout_section)   
+    
+    bad_workout_routine = workoutRoutine(
+        SectionID=new_workout_section.ID,
+        Name=None,
+        RepsDuration="Test Duration",
+        RoutineDescription="Test Description",
+        ExerciseOrder=5
+    )
+    
+    session.add(bad_workout_routine)
+    
+    with pytest.raises(IntegrityError):
+        session.commit()
+        
+    session.rollback()
+    session.delete(new_workout_section)
+    session.delete(new_workout)
+    session.commit()
+    session.close()
+    
+def test_insert_invalid_foreign_key_workout_routine():
+    session = SessionLocal()
+    
+    bad_workout_routine = workoutRoutine(
+        SectionID=9999,
+        Name="Bad Routine",
+        RepsDuration="Test Duration",
+        RoutineDescription="Test Description",
+        ExerciseOrder=5
+    )
+    
+    session.add(bad_workout_routine)
+    
+    with pytest.raises(IntegrityError):
+        session.commit()
+        
+    session.rollback()
+    session.close()
+    
