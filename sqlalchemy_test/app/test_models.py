@@ -1,4 +1,5 @@
 import pytest
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy_test.app.test_database import Base, engine, SessionLocal
 from database import workouts, workout_sections, workoutRoutine, User, UserWorkoutRequest, UserProfile
 
@@ -22,3 +23,17 @@ def test_data_insertion_retrieval_workouts():
     session.commit()
     session.close()
     
+def test_insert_invalid_workout_name():
+    session = SessionLocal()
+    
+    bad_workout = workouts(
+        Name=None,
+        Description="Test"
+    )
+    
+    session.add(bad_workout)
+    
+    with pytest.raises(IntegrityError):
+        session.commit()
+    
+    session.close()
