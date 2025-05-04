@@ -218,4 +218,43 @@ def test_insert_invalid_foreign_key_workout_routine():
         
     session.rollback()
     session.close()
+
+def test_insertion_retrieval_user():
+    session = SessionLocal()
+    
+    new_user = User(
+        Email="TestEmail@test.com",
+        HashedPassword="test",
+        IsActive=True
+    )
+    
+    session.add(new_user)
+    session.commit()
+    session.refresh(new_user)
+    
+    assert new_user.ID is not None
+    assert new_user.Email == "TestEmail@test.com"
+    assert new_user.HashedPassword == "test"
+    assert new_user.IsActive == True
+    
+    session.delete(new_user)
+    session.commit()
+    session.close()
+    
+def test_insert_invalid_user():
+    session = SessionLocal()
+    
+    incorrect_user = User(
+        Email=None,
+        HashedPassword="test",
+        IsActive=True
+    )
+    
+    session.add(incorrect_user)
+    
+    with pytest.raises(IntegrityError):
+        session.commit()
+
+    session.rollback()
+    session.close()
     
