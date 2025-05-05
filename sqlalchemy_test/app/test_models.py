@@ -257,4 +257,167 @@ def test_insert_invalid_user():
 
     session.rollback()
     session.close()
+
+def test_insertion_retrieval_user_workout_request():
+    session = SessionLocal()
     
+    new_user = User(
+        Email="TestEmail@test.com",
+        HashedPassword="test",
+        IsActive=True
+    )
+    
+    session.add(new_user)
+    session.commit()
+    session.refresh(new_user)
+    
+    new_workout = workouts(
+        Name="Test Workout",
+        Description="This is a test workout"
+    )
+    
+    session.add(new_workout)
+    session.commit()
+    session.refresh(new_workout)
+    
+    new_user_workout_request = UserWorkoutRequest(
+        UserID=new_user.ID,
+        WorkoutID=new_workout.ID,
+        RequestType="Test Gym Workout",
+        Status="Test pending"
+    )
+    
+    session.add(new_user_workout_request)
+    session.commit()
+    session.refresh(new_user_workout_request)
+    
+    assert new_user_workout_request.ID is not None
+    assert new_user_workout_request.UserID == new_user.ID #tests valid foreign key insertion
+    assert new_user_workout_request.WorkoutID == new_workout.ID #tests valid foreign key insertion
+    assert new_user_workout_request.RequestType == "Test Gym Workout"
+    assert new_user_workout_request.Status == "Test pending"
+    
+    session.delete(new_user_workout_request)
+    session.delete(new_workout)
+    session.delete(new_user)
+    session.commit()
+    session.close()
+    
+def test_insert_invalid_user_workout_request():
+    session = SessionLocal()
+    
+    incorrect_user_workout_request = UserWorkoutRequest(
+        RequestType=None,
+        Status="Test pending"
+    )
+    
+    session.add(incorrect_user_workout_request)
+    
+    with pytest.raises(IntegrityError):
+        session.commit()
+
+    session.rollback()
+    session.close()
+
+def test_insert_invalid_foreign_key_user_workout_request():
+    session = SessionLocal()
+    
+    bad_user_workout_request = UserWorkoutRequest(
+        UserID=9999,
+        RequestType="Test Gym Workout",
+        Status="Test pending"
+    )
+    
+    session.add(bad_user_workout_request)
+    
+    with pytest.raises(IntegrityError):
+        session.commit()
+        
+    session.rollback()
+    session.close()
+
+def test_data_insertion_retrieval_user_profile():
+    session = SessionLocal()
+    
+    new_user = User(
+        Email="TestEmail@test.com",
+        HashedPassword="test",
+        IsActive=True
+    )
+    
+    session.add(new_user)
+    session.commit()
+    session.refresh(new_user)
+    
+    new_user_profile = UserProfile(
+        UserID=new_user.ID,
+        FullName="Test",
+        Age=23,
+        HeightCM=176,
+        WeightKG=78,
+        FitnessLevel="Beginner",
+        Goal="Lose Weight",
+        InjuriesOrLimitations="N/A"
+    )
+    
+    session.add(new_user_profile)
+    session.commit()
+    session.refresh(new_user_profile)
+    
+    assert new_user_profile.ID is not None
+    assert new_user_profile.UserID == new_user.ID #tests valid foreign key insertion
+    assert new_user_profile.FullName == "Test"
+    assert new_user_profile.Age == 23
+    assert new_user_profile.HeightCM == 176
+    assert new_user_profile.WeightKG == 78
+    assert new_user_profile.FitnessLevel == "Beginner"
+    assert new_user_profile.Goal == "Lose Weight"
+    assert new_user_profile.InjuriesOrLimitations == "N/A"
+    
+    session.delete(new_user_profile)
+    session.delete(new_user)
+    session.commit()
+    session.close()
+    
+def test_insert_invalid_user_profile():
+    session = SessionLocal()
+    
+    incorrect_user_profile = UserProfile(
+        FullName=None,
+        Age=23,
+        HeightCM=176,
+        WeightKG=78,
+        FitnessLevel="Beginner",
+        Goal="Lose Weight",
+        InjuriesOrLimitations="N/A"
+    )
+    
+    session.add(incorrect_user_profile)
+    
+    with pytest.raises(IntegrityError):
+        session.commit()
+
+    session.rollback()
+    session.close()
+
+def test_insert_invalid_foreign_key_user_profile():
+    session = SessionLocal()
+    
+    bad_user_profile = UserProfile(
+        UserID=9999,
+        FullName="Test",
+        Age=23,
+        HeightCM=176,
+        WeightKG=78,
+        FitnessLevel="Beginner",
+        Goal="Lose Weight",
+        InjuriesOrLimitations="N/A"
+    )
+    
+    session.add(bad_user_profile)
+    
+    with pytest.raises(IntegrityError):
+        session.commit()
+        
+    session.rollback()
+    session.close()

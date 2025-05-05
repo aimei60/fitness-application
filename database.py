@@ -66,8 +66,7 @@ class User(Base):
     workout_requests = relationship("UserWorkoutRequest", back_populates="users")
     
     profiles = relationship("UserProfile", uselist=False, back_populates="user")
-    
-    
+      
 class UserWorkoutRequest(Base):
     __tablename__ = "user_workout_requests"
     
