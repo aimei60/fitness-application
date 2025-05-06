@@ -1,11 +1,14 @@
+"""
+Populates the fitness_db database with predefined workout programs, sections, and exercises.
+This script stores the addition of the essential fitness data required for the application's core functionality.
+"""
 from database import SessionLocal, Base, workouts, workout_sections, workoutRoutine
 from sqlalchemy import text
 
 """
 #TABLE 1 DATA
-This block inserts a predefined list of workout program templates into 
-the `workouts` table. These templates are used to provide structured 
-workout plans for users based on fitness level, goals, or constraints.
+This block inserts a predefined list of workout program templates into the workouts table. 
+These templates are used to provide workout plans for users based on fitness level, goals, or constraints.
 
 with SessionLocal.begin() as session:
     workout1 = workouts(Name="Beginner Workout", Description="Simple movements building strength, stamina, and workout confidence")
@@ -76,7 +79,7 @@ with SessionLocal.begin() as session:
     session.add_all([workout1, workout2, workout3, workout4, workout5, workout6, workout7, workout8, workout9, workout10, workout11, workout12, workout13, workout14, workout15, workout16, workout17, workout18, workout19, workout20, workout21, workout22, workout23, workout24, workout25, workout26, workout27, workout28, workout29, workout30])
 
 #TABLE 2 DATA
-
+Each section (warm Up, circuit, cool down) is associated with an existing workout program from the table above.
 
 with SessionLocal.begin() as session:
     beginner = session.query(workouts).filter_by(Name="Beginner Workout").first()
@@ -235,6 +238,8 @@ with SessionLocal.begin() as session:
     session.add_all(sections)
     
 #TABLE 3 DATA   
+This below inserts predefined workout routines into the workoutRoutine table. 
+Each routine is linked to a specific workout section (warm Up, circuit, or cool Down) and defines the exercises, their order, and instructions for the workout programs.
  
 with SessionLocal.begin() as session:
     beginner_warmup = session.query(workout_sections).filter_by(SectionName="Beginner Warm Up").first()

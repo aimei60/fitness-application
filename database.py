@@ -1,3 +1,12 @@
+"""
+Sets up the database connection and ORM models for the fitness application.
+
+Includes:
+- Database engine and session creation
+- ORM model definitions for core tables (User, Workouts, WorkoutSections, etc.)
+- Environment variable loading for database credentials
+"""
+
 import os
 from urllib.parse import quote_plus
 from sqlalchemy import create_engine
@@ -22,6 +31,10 @@ from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 class Base(DeclarativeBase):
     pass
 
+"""
+Defines a workout template used to build exercise programs for users.
+Each workout is broken into multiple sections for the workout_sections table.
+"""
 class workouts(Base):
     __tablename__ = "WorkOuts"
     
@@ -30,7 +43,11 @@ class workouts(Base):
     Description: Mapped[str]
     
     T1 = relationship("workout_sections", back_populates="T2")
-    
+
+"""
+Represents a section of a workout, such as Warm Up, Circuit, or Cool Down.
+This table group exercises and define the structure and order of a workout plan.
+"""    
 class workout_sections(Base):
     __tablename__ = "Workout_Sections" 
        
@@ -42,7 +59,11 @@ class workout_sections(Base):
     T2 = relationship("workouts", back_populates="T1")
     
     T3 = relationship("workoutRoutine", back_populates="T4")
-    
+
+"""
+Represents an individual exercise within a workout section.
+Defines the exercise name, repetitions or duration, description, and execution order.
+"""    
 class workoutRoutine(Base):
     __tablename__ = "Workout_Routine"
     
@@ -54,7 +75,11 @@ class workoutRoutine(Base):
     ExerciseOrder: Mapped[int] = mapped_column(Integer)
     
     T4 = relationship("workout_sections", back_populates="T3")
-
+    
+"""
+Represents an application user with login credentials and account status.
+Linked to user profiles and workout table.
+"""
 class User(Base):
     __tablename__ = "users"
     
@@ -66,7 +91,12 @@ class User(Base):
     workout_requests = relationship("UserWorkoutRequest", back_populates="users")
     
     profiles = relationship("UserProfile", uselist=False, back_populates="user")
-      
+
+"""
+Represents a user's request for a specific workout program.
+Tracks the request type and its current status (e.g., pending, approved, completed).
+Linked to users table and workouts table.
+"""      
 class UserWorkoutRequest(Base):
     __tablename__ = "user_workout_requests"
     
@@ -77,8 +107,13 @@ class UserWorkoutRequest(Base):
     Status: Mapped[str] = mapped_column(String(50), default="pending")
     
     users = relationship("User", back_populates="workout_requests")
-    workout = relationship("workouts")
     
+    workout = relationship("workouts")
+
+"""
+Stores extended profile information for a user, including fitness level, goals, and physical metrics.
+Each profile is linked one-to-one with a user account.
+"""    
 class UserProfile(Base):
     __tablename__ = "user_profiles"
     
