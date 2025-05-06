@@ -1,3 +1,12 @@
+"""
+Tests database models for correct insertion, retrieval, and integrity enforcement.
+
+Covers:
+- Successful creation and deletion of workout programs, sections, routines, users, profiles, and requests.
+- Handling of invalid data insertions (e.g. missing required fields, invalid foreign keys).
+- Ensures database constraints and relationships are correctly enforced.
+"""
+
 import pytest
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy_test.app.test_database import Base, engine, SessionLocal
@@ -70,7 +79,7 @@ def test_data_insertion_retrieval_workouts_sections():
     session.commit()
     session.close()
     
-def test_insert_invalid_workout_sections():
+def test_insert_invalid_workout_section_name():
     session = SessionLocal()
     
     new_workout = workouts(
@@ -160,7 +169,7 @@ def test_data_insertion_retrieval_workout_routines():
     session.commit()
     session.close()
     
-def test_insert_invalid_workout_routine():
+def test_insert_invalid_workout_routine_name():
     session = SessionLocal()
     
     new_workout = workouts(
@@ -303,7 +312,7 @@ def test_insertion_retrieval_user_workout_request():
     session.commit()
     session.close()
     
-def test_insert_invalid_user_workout_request():
+def test_insert_invalid_user_workout_request_type():
     session = SessionLocal()
     
     incorrect_user_workout_request = UserWorkoutRequest(
@@ -379,7 +388,7 @@ def test_data_insertion_retrieval_user_profile():
     session.commit()
     session.close()
     
-def test_insert_invalid_user_profile():
+def test_insert_invalid_user_profile_name():
     session = SessionLocal()
     
     incorrect_user_profile = UserProfile(
