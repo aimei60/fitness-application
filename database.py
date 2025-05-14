@@ -1,10 +1,6 @@
 """
 Sets up the database connection and ORM models for the fitness application.
-
-Includes:
-- Database engine and session creation
-- ORM model definitions for core tables (User, Workouts, WorkoutSections, etc.)
-- Environment variable loading for database credentials
+Includes a database engine and session creation, core tables e.g. workouts, workout_sections etc. and environment variable loading for database credentials
 """
 
 import os
@@ -46,7 +42,7 @@ class workouts(Base):
 
 """
 Represents a section of a workout, such as Warm Up, Circuit, or Cool Down.
-This table group exercises and define the structure and order of a workout plan.
+This table group defines the structure and order of a workout plan.
 """    
 class workout_sections(Base):
     __tablename__ = "Workout_Sections" 

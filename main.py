@@ -1,6 +1,6 @@
 """
-Populates the fitness_db database with predefined workout programs, sections, and exercises.
-This script stores the addition of the essential fitness data required for the application's core functionality.
+Populates the fitness_db database with predefined workout programs, sections, and routines.
+This fitness data is required for the application's core functionality.
 """
 from database import SessionLocal, Base, workouts, workout_sections, workoutRoutine
 from sqlalchemy import text
