@@ -6,7 +6,7 @@ Loads all ORM models required for testing.
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from database import Base
+from backend.application.database import Base
 import os
 from dotenv import load_dotenv
 from urllib.parse import quote_plus
@@ -21,6 +21,6 @@ DB_PORT = os.getenv("DB_PORT")
 engine = create_engine(f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/test_db")
 SessionLocal = sessionmaker(bind=engine)
 
-from database import workouts, workout_sections, workoutRoutine, User, UserWorkoutRequest, UserProfile
+from backend.application.database import workouts, workout_sections, workoutRoutine, User, UserWorkoutRequest, UserProfile
 
 

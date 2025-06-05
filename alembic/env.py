@@ -2,7 +2,7 @@ from logging.config import fileConfig
 import os
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
-from database import Base
+from backend.application.database import Base
 from dotenv import load_dotenv
 from urllib.parse import quote_plus
 from alembic import context

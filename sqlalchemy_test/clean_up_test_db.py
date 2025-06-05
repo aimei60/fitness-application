@@ -4,7 +4,7 @@ Intended for use in testing environments only.
 """
 
 from sqlalchemy_test.app.test_database import Base, engine, SessionLocal
-from database import workouts
+from backend.application.database import workouts
 
 
 
