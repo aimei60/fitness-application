@@ -3,7 +3,7 @@ from typing import List, Optional
 from enum import Enum
 
 #schema for workout routine table
-class WorkoutRoutineRead(BaseModel): #user output - returns the below fields
+class WorkoutRoutineRead(BaseModel): #output - returns the below fields
     Name: str = Field(..., max_length=50)
     RepsDuration: str = Field(..., max_length=20)
     RoutineDescription: str = Field(..., max_length=225)
@@ -13,7 +13,7 @@ class WorkoutRoutineRead(BaseModel): #user output - returns the below fields
         orm_mode = True
         
 #schema for workout section table
-class WorkoutSectionRead(BaseModel): #user output returns section name
+class WorkoutSectionRead(BaseModel): #output returns section name
     SectionName: str = Field(..., max_length=50)
     Routines: List[WorkoutRoutineRead] = []
     
@@ -24,7 +24,7 @@ class WorkoutSectionRead(BaseModel): #user output returns section name
 class WorkoutBase(BaseModel): #user input. User can type which workout they want
     Name: str = Field(..., max_length=50) #user input. Name in workouts has 50 max characters
     
-class WorkoutRead(WorkoutBase): #user output returns the decscription of the workout
+class WorkoutRead(WorkoutBase): #output returns the decscription of the workout
     Description: str
     Sections: List[WorkoutSectionRead] = []
     
@@ -58,9 +58,34 @@ class UserWorkoutRequestCreate(BaseModel): #user input
     RequestType: RequestTypeEnum
     WorkoutID: Optional[int] = None
     
-class UserWorkoutRequestRead(BaseModel): #user output
+class UserWorkoutRequestRead(BaseModel): #output
     RequestType: RequestTypeEnum
     Status: str
 
     class Config:
         orm_mode = True
+
+#schema for user profile
+class UserProfileCreate(BaseModel): #user input
+    FullName: str = Field(..., max_length=100)
+    Age: int
+    Height: int
+    Weight: int
+    FitnessLevel: str = Field(..., max_length=100)
+    Goal: str = Field(..., max_length=100)
+    InjuriesOrLimitations: Optional[str] = Field(None, max_length=255)
+    
+class UserProfileRead(BaseModel): #output
+    ID: int
+    FullName: str = Field(..., max_length=100)
+    Age: Optional[int]
+    Height: Optional[int]
+    Weight: Optional[int]
+    FitnessLevel: Optional[str] = Field(None, max_length=100)
+    Goal: Optional[str] = Field(None, max_length=200)
+    InjuriesOrLimitations: Optional[str] = Field(None, max_length=255)
+
+    class Config:
+        orm_mode = True
+    
+    
