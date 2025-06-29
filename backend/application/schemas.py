@@ -57,13 +57,22 @@ class RequestTypeEnum(str, Enum):
 class UserWorkoutRequestCreate(BaseModel): #user input
     RequestType: RequestTypeEnum
     WorkoutID: Optional[int] = None
-    
+
 class UserWorkoutRequestRead(BaseModel): #output
     RequestType: RequestTypeEnum
     Status: str
 
     class Config:
         orm_mode = True
+
+#schema for user to update status
+class RequestStatusEnum(str, Enum):
+    pending = "pending" #request is pending
+    active = "active" #request is active 
+    completed = "completed" #request is completed
+ 
+class UpdateRequestStatus(BaseModel): #user input
+    Status: RequestStatusEnum
 
 #schema for user profile
 class UserProfileCreate(BaseModel): #user input
