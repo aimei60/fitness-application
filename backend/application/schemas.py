@@ -47,7 +47,7 @@ class UserPasswordChange(BaseModel): #user input to change password
     current_password: str
     new_password: str = Field(..., min_length=8)
     
-#schema for user request - the below schema is optional for the user and if the user wants to request a more tailored or reviewed workout plan workout
+#schema for user request - the below schema is optional for the user and if the user wants to request a more tailored or reviewed workout plan
 class RequestTypeEnum(str, Enum):
     new_workout = "new_workout" #User wants a new plan 
     repeat_workout = "repeat_workout" #User wants to re-do their last plan
@@ -58,7 +58,7 @@ class UserWorkoutRequestCreate(BaseModel): #user input
     RequestType: RequestTypeEnum
     WorkoutID: Optional[int] = None
 
-class UserWorkoutRequestRead(BaseModel): #output
+class UserWorkoutRequestRead(BaseModel): #user output
     RequestType: RequestTypeEnum
     Status: str
 
@@ -72,7 +72,7 @@ class RequestStatusEnum(str, Enum):
     completed = "completed" #request is completed
  
 class UpdateRequestStatus(BaseModel): #user input
-    Status: RequestStatusEnum
+    Status: RequestStatusEnum 
 
 #schema for user profile
 class UserProfileCreate(BaseModel): #user input
