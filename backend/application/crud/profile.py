@@ -19,3 +19,6 @@ def create_user_profile(db: Session, user_id: int, profile: UserProfileCreate):
     db.refresh(user_profile)
     return user_profile
 
+#returns the profile for a specific user by user_id
+def read_user_profile(db: Session, user_id: int):
+    return db.query(UserProfile).filter(UserProfile.FullName == user_id).first()
