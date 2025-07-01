@@ -77,10 +77,10 @@ class UpdateRequestStatus(BaseModel): #user input
 #schema for user profile
 class UserProfileCreate(BaseModel): #user input
     FullName: str = Field(..., max_length=100)
-    Age: int
-    Height: int
-    Weight: int
-    FitnessLevel: str = Field(..., max_length=100)
+    Age: Optional[int]
+    Height: Optional[int]
+    Weight: Optional[int]
+    FitnessLevel: Optional[str] = Field(..., max_length=100)
     Goal: str = Field(..., max_length=100)
     InjuriesOrLimitations: Optional[str] = Field(None, max_length=255)
     
@@ -91,7 +91,7 @@ class UserProfileRead(BaseModel): #output
     Height: Optional[int]
     Weight: Optional[int]
     FitnessLevel: Optional[str] = Field(None, max_length=100)
-    Goal: Optional[str] = Field(None, max_length=200)
+    Goal: str= Field(..., max_length=200)
     InjuriesOrLimitations: Optional[str] = Field(None, max_length=255)
 
     class Config:
