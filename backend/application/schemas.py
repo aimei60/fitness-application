@@ -10,7 +10,7 @@ class WorkoutRoutineRead(BaseModel): #output - returns the below fields
     ExerciseOrder: int
     
     class Config:
-        orm_mode = True
+        from_attributes = True
         
 #schema for workout section table
 class WorkoutSectionRead(BaseModel): #output returns section name
@@ -18,7 +18,7 @@ class WorkoutSectionRead(BaseModel): #output returns section name
     Routines: List[WorkoutRoutineRead] = []
     
     class Config:
-        orm_mode = True
+        from_attributes = True
     
 #schema for workouts table
 class WorkoutBase(BaseModel): #user input. User can type which workout they want
@@ -29,7 +29,7 @@ class WorkoutRead(WorkoutBase): #output returns the decscription of the workout
     Sections: List[WorkoutSectionRead] = []
     
     class Config:
-        orm_mode = True
+        from_attributes = True
         
 #schema for user table
 class UserCreate(BaseModel): #user input to create profile 
@@ -41,7 +41,7 @@ class UserRead(BaseModel):#having this incase I want these details to be shown i
     IsActive: bool
     
     class Config:
-        orm_mode = True
+        ofrom_attributes = True
         
 class UserPasswordChange(BaseModel): #user input to change password
     current_password: str
@@ -63,7 +63,7 @@ class UserWorkoutRequestRead(BaseModel): #user output
     Status: str
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 #schema for user to update status
 class RequestStatusEnum(str, Enum):
@@ -95,6 +95,6 @@ class UserProfileRead(BaseModel): #output
     InjuriesOrLimitations: Optional[str] = Field(None, max_length=255)
 
     class Config:
-        orm_mode = True
+        from_attributes = True
     
     

@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 from typing import Optional
-from models import UserWorkoutRequest
+from backend.application.models import UserWorkoutRequest
 from schemas import UserWorkoutRequestCreate, RequestStatusEnum
 
 #user creates workout request

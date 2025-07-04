@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session, joinedload
-from models import workouts
+from backend.application.models import workouts
 
 #shows the user all available workout options
 def get_all_workouts(db: Session):
