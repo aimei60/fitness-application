@@ -31,6 +31,12 @@ class WorkoutRead(WorkoutBase): #output returns the decscription of the workout
     class Config:
         from_attributes = True
         
+class WorkoutSimpleRead(WorkoutBase): #output returns workout name and workout description
+    Description: str
+    
+    class Config:
+        from_attributes = True
+        
 #schema for user table
 class UserCreate(BaseModel): #user input to create profile 
     Email: EmailStr
