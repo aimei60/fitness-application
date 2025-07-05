@@ -7,4 +7,4 @@ def get_all_workouts(db: Session):
 
 #returns the workout name, description, section and the workout routine for the user
 def get_workout_with_sections_and_routines(db: Session, name: str):
-    return (db.query(workouts).options(joinedload(workouts.T1).joinedload(workout_sections.T3)).filter(workouts.Name.ilike(name)).first())
+    return (db.query(workouts).options(joinedload(workouts.Sections).joinedload(workout_sections.Routines)).filter(workouts.Name.ilike(name)).first())

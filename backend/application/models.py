@@ -18,7 +18,7 @@ class workouts(Base):
     Name: Mapped[str] = mapped_column(String(50))
     Description: Mapped[str]
     
-    T1 = relationship("workout_sections", back_populates="T2")
+    Sections = relationship("workout_sections", back_populates="Workout")
 
 """
 Represents a section of a workout, such as Warm Up, Circuit, or Cool Down.
@@ -32,9 +32,9 @@ class workout_sections(Base):
     SectionName: Mapped[str] = mapped_column(String(50))
     SectionOrder: Mapped[int]
     
-    T2 = relationship("workouts", back_populates="T1")
+    Routines = relationship("workoutRoutine", back_populates="Section")
     
-    T3 = relationship("workoutRoutine", back_populates="T4")
+    Workout = relationship("workouts", back_populates="Sections")
 
 """
 Represents an individual exercise within a workout section.
@@ -50,7 +50,7 @@ class workoutRoutine(Base):
     RoutineDescription: Mapped[str] = mapped_column(String(255))
     ExerciseOrder: Mapped[int] = mapped_column(Integer)
     
-    T4 = relationship("workout_sections", back_populates="T3")
+    Section = relationship("workout_sections", back_populates="Routines")
     
 """
 Represents an application user with login credentials and account status.

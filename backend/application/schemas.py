@@ -25,7 +25,6 @@ class WorkoutBase(BaseModel): #user input. User can type which workout they want
     Name: str = Field(..., max_length=50) #user input. Name in workouts has 50 max characters
     
 class WorkoutRead(WorkoutBase): #output returns the decscription of the workout
-    Description: str
     Sections: List[WorkoutSectionRead] = []
     
     class Config:
