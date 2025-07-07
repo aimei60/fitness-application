@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from typing import Optional
-from backend.application.models import UserWorkoutRequest
-from schemas import UserWorkoutRequestCreate, RequestStatusEnum
+from application.models import UserWorkoutRequest
+from application.schemas import UserWorkoutRequestCreate, RequestStatusEnum
 
 #user creates workout request
 def create_workout_request(db: Session, user_id: int, request: UserWorkoutRequestCreate):

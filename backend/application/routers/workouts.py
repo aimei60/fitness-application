@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from backend.application.database import get_db
-from backend.application.crud.workouts import get_all_workouts, get_workout_with_sections_and_routines
-from backend.application.schemas import WorkoutSimpleRead, WorkoutRead
+from application.database import get_db
+from application.crud.workouts import get_all_workouts, get_workout_with_sections_and_routines
+from application.schemas import WorkoutSimpleRead, WorkoutRead
 from typing import List
 
 router = APIRouter()

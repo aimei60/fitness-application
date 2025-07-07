@@ -2,7 +2,7 @@
 Populates the fitness_db database with predefined workout programs, sections, and routines.
 This fitness data is required for the application's core functionality.
 """
-from backend.application.database import SessionLocal, Base, workouts, workout_sections, workoutRoutine
+from application.database import SessionLocal, Base, workouts, workout_sections, workoutRoutine
 from sqlalchemy import text
 
 """

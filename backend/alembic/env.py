@@ -37,7 +37,7 @@ raw_database_url = (
 escaped_url = raw_database_url.replace("%", "%%")
 config.set_main_option("sqlalchemy.url", escaped_url)
 
-from backend.application.database import Base 
+from application.database import Base 
 target_metadata = Base.metadata
 
 #offline migration runner 

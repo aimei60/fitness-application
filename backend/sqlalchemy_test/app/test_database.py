@@ -21,6 +21,6 @@ DB_PORT = os.getenv("DB_PORT")
 engine = create_engine(f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/test_db")
 SessionLocal = sessionmaker(bind=engine)
 
-from backend.application.database import workouts, workout_sections, workoutRoutine, User, UserWorkoutRequest, UserProfile
+from application.database import workouts, workout_sections, workoutRoutine, User, UserWorkoutRequest, UserProfile
 
 

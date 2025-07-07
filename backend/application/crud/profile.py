@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
-from backend.application.models import UserProfile
-from schemas import UserProfileCreate, UserProfileRead
+from application.models import UserProfile
+from application.schemas import UserProfileCreate, UserProfileRead
 
 #allows the user to create their profile on the application and enter details such as name, age, fitness level etc.
 def create_user_profile(db: Session, user_id: int, profile: UserProfileCreate):

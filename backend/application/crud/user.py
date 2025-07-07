@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
-from backend.application.models import User
-from schemas import UserCreate, UserRead, UserPasswordChange
-from utilities.security import get_password_hash
+from application.models import User
+from application.schemas import UserCreate, UserRead, UserPasswordChange
+from application.utilities.security import get_password_hash
 
 #creates a new user and hashes the password and adds the user in the db
 def create_user(db: Session, user: UserCreate):
