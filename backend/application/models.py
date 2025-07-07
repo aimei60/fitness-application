@@ -59,7 +59,7 @@ Linked to user profiles and workout table.
 class User(Base):
     __tablename__ = "users"
     
-    ID: Mapped[int] = mapped_column(primary_key=True)
+    ID: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     Email: Mapped[str] = mapped_column(String(100), unique=True, index=True)
     HashedPassword: Mapped[str]
     IsActive: Mapped[bool] = mapped_column(default=True)

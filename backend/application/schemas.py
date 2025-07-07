@@ -61,7 +61,6 @@ class RequestTypeEnum(str, Enum):
     
 class UserWorkoutRequestCreate(BaseModel): #user input
     RequestType: RequestTypeEnum
-    WorkoutID: Optional[int] = None
 
 class UserWorkoutRequestRead(BaseModel): #user output
     RequestType: RequestTypeEnum
