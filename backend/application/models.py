@@ -76,7 +76,7 @@ Linked to users table and workouts table.
 class UserWorkoutRequest(Base):
     __tablename__ = "user_workout_requests"
     
-    ID: Mapped[int] = mapped_column(primary_key=True)
+    ID: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     UserID: Mapped[int] = mapped_column(ForeignKey("users.ID"))
     WorkoutID: Mapped[int] = mapped_column(ForeignKey("WorkOuts.ID"))
     RequestType: Mapped[str] = mapped_column(String(100))
@@ -93,7 +93,7 @@ Each profile is linked one-to-one with a user account.
 class UserProfile(Base):
     __tablename__ = "user_profiles"
     
-    ID: Mapped[int] = mapped_column(primary_key=True)
+    ID: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     UserID: Mapped[int] = mapped_column(ForeignKey("users.ID"), unique=True)
     FullName: Mapped[str] = mapped_column(String(100))
     Age: Mapped[int] = mapped_column(nullable=True)
