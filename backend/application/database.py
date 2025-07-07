@@ -8,8 +8,9 @@ from urllib.parse import quote_plus
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, DeclarativeBase
 from dotenv import load_dotenv
+from pathlib import Path
 
-load_dotenv("sens.env")
+load_dotenv(dotenv_path=Path(__file__).resolve().parent.parent / "sens.env") #tells python where to find the environment variables e.g. DB credentials from the .env file. makes it accessible via os.environ.get()
 
 DB_USER = os.environ.get("DB_USER")
 DB_PASSWORD = quote_plus(os.getenv("DB_PASSWORD"))
