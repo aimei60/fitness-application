@@ -100,5 +100,7 @@ class UserProfileRead(BaseModel): #output
 
     class Config:
         from_attributes = True
-    
-    
+
+class UserLogin(BaseModel):
+     Email: EmailStr
+     Password: str
