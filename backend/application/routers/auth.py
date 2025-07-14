@@ -4,6 +4,7 @@ from application.database import get_db
 from application.schemas import UserLogin
 from application.utilities import security
 from application.crud import auth
+from application import Oauth2
 
 router = APIRouter(tags=['Authentication'])
 
@@ -17,4 +18,6 @@ def user_login(user_credentials: UserLogin, db: Session = Depends(get_db)):
     if not security.verify_password(user_credentials.Password, user.HashedPassword):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Invalid Username or Password")
     
-    return {"token: example token"}
+    access_token = Oauth2.create_access_token(data ={"user_id": user.ID})
+    
+    return {"access_token": access_token, "token_type": "bearer"}
