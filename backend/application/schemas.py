@@ -104,3 +104,10 @@ class UserProfileRead(BaseModel): #output
 class UserLogin(BaseModel):
      Email: EmailStr
      Password: str
+     
+class Token(BaseModel): #output sent to user after login
+    access_token: str
+    token_type: str
+    
+class TokenData(BaseModel):
+    id: Optional[str] = None
