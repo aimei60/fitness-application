@@ -10,6 +10,7 @@ JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY")
 JWT_ALGORITHM = os.getenv("JWT_ALGORITHM", "HS256")
 JWT_EXPIRATION_MINUTES = int(os.getenv("JWT_EXPIRATION_MINUTES", 60))
 
+#Create access token for when the user logs in
 def create_access_token(data: dict):
     to_encode = data.copy()
     
