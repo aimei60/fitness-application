@@ -43,7 +43,7 @@ def verify_access_token(token: str, credentials_exception):
     return token_data
 
 #Extracts token from the request, verifies the token, queries the db for the user with user ID from the token and raises an error if anything goes wrong
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/login/form")
 
 def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(database.get_db)):
     credentials_exception = HTTPException(
