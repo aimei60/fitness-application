@@ -6,6 +6,7 @@ Includes core tables e.g. workouts, workout_sections etc.
 from sqlalchemy import ForeignKey, String, Integer
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from .database import Base
+from typing import Optional
 
 """
 Defines a workout template used to build exercise programs for users.
@@ -78,7 +79,7 @@ class UserWorkoutRequest(Base):
     
     ID: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     UserID: Mapped[int] = mapped_column(ForeignKey("users.ID"))
-    WorkoutID: Mapped[int] = mapped_column(ForeignKey("WorkOuts.ID"))
+    WorkoutID: Mapped[Optional[int]] = mapped_column(ForeignKey("WorkOuts.ID"), nullable=True)
     RequestType: Mapped[str] = mapped_column(String(100))
     Status: Mapped[str] = mapped_column(String(50), default="pending")
     

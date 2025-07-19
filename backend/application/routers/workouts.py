@@ -9,10 +9,12 @@ from application import Oauth2
 
 router = APIRouter()
 
+#Returns the entire list of workouts for the user
 @router.get("/workouts", response_model=List[WorkoutSimpleRead])
 def read_workouts(db: Session = Depends(get_db), current_user: User = Depends(Oauth2.get_current_user)):
     return get_all_workouts(db)
 
+#Returns the user chosen workout in full for the user to utilise
 @router.get("/workouts/{name}", response_model=WorkoutRead)
 def read_chosen_workout(name: str, db: Session = Depends(get_db), current_user: User = Depends(Oauth2.get_current_user)):
     workout = get_workout_with_sections_and_routines(db, name)

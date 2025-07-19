@@ -8,6 +8,7 @@ from application.models import User
 
 router = APIRouter()
 
-@router.post("/users/{user_id}/requests", response_model=UserWorkoutRequestRead)
-def create_request(user_id: int, request: UserWorkoutRequestCreate, db: Session = Depends(get_db), current_user: User = Depends(Oauth2.get_current_user)):
-    return create_workout_request(db, user_id, request)
+#
+@router.post("/users/requests", response_model=UserWorkoutRequestRead)
+def create_request(request: UserWorkoutRequestCreate, db: Session = Depends(get_db), current_user: User = Depends(Oauth2.get_current_user)):
+    return create_workout_request(db, current_user.ID, request)

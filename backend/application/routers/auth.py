@@ -24,6 +24,7 @@ def dev_login(user_credentials: OAuth2PasswordRequestForm = Depends(), db: Sessi
     
     return {"access_token": access_token, "token_type": "bearer"}
 
+#Json based login route for users
 @router.post('/login')
 def user_login(user_credentials: UserLogin, db: Session = Depends(get_db)):
     user = auth.get_user_by_email(db, user_credentials.Email)

@@ -38,6 +38,15 @@ escaped_url = raw_database_url.replace("%", "%%")
 config.set_main_option("sqlalchemy.url", escaped_url)
 
 from application.database import Base 
+from application.models import (
+    User,
+    workouts,
+    workout_sections,
+    workoutRoutine,
+    UserWorkoutRequest,
+    UserProfile,
+)
+
 target_metadata = Base.metadata
 
 #offline migration runner 

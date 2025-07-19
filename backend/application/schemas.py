@@ -60,7 +60,8 @@ class RequestTypeEnum(str, Enum):
     rehab_plan = "rehab_plan" #Recovery/injury-related requests
     
 class UserWorkoutRequestCreate(BaseModel): #user input
-    RequestType: RequestTypeEnum
+    request_type: RequestTypeEnum
+    
 
 class UserWorkoutRequestRead(BaseModel): #user output
     RequestType: RequestTypeEnum

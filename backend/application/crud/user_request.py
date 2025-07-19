@@ -7,8 +7,7 @@ from application.schemas import UserWorkoutRequestCreate, RequestStatusEnum
 def create_workout_request(db: Session, user_id: int, request: UserWorkoutRequestCreate):
     db_request = UserWorkoutRequest(
         UserID = user_id,
-        WorkoutID = request.WorkoutID,
-        RequestType = request.RequestType.value,
+        RequestType = request.request_type.value,
         Status = "Pending"
         )
     
