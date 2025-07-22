@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 from application.models import UserProfile
-from application.schemas import UserProfileCreate, UserProfileRead
+from application.schemas import UserProfileCreate, UserProfileRead, UserProfileUpdate
+from fastapi import HTTPException, status
 
 #allows the user to create their profile on the application and enter details such as name, age, fitness level etc.
 def create_user_profile(db: Session, user_id: int, profile: UserProfileCreate):
@@ -21,4 +22,30 @@ def create_user_profile(db: Session, user_id: int, profile: UserProfileCreate):
 
 #returns the profile for a specific user by user_id
 def read_user_profile(db: Session, user_id: int):
-    return db.query(UserProfile).filter(UserProfile.FullName == user_id).first()
+    return db.query(UserProfile).filter(UserProfile.UserID == user_id).first()
+
+#allows user to update their profile sections
+def update_user_profile(db: Session, user_id: int, profile: UserProfileUpdate):
+    user_profile = db.query(UserProfile).filter(UserProfile.UserID == user_id).first()
+  
+    if not user_profile:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User profile not found")
+    
+    if profile.FullName is not None:
+        user_profile.FullName = profile.FullName
+    if profile.Age is not None:
+        user_profile.Age = profile.Age
+    if profile.Height is not None:
+        user_profile.HeightCM = profile.Height
+    if profile.Weight is not None:
+        user_profile.WeightKG = profile.Weight
+    if profile.FitnessLevel is not None:
+        user_profile.FitnessLevel = profile.FitnessLevel
+    if profile.Goal is not None:
+        user_profile.Goal = profile.Goal
+    if profile.InjuriesOrLimitations is not None:
+        user_profile.InjuriesOrLimitations = profile.InjuriesOrLimitations
+        
+    db.commit()
+    db.refresh(user_profile)
+    return user_profile

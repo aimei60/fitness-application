@@ -101,6 +101,15 @@ class UserProfileRead(BaseModel): #output
 
     class Config:
         from_attributes = True
+        
+class UserProfileUpdate(BaseModel): #user input
+    FullName: Optional[str] = Field(None, max_length=100)
+    Age: Optional[int]
+    Height: Optional[int]
+    Weight: Optional[int]
+    FitnessLevel: Optional[str] = Field(None, max_length=100)
+    Goal: Optional[str] = Field(None, max_length=100)
+    InjuriesOrLimitations: Optional[str] = Field(None, max_length=255)
 
 class UserLogin(BaseModel):
      Email: EmailStr
