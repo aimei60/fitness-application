@@ -5,6 +5,13 @@ from fastapi import HTTPException, status
 
 #allows the user to create their profile on the application and enter details such as name, age, fitness level etc.
 def create_user_profile(db: Session, user_id: int, profile: UserProfileCreate):
+    existing_profile = db.query(UserProfile).filter(UserProfile.UserID == user_id).first()
+    if existing_profile:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="User profile already exists."
+        )
+    
     user_profile = UserProfile(
         UserID = user_id,
         FullName = profile.FullName,

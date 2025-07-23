@@ -91,13 +91,13 @@ class UserProfileCreate(BaseModel): #user input
     
 class UserProfileRead(BaseModel): #output
     ID: int
-    FullName: str = Field(..., max_length=100)
+    FullName: str
     Age: Optional[int]
-    Height: Optional[int]
-    Weight: Optional[int]
-    FitnessLevel: Optional[str] = Field(None, max_length=100)
-    Goal: str= Field(..., max_length=200)
-    InjuriesOrLimitations: Optional[str] = Field(None, max_length=255)
+    Height: Optional[int] = Field(None, alias="HeightCM")
+    Weight: Optional[int] = Field(None, alias="WeightKG")
+    FitnessLevel: Optional[str]
+    Goal: str
+    InjuriesOrLimitations: Optional[str]
 
     class Config:
         from_attributes = True
