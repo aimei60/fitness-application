@@ -6,9 +6,9 @@ from application.schemas import UserWorkoutRequestCreate, UserWorkoutRequestRead
 from application import Oauth2
 from application.models import User
 
-router = APIRouter()
+router = APIRouter(tags=['User Request'])
 
-#
+#allows the user to make a specific request
 @router.post("/users/requests", response_model=WorkoutRead)
 def create_request(request: UserWorkoutRequestCreate, db: Session = Depends(get_db), current_user: User = Depends(Oauth2.get_current_user)):
     return create_workout_request(db, current_user.ID, request)

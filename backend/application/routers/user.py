@@ -6,7 +6,7 @@ from application.schemas import UserCreate, UserRead, UserPasswordChange
 from application import Oauth2
 from application.models import User
 
-router = APIRouter()
+router = APIRouter(tags=['User'])
 
 #creates the user
 @router.post("/users", response_model=UserRead)

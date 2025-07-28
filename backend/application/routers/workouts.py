@@ -7,7 +7,7 @@ from application.schemas import WorkoutSimpleRead, WorkoutRead
 from typing import List
 from application import Oauth2
 
-router = APIRouter()
+router = APIRouter(tags=['Workouts'])
 
 #Returns the entire list of workouts for the user
 @router.get("/workouts", response_model=List[WorkoutSimpleRead])

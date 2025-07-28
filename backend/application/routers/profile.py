@@ -7,7 +7,7 @@ from application.schemas import UserProfileCreate, UserProfileUpdate, UserProfil
 from application.crud.profile import create_user_profile, read_user_profile, update_user_profile
 from application.models import User
 
-router = APIRouter()
+router = APIRouter(tags=['Profile'])
 
 #allows user to create their profile section
 @router.post("/profile", response_model=UserProfileRead)
