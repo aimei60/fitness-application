@@ -10,7 +10,7 @@ Covers:
 import pytest
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy_test.app.test_database import Base, engine, SessionLocal
-from backend.application.database import workouts, workout_sections, workoutRoutine, User, UserWorkoutRequest, UserProfile
+from backend.application.models import workouts, workout_sections, workoutRoutine, User, UserWorkoutRequest, UserProfile
 
 def test_data_insertion_retrieval_workouts():
     session = SessionLocal()
