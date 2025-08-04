@@ -2,20 +2,20 @@ import pytest
 from backend.sqlalchemy_test.app.test_database import SessionLocal
 from backend.application.models import workouts, User
 from backend.application.crud.workouts import get_all_workouts, get_workout_with_sections_and_routines
-from backend.tests.test_utils import insert_sample_entire_workout
-from backend.application.crud.user import create_user
+from backend.tests.test_utils import insert_sample_entire_workout, insert_sample_user
+from backend.application.crud.user import create_user, get_user_email_and_active_status
 from backend.application.schemas import UserCreate
 from backend.application.utilities.security import verify_password
 
-"""#insert workout sample data into the workouts table in the test db
-def insert_test_workout(db):
+#insert workout sample data into the workouts table in the test db
+"""def insert_test_workout(db):
     workout = workouts(Name="Test 1", Description="Test Description 1")
     db.add(workout)
     db.commit()
     db.refresh(workout)
-    return workout
+    return workout"""
 
-#checks an inserted workout is present when the list of all workouts is shown
+"""#checks an inserted workout is present when the list of all workouts is shown
 def test_workout_retrieval():
     db = SessionLocal()
     
@@ -29,7 +29,7 @@ def test_workout_retrieval():
     
     db.delete(inserted)
     db.commit()
-    db.close()
+    db.close()"""
 
 #inserts entire sample workout and check its been entered correctly and retrieved correctly
 def test_workout_with_sections_and_routines():
@@ -49,7 +49,7 @@ def test_workout_with_sections_and_routines():
     db.delete(section)
     db.delete(workout)
     db.commit()
-    db.close()"""
+    db.close()
     
 def test_create_user():
     db = SessionLocal()
@@ -64,6 +64,20 @@ def test_create_user():
     db.delete(create_test_user)
     db.commit()
     db.close()
+    
+def test_retrieve_user_details():
+    db = SessionLocal()
+    
+    user = insert_sample_user(db)
+    result = get_user_email_and_active_status(user)
+    
+    assert result.Email == user.Email
+    assert result.IsActive == user.IsActive
+    
+    db.delete(user)
+    db.commit()
+    db.close()
+    
         
 
         

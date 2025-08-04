@@ -2,7 +2,8 @@ import sys
 print("PYTHONPATH:", sys.path)
 
 from backend.sqlalchemy_test.app.test_database import SessionLocal
-from backend.application.models import workouts, workout_sections, workoutRoutine
+from backend.application.models import workouts, workout_sections, workoutRoutine, User
+from backend.application.utilities.security import get_password_hash
 
 #inserts workout, workout section and workout routine in the test db
 def insert_sample_entire_workout(db):
@@ -31,7 +32,12 @@ def insert_sample_entire_workout(db):
     
     return workout, section, routine
     
-
-
-
+def insert_sample_user(db):
+    test_user = User(Email="TestUser1@test.com", HashedPassword=get_password_hash("Orange23"), IsActive=True)
+    
+    db.add(test_user)
+    db.commit()
+    db.refresh(test_user)
+    
+    return test_user
 

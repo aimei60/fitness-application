@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field, EmailStr
+from pydantic import BaseModel, Field, EmailStr, ConfigDict
 from typing import List, Optional
 from enum import Enum
 
@@ -9,16 +9,14 @@ class WorkoutRoutineRead(BaseModel): #output - returns the below fields
     RoutineDescription: str = Field(..., max_length=225)
     ExerciseOrder: int
     
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
         
 #schema for workout section table
 class WorkoutSectionRead(BaseModel): #output returns section name
     SectionName: str = Field(..., max_length=50)
     Routines: List[WorkoutRoutineRead] = []
     
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
     
 #schema for workouts table
 class WorkoutBase(BaseModel): #user input. User can type which workout they want
@@ -27,14 +25,12 @@ class WorkoutBase(BaseModel): #user input. User can type which workout they want
 class WorkoutRead(WorkoutBase): #output returns the decscription of the workout
     Sections: List[WorkoutSectionRead] = []
     
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
         
 class WorkoutSimpleRead(WorkoutBase): #output returns workout name and workout description
     Description: str
     
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
         
 #schema for user table
 class UserCreate(BaseModel): #user input to create profile 
@@ -45,8 +41,7 @@ class UserRead(BaseModel):#having this incase I want these details to be shown i
     Email: EmailStr
     IsActive: bool
     
-    class Config:
-        ofrom_attributes = True
+    model_config = ConfigDict(from_attributes=True)
         
 class UserPasswordChange(BaseModel): #user input to change password
     current_password: str
@@ -67,8 +62,7 @@ class UserWorkoutRequestRead(BaseModel): #user output
     RequestType: RequestTypeEnum
     Status: str
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 #schema for user to update status
 class RequestStatusEnum(str, Enum):
@@ -99,8 +93,7 @@ class UserProfileRead(BaseModel): #output
     Goal: str
     InjuriesOrLimitations: Optional[str]
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
         
 class UserProfileUpdate(BaseModel): #user input
     FullName: Optional[str] = Field(None, max_length=100)
