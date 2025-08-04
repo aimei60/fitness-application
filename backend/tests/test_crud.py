@@ -1,10 +1,13 @@
 import pytest
 from backend.sqlalchemy_test.app.test_database import SessionLocal
-from backend.application.models import workouts
+from backend.application.models import workouts, User
 from backend.application.crud.workouts import get_all_workouts, get_workout_with_sections_and_routines
 from backend.tests.test_utils import insert_sample_entire_workout
+from backend.application.crud.user import create_user
+from backend.application.schemas import UserCreate
+from backend.application.utilities.security import verify_password
 
-#insert workout sample data into the workouts table in the test db
+"""#insert workout sample data into the workouts table in the test db
 def insert_test_workout(db):
     workout = workouts(Name="Test 1", Description="Test Description 1")
     db.add(workout)
@@ -46,8 +49,21 @@ def test_workout_with_sections_and_routines():
     db.delete(section)
     db.delete(workout)
     db.commit()
-    db.close()
+    db.close()"""
+    
+def test_create_user():
+    db = SessionLocal()
+    
+    test_user = UserCreate(Email="test@example.com", Password="Orange23")
         
+    create_test_user = create_user(db, test_user)
+    
+    assert create_test_user.Email == test_user.Email
+    assert verify_password("Orange23", create_test_user.HashedPassword)
+    
+    db.delete(create_test_user)
+    db.commit()
+    db.close()
         
 
         

@@ -1,5 +1,8 @@
+import sys
+print("sys.path =", sys.path)
+
 from fastapi import FastAPI
-from .routers import workouts, user, user_request, auth, profile
+from .application.routers import workouts, user, user_request, auth, profile
 
 app = FastAPI()  
 

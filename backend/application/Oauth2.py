@@ -5,7 +5,7 @@ from jwt.exceptions import InvalidTokenError
 import os
 from dotenv import load_dotenv
 from datetime import datetime, timedelta, timezone
-from application import schemas, database, models
+from backend.application import schemas, database, models
 from sqlalchemy.orm import Session
 
 

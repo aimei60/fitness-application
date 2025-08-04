@@ -1,11 +1,11 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from application.database import get_db
-from application.models import User
-from application.crud.workouts import get_all_workouts, get_workout_with_sections_and_routines
-from application.schemas import WorkoutSimpleRead, WorkoutRead
+from backend.application.database import get_db
+from backend.application.models import User
+from backend.application.crud.workouts import get_all_workouts, get_workout_with_sections_and_routines
+from backend.application.schemas import WorkoutSimpleRead, WorkoutRead
 from typing import List
-from application import Oauth2
+from backend.application import Oauth2
 
 router = APIRouter(tags=['Workouts'])
 

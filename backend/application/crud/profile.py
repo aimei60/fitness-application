@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
-from application.models import UserProfile
-from application.schemas import UserProfileCreate, UserProfileRead, UserProfileUpdate
+from backend.application.models import UserProfile
+from backend.application.schemas import UserProfileCreate, UserProfileRead, UserProfileUpdate
 from fastapi import HTTPException, status
 
 #allows the user to create their profile on the application and enter details such as name, age, fitness level etc.

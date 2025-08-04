@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
-from application.models import User
-from application.schemas import UserCreate, UserRead, UserPasswordChange
-from application.utilities.security import get_password_hash
+from backend.application.models import User
+from backend.application.schemas import UserCreate, UserRead, UserPasswordChange
+from backend.application.utilities.security import get_password_hash
 from passlib.context import CryptContext
 from fastapi import status, HTTPException
 
