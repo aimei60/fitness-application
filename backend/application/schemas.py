@@ -104,13 +104,16 @@ class UserProfileUpdate(BaseModel): #user input
     Goal: Optional[str] = Field(None, max_length=100)
     InjuriesOrLimitations: Optional[str] = Field(None, max_length=255)
 
+#schema for user login
 class UserLogin(BaseModel):
      Email: EmailStr
      Password: str
-     
+
+#schema for token  
 class Token(BaseModel): #output sent to user after login
     access_token: str
     token_type: str
-    
+
+#schema for tokendata    
 class TokenData(BaseModel):
     id: Optional[str] = None

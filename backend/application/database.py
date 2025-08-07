@@ -1,7 +1,4 @@
-"""
-Sets up the database connection for FastAPI.
-Loads environment variables, creates the SQLAlchemy engine and the session factory. Includes environment variable loading for database credentials.
-"""
+#sets up the database connection for FastAPI, loads environment variables, creates the SQLAlchemy engine and the session factory
 
 import os
 from urllib.parse import quote_plus

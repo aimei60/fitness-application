@@ -1,7 +1,4 @@
-"""
-Populates the fitness_db database with predefined workout programs, sections, and routines.
-This fitness data is required for the application's core functionality.
-"""
+#populates the fitness_db with predefined workout programs, sections, and routines. This data is required for the application's core functionality.
 
 from backend.application.database import SessionLocal
 from backend.application.models import workouts, workout_sections, workoutRoutine
@@ -9,8 +6,7 @@ from sqlalchemy import text
 
 """
 #TABLE 1 DATA
-This block inserts a predefined list of workout program templates into the workouts table. 
-These templates are used to provide workout plans for users based on fitness level, goals, or constraints.
+inserts a predefined list of workout program templates into the workouts table. Allows user to pick the workout they want from this data. 
 
 with SessionLocal.begin() as session:
     workout1 = workouts(Name="Beginner Workout", Description="Simple movements building strength, stamina, and workout confidence")
@@ -48,7 +44,7 @@ with SessionLocal.begin() as session:
 
 
 #TABLE 2 DATA
-#Each section (warm Up, circuit, cool down) is associated with an existing workout program from the table above.
+#each section (warm Up, circuit, cool down) is associated with an existing workout program from the table above.
 
 with SessionLocal.begin() as session:
     beginner = session.query(workouts).filter_by(Name="Beginner Workout").first()
@@ -207,8 +203,7 @@ with SessionLocal.begin() as session:
     session.add_all(sections)
 
 #TABLE 3 DATA   
-This below inserts predefined workout routines into the workoutRoutine table. 
-Each routine is linked to a specific workout section (warm Up, circuit, or cool Down) and defines the exercises, their order, and instructions for the workout programs.
+inserts predefined workout routines into the workoutRoutine table. Each routine is linked to a specific workout section (warm Up, circuit, or cool Down) and defines the exercises, their order, and instructions for the workout programs.
 
 with SessionLocal.begin() as session:
     

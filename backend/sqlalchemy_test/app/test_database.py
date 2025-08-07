@@ -1,8 +1,4 @@
-"""
-Sets up a database connection and session for the test_db database.
-Used exclusively for running tests against a separate, isolated database.
-Loads all ORM models required for testing.
-"""
+#sets up a db connection and session for the test_db database. This is for running tests against a separate, isolated db.
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker

@@ -8,7 +8,6 @@ from datetime import datetime, timedelta, timezone
 from backend.application import schemas, database, models
 from sqlalchemy.orm import Session
 
-
 load_dotenv()
 
 JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY")
@@ -18,7 +17,7 @@ JWT_EXPIRATION_MINUTES = int(os.getenv("JWT_EXPIRATION_MINUTES", 60))
 if JWT_SECRET_KEY is None:
         raise ValueError("JWT_SECRET_KEY environment variable is required")
     
-#Create access token for when the user logs in
+#creates access token for when the user logs in
 def create_access_token(data: dict):
     to_encode = data.copy()
     
@@ -29,7 +28,7 @@ def create_access_token(data: dict):
     
     return encoded_jwt
 
-#Decodes the token, validates the token is correct, checks if the user_id is present, and returns the user_id in TokenData format
+#decodes the token, validates the token is correct, checks if the user_id is present, and returns the user_id in TokenData format
 def verify_access_token(token: str, credentials_exception):
     try:
         payload = jwt.decode(token, JWT_SECRET_KEY, algorithms=[JWT_ALGORITHM])
@@ -42,7 +41,7 @@ def verify_access_token(token: str, credentials_exception):
     
     return token_data
 
-#Extracts token from the request, verifies the token, queries the db for the user with user ID from the token and raises an error if anything goes wrong
+#extracts token from the request, verifies the token, queries the db for the user with user ID from the token and raises an error if anything goes wrong
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/login/form")
 
 def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(database.get_db)):

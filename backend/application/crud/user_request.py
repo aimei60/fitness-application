@@ -5,9 +5,8 @@ from backend.application.models import workouts, UserWorkoutRequest, workouts
 from backend.application.schemas import UserWorkoutRequestCreate, RequestStatusEnum, RequestTypeEnum
 from backend.application.crud.workouts import get_workout_with_sections_and_routines
 
-
+#allows the user to create a workout request and updates the request with a selected workout
 def create_workout_request(db: Session, user_id: int, request: UserWorkoutRequestCreate):
-    #user creates workout request
     db_request = UserWorkoutRequest(
         UserID = user_id,
         RequestType = request.request_type.value,
@@ -24,7 +23,6 @@ def create_workout_request(db: Session, user_id: int, request: UserWorkoutReques
         workout = db.query(workouts).filter(workouts.Name == "Everyday movement Workout").first()
 
     elif request.request_type == RequestTypeEnum.repeat_workout:
-        #return the user's last assigned workout
         last_request = (
             db.query(UserWorkoutRequest)
             .filter(UserWorkoutRequest.UserID == user_id, UserWorkoutRequest.WorkoutID.isnot(None))
@@ -40,7 +38,6 @@ def create_workout_request(db: Session, user_id: int, request: UserWorkoutReques
     elif request.request_type == RequestTypeEnum.rehab_plan:
         workout = db.query(workouts).filter(workouts.Name == "Recovery rehabilitation Workout").first()
 
-    #Update the request with the selected workout
     if workout:
         db_request.WorkoutID = workout.ID
         db.commit()

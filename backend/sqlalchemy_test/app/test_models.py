@@ -1,17 +1,11 @@
-"""
-Tests database models for correct insertion, retrieval, and integrity enforcement.
-
-Covers:
-- Successful creation and deletion of workout programs, sections, routines, users, profiles, and requests.
-- Handling of invalid data insertions (e.g. missing required fields, invalid foreign keys).
-- Ensures database constraints and relationships are correctly enforced.
-"""
+#tests db models for correct insertion, retrieval, and integrity enforcement.
 
 import pytest
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy_test.app.test_database import Base, engine, SessionLocal
 from backend.application.models import workouts, workout_sections, workoutRoutine, User, UserWorkoutRequest, UserProfile
 
+#tests correct data insertion and retrieval for workouts table
 def test_data_insertion_retrieval_workouts():
     session = SessionLocal()
     
@@ -31,7 +25,8 @@ def test_data_insertion_retrieval_workouts():
     session.delete(new_workout)
     session.commit()
     session.close()
-    
+
+#raises the correct error if the wrong workout name is entered
 def test_insert_invalid_workout_name():
     session = SessionLocal()
     
@@ -47,7 +42,8 @@ def test_insert_invalid_workout_name():
 
     session.rollback()
     session.close()
-    
+
+#tests correct data insertion and retrieval for workout sections table
 def test_data_insertion_retrieval_workouts_sections():
     session = SessionLocal()
     
@@ -79,6 +75,7 @@ def test_data_insertion_retrieval_workouts_sections():
     session.commit()
     session.close()
     
+#raises the correct error if the wrong workout section name is entered    
 def test_insert_invalid_workout_section_name():
     session = SessionLocal()
     
@@ -105,7 +102,8 @@ def test_insert_invalid_workout_section_name():
     session.delete(new_workout)
     session.commit()
     session.close()
-    
+
+#tests the correct error is raised if there is an incorrect key    
 def test_insert_invalid_foreign_key_workout_section():
     session = SessionLocal()
     
@@ -122,7 +120,8 @@ def test_insert_invalid_foreign_key_workout_section():
         
     session.rollback()
     session.close()
-    
+
+#tests correct data insertion and retrieval for workout routines table    
 def test_data_insertion_retrieval_workout_routines():
     session = SessionLocal()
     
@@ -169,6 +168,7 @@ def test_data_insertion_retrieval_workout_routines():
     session.commit()
     session.close()
     
+#raises the correct error if the wrong workout routine name is entered        
 def test_insert_invalid_workout_routine_name():
     session = SessionLocal()
     
@@ -209,6 +209,7 @@ def test_insert_invalid_workout_routine_name():
     session.commit()
     session.close()
     
+#tests the correct error is raised if there is an incorrect key      
 def test_insert_invalid_foreign_key_workout_routine():
     session = SessionLocal()
     
@@ -228,6 +229,7 @@ def test_insert_invalid_foreign_key_workout_routine():
     session.rollback()
     session.close()
 
+#tests the insertion and retrieval of user details
 def test_insertion_retrieval_user():
     session = SessionLocal()
     
@@ -249,7 +251,8 @@ def test_insertion_retrieval_user():
     session.delete(new_user)
     session.commit()
     session.close()
-    
+
+#tests the correct error is raised when an invalid user is inserted    
 def test_insert_invalid_user():
     session = SessionLocal()
     
@@ -267,6 +270,7 @@ def test_insert_invalid_user():
     session.rollback()
     session.close()
 
+#tests the creation of test user and test workout, links them and confirms it was saved correctly
 def test_insertion_retrieval_user_workout_request():
     session = SessionLocal()
     
@@ -312,6 +316,7 @@ def test_insertion_retrieval_user_workout_request():
     session.commit()
     session.close()
     
+#tests the correct error is raised when the incorrect workout is requested
 def test_insert_invalid_user_workout_request_type():
     session = SessionLocal()
     
@@ -328,6 +333,7 @@ def test_insert_invalid_user_workout_request_type():
     session.rollback()
     session.close()
 
+#tests the correct error is raised if there is an incorrect key 
 def test_insert_invalid_foreign_key_user_workout_request():
     session = SessionLocal()
     
@@ -345,6 +351,7 @@ def test_insert_invalid_foreign_key_user_workout_request():
     session.rollback()
     session.close()
 
+#tests the correct insertion and retrieval of user profile details
 def test_data_insertion_retrieval_user_profile():
     session = SessionLocal()
     
@@ -387,7 +394,8 @@ def test_data_insertion_retrieval_user_profile():
     session.delete(new_user)
     session.commit()
     session.close()
-    
+ 
+#tests the correct error is raised when the wrong details are entered    
 def test_insert_invalid_user_profile_name():
     session = SessionLocal()
     
@@ -408,7 +416,8 @@ def test_insert_invalid_user_profile_name():
 
     session.rollback()
     session.close()
-
+    
+#tests the correct error is raised if there is an incorrect key 
 def test_insert_invalid_foreign_key_user_profile():
     session = SessionLocal()
     

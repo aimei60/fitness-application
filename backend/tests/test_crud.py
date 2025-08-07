@@ -1,5 +1,6 @@
+#tests all the crud functions
+
 import pytest
-from passlib.context import CryptContext
 from unittest.mock import MagicMock
 from fastapi import status, HTTPException
 from backend.sqlalchemy_test.app.test_database import SessionLocal
@@ -9,7 +10,6 @@ from backend.tests.test_utils import insert_sample_entire_workout, insert_sample
 from backend.application.crud.user import create_user, get_user_email_and_active_status, update_user_password
 from backend.application.schemas import UserCreate, UserPasswordChange
 from backend.application.utilities.security import get_password_hash, verify_password
-
 
 #insert workout sample data into the workouts table in the test db
 def insert_test_workout(db):
