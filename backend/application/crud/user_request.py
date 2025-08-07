@@ -14,29 +14,27 @@ def create_workout_request(db: Session, user_id: int, request: UserWorkoutReques
         )
     
     db.add(db_request)
-    db.commit()
-    db.refresh(db_request)
 
     workout = None
+    with db.no_autoflush:
+        if request.request_type == RequestTypeEnum.new_workout:
+            workout = db.query(workouts).filter(workouts.Name == "Everyday movement Workout").first()
 
-    if request.request_type == RequestTypeEnum.new_workout:
-        workout = db.query(workouts).filter(workouts.Name == "Everyday movement Workout").first()
+        elif request.request_type == RequestTypeEnum.repeat_workout:
+            last_request = (
+                db.query(UserWorkoutRequest)
+                .filter(UserWorkoutRequest.UserID == user_id, UserWorkoutRequest.WorkoutID.isnot(None))
+                .order_by(UserWorkoutRequest.ID.desc())
+                .first()
+                )
+            if last_request:
+                workout = db.query(workouts).filter(workouts.ID == last_request.WorkoutID).first()
 
-    elif request.request_type == RequestTypeEnum.repeat_workout:
-        last_request = (
-            db.query(UserWorkoutRequest)
-            .filter(UserWorkoutRequest.UserID == user_id, UserWorkoutRequest.WorkoutID.isnot(None))
-            .order_by(UserWorkoutRequest.ID.desc())
-            .first()
-        )
-        if last_request:
-            workout = db.query(workouts).filter(workouts.ID == last_request.WorkoutID).first()
+        elif request.request_type == RequestTypeEnum.upgrade_level:
+            workout = db.query(workouts).filter(workouts.Name == "Endurance Workout").first()
 
-    elif request.request_type == RequestTypeEnum.upgrade_level:
-        workout = db.query(workouts).filter(workouts.Name == "Endurance Workout").first()
-
-    elif request.request_type == RequestTypeEnum.rehab_plan:
-        workout = db.query(workouts).filter(workouts.Name == "Recovery rehabilitation Workout").first()
+        elif request.request_type == RequestTypeEnum.rehab_plan:
+            workout = db.query(workouts).filter(workouts.Name == "Recovery rehabilitation Workout").first()
 
     if workout:
         db_request.WorkoutID = workout.ID

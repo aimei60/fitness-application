@@ -4,14 +4,15 @@ import pytest
 from unittest.mock import MagicMock
 from fastapi import status, HTTPException
 from backend.sqlalchemy_test.app.test_database import SessionLocal
-from backend.application.models import workouts, User
+from backend.application.models import workouts, User, UserWorkoutRequest
 from backend.application.crud.workouts import get_all_workouts, get_workout_with_sections_and_routines
 from backend.tests.test_utils import insert_sample_entire_workout, insert_sample_user
 from backend.application.crud.user import create_user, get_user_email_and_active_status, update_user_password
-from backend.application.schemas import UserCreate, UserPasswordChange
+from backend.application.crud.user_request import create_workout_request
+from backend.application.schemas import UserCreate, UserPasswordChange, UserWorkoutRequestCreate, RequestTypeEnum
 from backend.application.utilities.security import get_password_hash, verify_password
 
-#insert workout sample data into the workouts table in the test db
+"""#insert workout sample data into the workouts table in the test db
 def insert_test_workout(db):
     workout = workouts(Name="Test 1", Description="Test Description 1")
     db.add(workout)
@@ -34,7 +35,7 @@ def test_workout_retrieval():
     db.delete(inserted)
     db.commit()
     db.close()
-
+"""
 #inserts entire sample workout and check its been entered correctly and retrieved correctly
 def test_workout_with_sections_and_routines():
     db = SessionLocal()
@@ -59,7 +60,7 @@ def test_workout_with_sections_and_routines():
 def test_create_user():
     db = SessionLocal()
     
-    test_user = UserCreate(Email="test@example.com", Password="Orange23")
+    test_user = UserCreate(Email="test1@example.com", Password="Orange23")
         
     create_test_user = create_user(db, test_user)
     
@@ -115,16 +116,33 @@ def test_update_user_password_failure():
         update_user_password(db=mock_db, user_input=user_test_input, current_user=mock_user)
         
     assert exc_info.value.status_code == status.HTTP_403_FORBIDDEN
+    
+def test_create_workout_request_success():
+    db = SessionLocal()
 
-        
-     
-    
+    db.query(UserWorkoutRequest).delete()
+    db.query(workouts).filter(workouts.Name == "Everyday movement Workout").delete()
+    db.query(User).filter(User.Email == "test_user@example.com").delete()
+    db.commit()
 
-        
+    user = User(Email="test_user@example.com", HashedPassword="test", IsActive=True)
+    db.add(user)
+    db.commit()
+    db.refresh(user)
 
-        
+    workout = workouts(Name="Everyday movement Workout", Description="Test workout")
+    db.add(workout)
+    db.commit()
+    db.refresh(workout)
 
+    request = UserWorkoutRequestCreate(request_type=RequestTypeEnum.new_workout)
+
+    result = create_workout_request(db, user_id=user.ID, request=request)
+
+    assert result.Name == "Everyday movement Workout"
     
-    
-    
-    
+    db.query(UserWorkoutRequest).filter(UserWorkoutRequest.UserID == user.ID).delete()
+    db.query(workouts).filter(workouts.ID == workout.ID).delete()
+    db.query(User).filter(User.ID == user.ID).delete()
+    db.commit()
+    db.close()
