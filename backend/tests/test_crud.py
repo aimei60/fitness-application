@@ -116,33 +116,42 @@ def test_update_user_password_failure():
         update_user_password(db=mock_db, user_input=user_test_input, current_user=mock_user)
         
     assert exc_info.value.status_code == status.HTTP_403_FORBIDDEN
-    
+
+#tests the user requesting for a specific request. This is the successful test.    
 def test_create_workout_request_success():
     db = SessionLocal()
 
-    db.query(UserWorkoutRequest).delete()
-    db.query(workouts).filter(workouts.Name == "Everyday movement Workout").delete()
-    db.query(User).filter(User.Email == "test_user@example.com").delete()
-    db.commit()
-
-    user = User(Email="test_user@example.com", HashedPassword="test", IsActive=True)
+    user = User(Email="test_success_user2@example.com", HashedPassword="test", IsActive=True)
     db.add(user)
     db.commit()
     db.refresh(user)
 
-    workout = workouts(Name="Everyday movement Workout", Description="Test workout")
+    workout = workouts(Name="Everyday movement Workout", Description="Test")
     db.add(workout)
     db.commit()
     db.refresh(workout)
 
-    request = UserWorkoutRequestCreate(request_type=RequestTypeEnum.new_workout)
+    req = UserWorkoutRequestCreate(request_type=RequestTypeEnum.new_workout)
 
-    result = create_workout_request(db, user_id=user.ID, request=request)
+    result = create_workout_request(db, user_id=user.ID, request=req)
 
     assert result.Name == "Everyday movement Workout"
-    
+
     db.query(UserWorkoutRequest).filter(UserWorkoutRequest.UserID == user.ID).delete()
     db.query(workouts).filter(workouts.ID == workout.ID).delete()
     db.query(User).filter(User.ID == user.ID).delete()
     db.commit()
     db.close()
+
+#tests the correct error is raised when the wrong user request is made
+def test_create_workout_request_failure():
+    db = MagicMock()
+    
+    db.query().filter().first.return_value = None
+
+    req = UserWorkoutRequestCreate(request_type=RequestTypeEnum.new_workout)
+
+    with pytest.raises(HTTPException) as exc:
+        create_workout_request(db, user_id=123, request=req)
+
+    assert exc.value.status_code == 404
