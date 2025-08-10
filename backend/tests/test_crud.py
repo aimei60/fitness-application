@@ -10,6 +10,7 @@ from backend.tests.test_utils import insert_sample_entire_workout, insert_sample
 from backend.application.crud.user import create_user, get_user_email_and_active_status, update_user_password
 from backend.application.crud.user_request import create_workout_request
 from backend.application.crud.profile import create_user_profile, read_user_profile, update_user_profile
+from backend.application.crud.auth import get_user_by_email
 from backend.application.schemas import UserCreate, UserPasswordChange, UserWorkoutRequestCreate, RequestTypeEnum, UserProfileCreate, UserProfileUpdate
 from backend.application.utilities.security import get_password_hash, verify_password
 
@@ -278,4 +279,27 @@ def test_update_user_profile_updates_fields():
 
     db.query(UserProfile).filter_by(UserID=user.ID).delete()
     db.commit()
+    db.close()
+    
+#tests the correct user is returned when requested via email
+def test_get_user_by_email_found():
+    db = SessionLocal()
+
+    user = db.query(User).filter(User.Email == "test@example.com").one()
+
+    result = get_user_by_email(db, "test@example.com")
+
+    assert result is not None
+    assert result.ID == user.ID
+    assert result.Email == "test@example.com"
+
+    db.close()
+
+#tests the correct reaction when a non-existing user is requested
+def test_get_user_by_email_not_found():
+    db = SessionLocal()
+
+    result = get_user_by_email(db, "not_existing_user@example.com")
+    assert result is None
+
     db.close()
