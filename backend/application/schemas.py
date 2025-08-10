@@ -97,9 +97,9 @@ class UserProfileRead(BaseModel): #output
         
 class UserProfileUpdate(BaseModel): #user input
     FullName: Optional[str] = Field(None, max_length=100)
-    Age: Optional[int]
-    Height: Optional[int]
-    Weight: Optional[int]
+    Age: Optional[int] = None
+    Height: Optional[int] = None
+    Weight: Optional[int] = None
     FitnessLevel: Optional[str] = Field(None, max_length=100)
     Goal: Optional[str] = Field(None, max_length=100)
     InjuriesOrLimitations: Optional[str] = Field(None, max_length=255)

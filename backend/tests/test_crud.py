@@ -4,15 +4,16 @@ import pytest
 from unittest.mock import MagicMock
 from fastapi import status, HTTPException
 from backend.sqlalchemy_test.app.test_database import SessionLocal
-from backend.application.models import workouts, User, UserWorkoutRequest
+from backend.application.models import workouts, User, UserWorkoutRequest, UserProfile
 from backend.application.crud.workouts import get_all_workouts, get_workout_with_sections_and_routines
 from backend.tests.test_utils import insert_sample_entire_workout, insert_sample_user
 from backend.application.crud.user import create_user, get_user_email_and_active_status, update_user_password
 from backend.application.crud.user_request import create_workout_request
-from backend.application.schemas import UserCreate, UserPasswordChange, UserWorkoutRequestCreate, RequestTypeEnum
+from backend.application.crud.profile import create_user_profile, read_user_profile, update_user_profile
+from backend.application.schemas import UserCreate, UserPasswordChange, UserWorkoutRequestCreate, RequestTypeEnum, UserProfileCreate, UserProfileUpdate
 from backend.application.utilities.security import get_password_hash, verify_password
 
-"""#insert workout sample data into the workouts table in the test db
+#insert workout sample data into the workouts table in the test db
 def insert_test_workout(db):
     workout = workouts(Name="Test 1", Description="Test Description 1")
     db.add(workout)
@@ -35,7 +36,7 @@ def test_workout_retrieval():
     db.delete(inserted)
     db.commit()
     db.close()
-"""
+
 #inserts entire sample workout and check its been entered correctly and retrieved correctly
 def test_workout_with_sections_and_routines():
     db = SessionLocal()
@@ -155,3 +156,126 @@ def test_create_workout_request_failure():
         create_workout_request(db, user_id=123, request=req)
 
     assert exc.value.status_code == 404
+    
+#creating a successful test of user creating their profile using test data    
+def test_create_user_profile_success():
+    db = SessionLocal()
+    
+    user = db.query(User).filter(User.Email == "test@example.com").one()
+    
+    db.query(UserProfile).filter(UserProfile.UserID == user.ID).delete()
+    db.commit()
+    
+    test_profile = UserProfileCreate(FullName="Anne Smith", Age=24, Height=170, Weight=60, FitnessLevel="Beginner", Goal="To get stronger", InjuriesOrLimitations="N/A")
+    
+    create_test_profile = create_user_profile(db, user_id=user.ID, profile=test_profile)
+    
+    assert create_test_profile.UserID == user.ID
+    assert create_test_profile.FullName == test_profile.FullName
+    assert create_test_profile.Age == test_profile.Age
+    assert create_test_profile.HeightCM == test_profile.Height
+    assert create_test_profile.WeightKG == test_profile.Weight
+    assert create_test_profile.FitnessLevel == test_profile.FitnessLevel
+    assert create_test_profile.Goal == test_profile.Goal
+    assert create_test_profile.InjuriesOrLimitations == test_profile.InjuriesOrLimitations
+    assert db.query(UserProfile).filter_by(UserID=user.ID).count() == 1
+    
+    db.delete(create_test_profile)
+    db.commit()
+    db.close()
+
+#tests for duplicate profile being added to the same user and raising the correct error    
+def test_create_user_profile_duplicate_error():
+    db = SessionLocal()
+    
+    user = db.query(User).filter(User.Email == "test@example.com").one()
+
+    db.query(UserProfile).filter_by(UserID=user.ID).delete()
+    db.commit()
+
+    profile = UserProfileCreate(
+        FullName="A",
+        Age=33,
+        Height=182,
+        Weight=65,
+        Goal="B",
+        FitnessLevel="Beginner"
+    )
+
+    create_user_profile(db, user.ID, profile)
+
+    with pytest.raises(HTTPException) as exc:
+        create_user_profile(db, user.ID, profile)
+
+    assert exc.value.status_code == status.HTTP_400_BAD_REQUEST
+    assert db.query(UserProfile).filter_by(UserID=user.ID).count() == 1
+    
+    db.query(UserProfile).filter_by(UserID=user.ID).delete()
+    db.commit()
+    db.close()
+    
+#tests the correct data is returned when the user wants to view/ read their profile
+def test_read_user_profile_returns_data():
+    db = SessionLocal()
+
+    user = db.query(User).filter(User.Email == "test@example.com").one()
+
+    db.query(UserProfile).filter_by(UserID=user.ID).delete()
+    db.commit()
+
+    profile = UserProfile(
+        UserID=user.ID,
+        FullName="Anne Smith",
+        Age=24,
+        HeightCM=170,
+        WeightKG=60,
+        FitnessLevel="Beginner",
+        Goal="To get stronger",
+        InjuriesOrLimitations="N/A",
+    )
+    db.add(profile)
+    db.commit()
+    db.refresh(profile)
+
+    result = read_user_profile(db, user.ID)
+
+    assert result is not None
+    assert result.ID == profile.ID
+
+    db.query(UserProfile).filter_by(UserID=user.ID).delete()
+    db.commit()
+    db.close()
+    
+#tests the user updated their profile data correctly
+def test_update_user_profile_updates_fields():
+    db = SessionLocal()
+
+    user = db.query(User).filter(User.Email == "test@example.com").one()
+
+    db.query(UserProfile).filter_by(UserID=user.ID).delete()
+    db.commit()
+
+    original = UserProfile(
+        UserID=user.ID,
+        FullName="Anne Smith",
+        Age=24,
+        HeightCM=170,
+        WeightKG=60,
+        FitnessLevel="beginner",
+        Goal="to get stronger",
+        InjuriesOrLimitations="N/A",
+    )
+    db.add(original)
+    db.commit()
+    db.refresh(original)
+
+    new_info = UserProfileUpdate(FullName="Anne S", Height=172, Weight=62)
+    updated = update_user_profile(db, user_id=user.ID, profile=new_info)
+
+    assert updated.FullName == "Anne S"
+    assert updated.HeightCM == 172
+    assert updated.WeightKG == 62
+
+    db.query(UserProfile).filter_by(UserID=user.ID).delete()
+    db.commit()
+    db.close()

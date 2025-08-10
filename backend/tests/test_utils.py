@@ -4,6 +4,8 @@ print("PYTHONPATH:", sys.path)
 from backend.sqlalchemy_test.app.test_database import SessionLocal
 from backend.application.models import workouts, workout_sections, workoutRoutine, User
 from backend.application.utilities.security import get_password_hash
+from backend.application.crud.profile import create_user_profile
+from backend.application.models import UserProfile
 
 #inserts workout, workout section and workout routine in the test db
 def insert_sample_entire_workout(db):
@@ -40,4 +42,3 @@ def insert_sample_user(db):
     db.refresh(test_user)
     
     return test_user
-
