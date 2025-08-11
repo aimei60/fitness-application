@@ -18,7 +18,7 @@ from backend.application.utilities.security import get_password_hash, verify_pas
 def insert_test_workout(db):
     workout = workouts(Name="Test 1", Description="Test Description 1")
     db.add(workout)
-    db.commit()
+    db.flush() 
     db.refresh(workout)
     return workout
 
@@ -34,8 +34,7 @@ def test_workout_retrieval():
         names.append(w.Name)
     assert inserted.Name in names
     
-    db.delete(inserted)
-    db.commit()
+    db.rollback()
     db.close()
 
 #inserts entire sample workout and check its been entered correctly and retrieved correctly

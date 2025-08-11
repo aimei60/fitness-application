@@ -2,7 +2,7 @@
 
 import pytest
 from sqlalchemy.exc import IntegrityError
-from sqlalchemy_test.app.test_database import Base, engine, SessionLocal
+from backend.sqlalchemy_test.app.test_database import Base, engine, SessionLocal
 from backend.application.models import workouts, workout_sections, workoutRoutine, User, UserWorkoutRequest, UserProfile
 
 #tests correct data insertion and retrieval for workouts table
