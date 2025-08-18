@@ -9,6 +9,7 @@ from backend.application import Oauth2
 
 router = APIRouter(tags=['Authentication'])
 
+#for Swagger UI
 #authenticates the user and verifies their password and if correct, generates and returns a JWT access token
 @router.post('/login/form')
 def dev_login(user_credentials: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
@@ -37,4 +38,4 @@ def user_login(user_credentials: UserLogin, db: Session = Depends(get_db)):
     
     access_token = Oauth2.create_access_token(data ={"user_id": user.ID})
     
-    return {"access_token": access_token, "token_type": "bearer"}@router.post('/login')
+    return {"access_token": access_token, "token_type": "bearer"}

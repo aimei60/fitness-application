@@ -32,7 +32,7 @@ def test_verify_access_token():
 def test_get_current_user_returns_user():
     db = SessionLocal()
     
-    user = db.query(User).filter(User.Email == "test@example.com").one()
+    user = db.query(User).filter(User.Email == "TestUser@test.com").one()
     token = Oauth2.create_access_token({"user_id": user.ID})
 
     current = Oauth2.get_current_user(token=token, db=db)

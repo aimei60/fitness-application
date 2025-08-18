@@ -13,6 +13,23 @@ from backend.application.crud.profile import create_user_profile, read_user_prof
 from backend.application.crud.auth import get_user_by_email
 from backend.application.schemas import UserCreate, UserPasswordChange, UserWorkoutRequestCreate, RequestTypeEnum, UserProfileCreate, UserProfileUpdate
 from backend.application.utilities.security import get_password_hash, verify_password
+from backend.application.crud.user import pwd_context
+
+#ensures my tests always has a user otherwise some of my tests fail when inserting a user from the test table directly in the test function
+def ensure_test_user(db, email="test@example.com", password="test"):
+    user = db.query(User).filter(User.Email == email).one_or_none()
+    if user is None:
+        user = User(
+            Email=email,
+            HashedPassword=pwd_context.hash(password),
+            IsActive=True,
+        )
+        db.add(user)
+        db.commit()
+        db.refresh(user)
+    return user
+
+#WORKOUTS.PY CRUD FUNCTION TESTS
 
 #insert workout sample data into the workouts table in the test db
 def insert_test_workout(db):
@@ -56,6 +73,8 @@ def test_workout_with_sections_and_routines():
     db.delete(workout)
     db.commit()
     db.close()
+
+#USER.PY CRUD FUNCTION TESTS 
  
 #tests the creation of a new user and checks its email and password is correct    
 def test_create_user():
@@ -117,6 +136,8 @@ def test_update_user_password_failure():
         update_user_password(db=mock_db, user_input=user_test_input, current_user=mock_user)
         
     assert exc_info.value.status_code == status.HTTP_403_FORBIDDEN
+    
+#USER_REQUEST.PY CRUD FUNCTION TESTS    
 
 #tests the user requesting for a specific request. This is the successful test.    
 def test_create_workout_request_success():
@@ -156,13 +177,14 @@ def test_create_workout_request_failure():
         create_workout_request(db, user_id=123, request=req)
 
     assert exc.value.status_code == 404
-    
+
+#PROFILE.PY CRUD FUNCTION TESTS    
+
 #creating a successful test of user creating their profile using test data    
 def test_create_user_profile_success():
     db = SessionLocal()
     
-    user = db.query(User).filter(User.Email == "test@example.com").one()
-    
+    user = ensure_test_user(db)
     db.query(UserProfile).filter(UserProfile.UserID == user.ID).delete()
     db.commit()
     
@@ -188,7 +210,7 @@ def test_create_user_profile_success():
 def test_create_user_profile_duplicate_error():
     db = SessionLocal()
     
-    user = db.query(User).filter(User.Email == "test@example.com").one()
+    user = ensure_test_user(db)
 
     db.query(UserProfile).filter_by(UserID=user.ID).delete()
     db.commit()
@@ -218,7 +240,7 @@ def test_create_user_profile_duplicate_error():
 def test_read_user_profile_returns_data():
     db = SessionLocal()
 
-    user = db.query(User).filter(User.Email == "test@example.com").one()
+    user = ensure_test_user(db)
 
     db.query(UserProfile).filter_by(UserID=user.ID).delete()
     db.commit()
@@ -250,7 +272,7 @@ def test_read_user_profile_returns_data():
 def test_update_user_profile_updates_fields():
     db = SessionLocal()
 
-    user = db.query(User).filter(User.Email == "test@example.com").one()
+    user = ensure_test_user(db)
 
     db.query(UserProfile).filter_by(UserID=user.ID).delete()
     db.commit()
@@ -279,12 +301,14 @@ def test_update_user_profile_updates_fields():
     db.query(UserProfile).filter_by(UserID=user.ID).delete()
     db.commit()
     db.close()
+
+#AUTH.PY CRUD FUNCTION TESTS
     
 #tests the correct user is returned when requested via email
 def test_get_user_by_email_found():
     db = SessionLocal()
 
-    user = db.query(User).filter(User.Email == "test@example.com").one()
+    user = ensure_test_user(db)
 
     result = get_user_by_email(db, "test@example.com")
 
