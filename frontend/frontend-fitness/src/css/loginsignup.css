@@ -7,7 +7,8 @@ body {
     display: flex;
     flex-direction: column;
     margin: auto;
-    background: white;
+    background: rgb(239, 253, 247);
+    width: 20rem;
     padding: 3rem;
     border-radius: 1rem;
 }
@@ -39,12 +40,50 @@ body {
     display: flex;
     align-items: center;
     margin: auto;
-    width: 11.2rem;
+    width: 20rem;
     height: 3rem;
-    background: rgb(209, 248, 234);
-    border-radius: 0.2rem;
+    background: rgb(227, 235, 232);
+    border-radius: 0.25rem;
 }
 
 .input img {
-    
+    margin: 0rem 0.4rem;
 }
+
+.input input {
+    height: 5rem;
+    width: 20rem;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #131414;
+    font-size: 1.1rem;
+}
+
+.forgot-password {
+    padding-right: 12rem;
+    padding-top: 0rem;
+    color: #797979;
+    font-size: 1rem;
+}
+
+.submit-container {
+    display: flex;
+    gap: 1.3rem;
+    margin: 1.5rem auto;
+}
+
+.submit {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 6rem;
+    height: 3rem;
+    border-radius: 1rem;
+    color: #cfffee;
+    background-color: #69d5ff;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+ 

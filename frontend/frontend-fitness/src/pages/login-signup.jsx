@@ -1,8 +1,11 @@
 import "../css/loginsignup.css";
 import emailIcon from '../assets/email.png'
 import passwordIcon from '../assets/password.png'
+import { useState } from "react";
 
 function Login() {
+
+
 
   return (
     <div className="container">
@@ -12,13 +15,13 @@ function Login() {
       <div className="inputs">
         <div className="input">
           <img src={emailIcon} alt=""></img>
-          <input type="email"></input>
+          <input type="email" placeholder="Email Address"></input>
         </div>
         <div className="input">
           <img src={passwordIcon} alt=""></img>
-          <input type="password"></input>
+          <input type="password" placeholder="Password"></input>
         </div>
-        <div className="forgotten-password">Forgotten Password</div>
+        <div className="forgot-password">Forgot Password</div>
         <div className="submit-container">
           <div className="submit">Sign Up</div>
           <div className="submit">Login</div>
