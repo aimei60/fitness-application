@@ -8,6 +8,10 @@ function Login() {
   const [toggle, setToggle] = useState("Sign up");
 
   return (
+    <>
+    <div className="title-container">
+      <div className="title">FitRequest</div>
+    </div>
     <div className="container">
       <div className="header">
         <div className="text">{toggle}</div>
@@ -28,6 +32,7 @@ function Login() {
         </div>
       </div>
     </div>
+    </>
   )
 }
 
