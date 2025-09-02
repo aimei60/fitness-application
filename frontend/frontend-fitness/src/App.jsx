@@ -1,10 +1,9 @@
-import './App.css'
+import './css/App.css'
+import Login from "./pages/login-signup";
 
 function App() {
-
-  return (
-    <div>Fitness</div>
-  )
+  return <Login />;
+  
 }
 
 export default App
