@@ -77,12 +77,12 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 6rem;
-    height: 3rem;
+    width: 10rem;
+    height: 2rem;
     border-radius: 1rem;
     color: #cfffee;
     background-color: #69d5ff;
-    font-size: 1rem;
+    font-size: 0.9rem;
     font-weight: 700;
     cursor: pointer;
 }
@@ -101,4 +101,22 @@ body {
     text-shadow: 0.0625rem 0.0625rem 0.125rem rgba(0,0,0,0.1);
     letter-spacing: 0.0625rem;
     font-family: 'Poppins', sans-serif; 
+}
+
+.submit2 {
+    gap: 1.3rem;
+    margin: 1rem auto;
+    font-size: 1.2rem;
+    font-weight: 700;
+    cursor: pointer;
+    color: #3d5e6b;
+    background-color: #b1e4e2;
+    border-radius: 1rem;
+    margin-top: 0rem !important;
+    margin-bottom: 0rem !important;
+}
+
+.errorMsg {
+    color: red;
+    margin-top: 0.4rem;
 }
