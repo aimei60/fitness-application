@@ -5,7 +5,7 @@ from backend.application.database import get_db
 from backend.application.utilities import security
 from backend.application.schemas import UserLogin
 from backend.application.crud import auth
-from backend.application import Oauth2
+from backend.application import Oauth2, database, models
 
 router = APIRouter(tags=['Authentication'])
 
@@ -39,3 +39,8 @@ def user_login(user_credentials: UserLogin, db: Session = Depends(get_db)):
     access_token = Oauth2.create_access_token(data ={"user_id": user.ID})
     
     return {"access_token": access_token, "token_type": "bearer"}
+
+#helper function to check login flow 
+@router.get("/me")
+def read_me(current_user: models.User = Depends(Oauth2.get_current_user)):
+    return {"id": current_user.ID, "email": current_user.Email}
