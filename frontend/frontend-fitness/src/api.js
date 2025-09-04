@@ -4,6 +4,7 @@ import axios from "axios";
 //creates axios to make http requests. all requests go to backend --> vite_api_base or http://localhost:8000
 export const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE || "http://localhost:8000",
+  withCredentials: false
 });
 
 // checks if token was saved in local storage from a previous login and if found axios attaches it to every request and this makes sure the suer stays logged in if the page refreshes

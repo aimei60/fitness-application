@@ -22,6 +22,7 @@ function Login() {
       setToken(data.access_token);           
       window.location.href = "/homepage";    
     } catch (e) {
+      console.error("Signup error:", e)
       //optional chaining for cleaner code
       const msg = e?.response?.data?.detail || "Login failed";
       setError(msg); // 
@@ -30,8 +31,20 @@ function Login() {
     }
   }
 
-  //sign up function
+  //sign up function. If successful saves the jwt token with setToken and sends the user to the homepage else if failed shows error
   async function handleSignup() {
+    setError(null); setLoading(true);
+    try {
+      const { data } = await api.post("/signup", { Email: email, Password: password });
+      setToken(data.access_token);    
+      window.location.href = "/homepage"; 
+    } catch (e) {
+      console.error("Signup error:", e)
+      const msg = e?.response?.data?.detail || "Signup failed";
+      setError(msg);
+    } finally {
+      setLoading(false);
+    }
   }
   
   //confirms whether user to should sign up or login

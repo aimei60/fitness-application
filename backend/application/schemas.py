@@ -108,6 +108,11 @@ class UserProfileUpdate(BaseModel): #user input
 class UserLogin(BaseModel):
      Email: EmailStr
      Password: str
+     
+#schema for user signup
+class UserSignup(BaseModel):
+    Email: EmailStr
+    Password: str
 
 #schema for token  
 class Token(BaseModel): #output sent to user after login
