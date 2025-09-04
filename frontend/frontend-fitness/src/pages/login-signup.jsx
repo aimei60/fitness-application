@@ -3,6 +3,7 @@ import emailIcon from '../assets/email.png'
 import passwordIcon from '../assets/password.png'
 import { useState } from "react";
 import { api, setToken } from "../api";
+import { useNavigate } from "react-router-dom";
 
 function Login() {
 
@@ -12,6 +13,7 @@ function Login() {
   const [error, setError] = useState(null); //status of the request
   const [loading, setLoading] = useState(false); //error message if something is amiss
   
+  const navigate = useNavigate();
   const isSignup = toggle === "Sign up";
   //sends login request to backend. if successful saves the jwt token with setToken and sends the user to the homepage else if failed shows error
   async function handleLogin() {
@@ -20,7 +22,7 @@ function Login() {
     try {
       const { data } = await api.post("/login", { Email: email, Password: password });
       setToken(data.access_token);           
-      window.location.href = "/homepage";    
+      navigate("/homepage", { replace: true });   
     } catch (e) {
       console.error("Signup error:", e)
       //optional chaining for cleaner code
@@ -37,7 +39,7 @@ function Login() {
     try {
       const { data } = await api.post("/signup", { Email: email, Password: password });
       setToken(data.access_token);    
-      window.location.href = "/homepage"; 
+      navigate("/homepage", { replace: true }); 
     } catch (e) {
       console.error("Signup error:", e)
       const msg = e?.response?.data?.detail || "Signup failed";
