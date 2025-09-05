@@ -1,0 +1,7 @@
+.homepage-container {
+    height: 100vh;
+    display: grid;
+    place-items: center;
+    background: linear-gradient(#a6fcdd, #8bd6f4);
+}
+

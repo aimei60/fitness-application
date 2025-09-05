@@ -59,9 +59,11 @@ function Login() {
   //code for the login/sign up page
   return (
     <>
-      <div className="title-container">
-        <div className="title">FitRequest</div>
-      </div>
+    <div className="login-page">
+      <div className="login-wrapper">      
+        <div className="title-container">
+          <div className="title">FitRequest</div>
+          </div>
       <div className="container">
         <div className="header">
           <div className="text">{toggle}</div>
@@ -87,7 +89,9 @@ function Login() {
             <button type="button" className={toggle === "Sign up"?"submit gray":"submit"}onClick={() => { setToggle("Login");}}>Login Section</button>
           </div>
         </form>
+        </div>
       </div>
+    </div>
     </>
   );
 }

@@ -1,4 +1,3 @@
-import './css/App.css'
 import Login from "./pages/login-signup";
 import Homepage from './pages/homepage';
 import { Route, Routes, Navigate } from "react-router-dom";
