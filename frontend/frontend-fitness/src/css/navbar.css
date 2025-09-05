@@ -1,0 +1,51 @@
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+
+}
+
+.navbar {
+    background-color: rgb(157, 213, 213);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    padding: 1.4rem 1rem;   
+    margin: 0;    
+    box-sizing: border-box;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+}
+.navbar_brand {
+    color: #47a5a1;
+    text-shadow: 0.0625rem 0.0625rem 0.125rem rgba(0,0,0,0.1);
+    letter-spacing: 0.0625rem;
+    font-family: 'Poppins', sans-serif; 
+    font-weight: 550;
+    font-size: 1.5rem;
+}
+
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 20px; 
+}
+
+.navbar-links a {
+  text-decoration: none;
+  color: black;
+  font-weight: 500;
+}
+
+.logout {
+  background-color: white;
+  border: 1px solid black;
+  padding: 6px 12px;
+  cursor: pointer;
+  border-radius: 4px;
+}
