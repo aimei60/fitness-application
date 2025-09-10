@@ -54,66 +54,71 @@ export default function WorkoutDetail() {
     load();
   }, [Name, navigate]);
 
-    if (!workout) return null;
+  if (loading) return <p>Loading workout…</p>;
+  if (err) return <p style={{ color: "red" }}>{err}</p>;
+  if (!workout) return null;
 
-  //displays the specific chosen workout details
+  // displays the specific chosen workout details
   const title = workout.Name || workout.name;
   const description = workout.Description || workout.description;
   const sections = workout.Sections || workout.sections || [];
 
   return (
-  <>
-    <NavBar />
-    <div className="back-button-container">
-      <button className="back-button" onClick={() => navigate(-1)}>
-            Back to Workouts List
-          </button>
-    </div>
-    <div className="workout-container">
-      <div className="workout-detail">
-
-        <h2 className="workout-title">{title}</h2>
-        <p className="workout-description">{description}</p>
-
-        {sections.length === 0 ? (
-          <p>No sections found!</p>
-        ) : (
-          <div className="sections-container">
-            {sections.map((section) => {
-              const sectionName = section.SectionName || "Untitled Section";
-              const routines = section.Routines || [];
-
-              return (
-                <div key={section.ID} className="section-card">
-                  <h3 className="section-title">{sectionName}</h3>
-
-                  {routines.length === 0 ? (
-                    <p>No routines found!</p>
-                  ) : (
-                    <ul className="routine-list">
-                      {routines.map((routine) => (
-                        <li key={routine.ID} className="routine-item">
-                          <div>
-                            <div className="routine-row">
-                              <span className="routine-name">{routine.Name}</span>
-                              {routine.RepsDuration && <span className="routine-duration"> - {routine.RepsDuration}</span>}
-                            </div>
-                          </div>
-                          {routine.RoutineDescription && (
-                            <p className="routine-desc">{routine.RoutineDescription}</p>
-                          )}
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        )}
+    <>
+      <NavBar />
+      <div className="back-button-container">
+        <button className="back-button" onClick={() => navigate(-1)}>
+          Back to Workouts List
+        </button>
       </div>
-    </div>
-  </>
-);
+      <div className="workout-container">
+        <div className="workout-detail">
+          <h2 className="workout-title">{title}</h2>
+          <p className="workout-description">{description}</p>
 
+          {sections.length === 0 ? (
+            <p>No sections found!</p>
+          ) : (
+            <div className="sections-container">
+              {sections.map((section) => {
+                const sectionName = section.SectionName || "Untitled Section";
+                const routines = section.Routines || [];
+
+                return (
+                  <div key={section.ID} className="section-card">
+                    <h3 className="section-title">{sectionName}</h3>
+
+                    {routines.length === 0 ? (
+                      <p>No routines found!</p>
+                    ) : (
+                      <ul className="routine-list">
+                        {routines.map((routine) => (
+                          <li key={routine.ID} className="routine-item">
+                            <div>
+                              <div className="routine-row">
+                                <span className="routine-name">{routine.Name}</span>
+                                {routine.RepsDuration && (
+                                  <span className="routine-duration">
+                                    {" "}
+                                    - {routine.RepsDuration}
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                            {routine.RoutineDescription && (
+                              <p className="routine-desc">{routine.RoutineDescription}</p>
+                            )}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      </div>
+    </>
+  );
 }

@@ -15,11 +15,19 @@ def create_profile(profile: UserProfileCreate, db: Session = Depends(get_db), cu
     return create_user_profile(db, current_user.ID, profile)
 
 #returns the user's profile
-@router.get("/profile/summary", response_model=UserProfileRead)
+@router.get("/profile", response_model=UserProfileRead)
 def return_user_profile(db: Session = Depends(get_db), current_user: User = Depends(Oauth2.get_current_user)):
-    return read_user_profile(db, current_user.ID)
+    profile = read_user_profile(db, current_user.ID)
+    
+    if profile is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Profile not found")
+    return profile
 
 #allows user to update the their profile details
-@router.post("/profile/update-profile", response_model=UserProfileRead)
+@router.patch("/profile", response_model=UserProfileRead)
 def update_profile(input: UserProfileUpdate, db: Session = Depends(get_db), current_user: User = Depends(Oauth2.get_current_user)):
-    return update_user_profile(db, current_user.ID, input)
+    updated = update_user_profile(db, current_user.ID, input)
+    
+    if updated is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Profile not found")
+    return updated
