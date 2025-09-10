@@ -1,0 +1,90 @@
+/* Container for the entire settings page */
+.settings-container { 
+  max-width: 400px;
+  margin: 2rem auto; 
+  padding: 1.5rem;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  font-family: Arial, sans-serif;
+}
+
+.settings {
+    font-size: 1.5rem; 
+    font-weight: 600;
+    margin-bottom: 6rem;
+    color: #096a60;
+    margin-left: 1.5rem;
+}
+
+.password-change{
+  color: #096a60 !important;
+}
+
+.email, .status {
+    font-weight: bold;
+}
+
+.settings-container h1 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: #333;
+}
+
+.settings-container p {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.settings-container p.success {
+  color: green;
+}
+
+.settings-container p.error {
+  color: red;
+}
+
+.settings-container div p {
+  font-size: 1rem;
+  color: #555;
+  margin: 0.25rem 0;
+}
+
+form {
+  margin-top: 1.5rem;
+}
+
+form div {
+  margin-bottom: 1rem;
+}
+
+form label {
+  display: block;
+  margin-bottom: 0.25rem;
+  font-weight: bold;
+  color: #333;
+}
+
+form input {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+form button {
+  width: 100%;
+  padding: 0.6rem;
+  background-color: #36ab8c;
+  color: white;
+  font-size: 1rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+form button:hover {
+  background-color: #417cda !important;
+}

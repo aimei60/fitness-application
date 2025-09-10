@@ -1,8 +1,10 @@
+
 .main-profile-container {
   display: flex;
   justify-content: center; 
   align-items: center;
-  margin-top: 3rem;
+  min-height: 100vh;
+  background: linear-gradient(#b9f3d8, #7bd3e6); 
 }
 
 .profile-container {
@@ -42,7 +44,7 @@
 .field {
   display: grid;
   gap: 0.375rem; 
-  justify-content: center
+  justify-content: center;
 }
 
 .label {

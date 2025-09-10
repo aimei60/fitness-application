@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const BASE = (import.meta.env.VITE_API_URL || "").replace(/\/+$/, "");
-const API = `${BASE}/profile`;
 
 export default function Profile() {
   const navigate = useNavigate();
