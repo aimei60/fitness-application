@@ -1,3 +1,5 @@
+//workout details page
+
 import "../css/workoutdetail.css";
 import NavBar from "../components/Navbar";
 import { useEffect, useState } from "react";

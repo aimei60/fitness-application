@@ -1,3 +1,5 @@
+//profile page
+
 import "../css/profile.css";
 import NavBar from "../components/Navbar";
 import { useEffect, useState } from "react";

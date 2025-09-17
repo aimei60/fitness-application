@@ -1,3 +1,5 @@
+#tests the router functions
+
 from fastapi.testclient import TestClient
 from backend.main import app
 from backend.application.database import get_db

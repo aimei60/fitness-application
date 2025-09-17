@@ -1,3 +1,5 @@
+//login / sign up page
+
 import "../css/loginsignup.css";
 import emailIcon from '../assets/email.png'
 import passwordIcon from '../assets/password.png'

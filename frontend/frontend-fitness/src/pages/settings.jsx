@@ -1,3 +1,5 @@
+//settings
+
 import "../css/settings.css";
 import NavBar from "../components/Navbar";
 import { useNavigate } from "react-router-dom";

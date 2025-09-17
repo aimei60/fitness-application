@@ -1,3 +1,5 @@
+#file for setting up sample data
+
 import sys
 print("PYTHONPATH:", sys.path)
 

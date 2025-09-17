@@ -1,3 +1,5 @@
+//homepage
+
 import "../css/homepage.css";
 import NavBar from "../components/Navbar";
 import { useEffect, useState } from "react";
