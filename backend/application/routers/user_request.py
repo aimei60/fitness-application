@@ -2,11 +2,11 @@
 
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-from backend.application.database import get_db
-from backend.application.crud.user_request import create_workout_request
-from backend.application.schemas import UserWorkoutRequestCreate, UserWorkoutRequestRead, WorkoutRead, UpdateRequestStatus
-from backend.application import Oauth2
-from backend.application.models import User
+from application.database import get_db
+from application.crud.user_request import create_workout_request
+from application.schemas import UserWorkoutRequestCreate, UserWorkoutRequestRead, WorkoutRead, UpdateRequestStatus
+from application import Oauth2
+from application.models import User
 
 router = APIRouter(tags=['User Request'])
 

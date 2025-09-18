@@ -3,10 +3,10 @@
 import pytest
 import jwt
 from fastapi import status, HTTPException
-from backend.sqlalchemy_test.app.test_database import SessionLocal
+from sqlalchemy_test.app.test_database import SessionLocal
 from datetime import datetime, timedelta, timezone
-from backend.application import Oauth2
-from backend.application.models import User
+from application import Oauth2
+from application.models import User
 
 @pytest.fixture(autouse=True)
 def auth_constants(monkeypatch):

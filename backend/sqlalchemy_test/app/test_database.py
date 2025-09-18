@@ -2,7 +2,7 @@
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from backend.application.database import Base
+from application.database import Base
 import os
 from dotenv import load_dotenv
 from urllib.parse import quote_plus
@@ -17,7 +17,7 @@ DB_PORT = os.getenv("DB_PORT")
 engine = create_engine(f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/test_db")
 SessionLocal = sessionmaker(bind=engine)
 
-from backend.application.models import (
+from application.models import (
     workouts,
     workout_sections,
     workoutRoutine,

@@ -2,11 +2,11 @@
 
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-from backend.application.database import get_db
-from backend.application.crud.user import create_user, get_user_email_and_active_status, update_user_password
-from backend.application.schemas import UserCreate, UserRead, UserPasswordChange
-from backend.application import Oauth2
-from backend.application.models import User
+from application.database import get_db
+from application.crud.user import create_user, get_user_email_and_active_status, update_user_password
+from application.schemas import UserCreate, UserRead, UserPasswordChange
+from application import Oauth2
+from application.models import User
 
 router = APIRouter(tags=['User'])
 

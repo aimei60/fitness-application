@@ -1,12 +1,12 @@
 #tests the router functions
 
 from fastapi.testclient import TestClient
-from backend.main import app
-from backend.application.database import get_db
-from backend.sqlalchemy_test.app.test_database import SessionLocal
-from backend.application.models import workouts, User, UserWorkoutRequest, UserProfile
-from backend.application import Oauth2
-from backend.application.crud.user import pwd_context
+from main import app
+from application.database import get_db
+from sqlalchemy_test.app.test_database import SessionLocal
+from application.models import workouts, User, UserWorkoutRequest, UserProfile
+from application import Oauth2
+from application.crud.user import pwd_context
 
 #test override db
 def override_get_db():

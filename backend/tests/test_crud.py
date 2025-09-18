@@ -3,17 +3,17 @@
 import pytest
 from unittest.mock import MagicMock
 from fastapi import status, HTTPException
-from backend.sqlalchemy_test.app.test_database import SessionLocal
-from backend.application.models import workouts, User, UserWorkoutRequest, UserProfile
-from backend.application.crud.workouts import get_all_workouts, get_workout_with_sections_and_routines
-from backend.tests.test_utils import insert_sample_entire_workout, insert_sample_user
-from backend.application.crud.user import create_user, get_user_email_and_active_status, update_user_password
-from backend.application.crud.user_request import create_workout_request
-from backend.application.crud.profile import create_user_profile, read_user_profile, update_user_profile
-from backend.application.crud.auth import get_user_by_email
-from backend.application.schemas import UserCreate, UserPasswordChange, UserWorkoutRequestCreate, RequestTypeEnum, UserProfileCreate, UserProfileUpdate
-from backend.application.utilities.security import get_password_hash, verify_password
-from backend.application.crud.user import pwd_context
+from sqlalchemy_test.app.test_database import SessionLocal
+from application.models import workouts, User, UserWorkoutRequest, UserProfile
+from application.crud.workouts import get_all_workouts, get_workout_with_sections_and_routines
+from tests.test_utils import insert_sample_entire_workout, insert_sample_user
+from application.crud.user import create_user, get_user_email_and_active_status, update_user_password
+from application.crud.user_request import create_workout_request
+from application.crud.profile import create_user_profile, read_user_profile, update_user_profile
+from application.crud.auth import get_user_by_email
+from application.schemas import UserCreate, UserPasswordChange, UserWorkoutRequestCreate, RequestTypeEnum, UserProfileCreate, UserProfileUpdate
+from application.utilities.security import get_password_hash, verify_password
+from application.crud.user import pwd_context
 
 #ensures my tests always has a user otherwise some of my tests fail when inserting a user from the test table directly in the test function
 def ensure_test_user(db, email="test@example.com", password="test"):

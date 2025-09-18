@@ -3,9 +3,9 @@
 from sqlalchemy.orm import Session
 from typing import Optional
 from fastapi import HTTPException, status
-from backend.application.models import workouts, UserWorkoutRequest, workouts
-from backend.application.schemas import UserWorkoutRequestCreate, RequestStatusEnum, RequestTypeEnum
-from backend.application.crud.workouts import get_workout_with_sections_and_routines
+from application.models import workouts, UserWorkoutRequest, workouts
+from application.schemas import UserWorkoutRequestCreate, RequestStatusEnum, RequestTypeEnum
+from application.crud.workouts import get_workout_with_sections_and_routines
 
 #allows the user to create a workout request and updates the request with a selected workout
 def create_workout_request(db: Session, user_id: int, request: UserWorkoutRequestCreate):

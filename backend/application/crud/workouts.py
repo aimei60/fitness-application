@@ -1,7 +1,7 @@
 #workouts crud functions
 
 from sqlalchemy.orm import Session, joinedload
-from backend.application.models import workouts, workout_sections
+from application.models import workouts, workout_sections
 
 #shows the user all available workout options
 def get_all_workouts(db: Session):

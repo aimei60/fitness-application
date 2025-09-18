@@ -37,8 +37,8 @@ raw_database_url = (
 escaped_url = raw_database_url.replace("%", "%%")
 config.set_main_option("sqlalchemy.url", escaped_url)
 
-from backend.application.database import Base 
-from backend.application.models import (
+from application.database import Base 
+from application.models import (
     User,
     workouts,
     workout_sections,

@@ -1,7 +1,7 @@
 #initialises FastAPI, configures CORS, registers routers and includes 2 routes
 
 from fastapi import FastAPI
-from .application.routers import workouts, user, user_request, auth, profile
+from application.routers import workouts, user, user_request, auth, profile
 from fastapi.middleware.cors import CORSMiddleware
 import os
 
