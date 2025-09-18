@@ -1,0 +1,26 @@
+#git and version control
+.git
+.gitignore
+
+#python cache
+__pycache__/
+*.pyc
+
+#environment files - secrets
+.env
+.env.*
+
+#docker-related files to avoid recursive copying 
+Dockerfile
+.dockerignore
+
+#alembic cache
+alembic/versions/__pycache__/
+
+#local virtual environment
+.venv/
+backend/venv/
+
+#OS & editor
+.vscode/
+
