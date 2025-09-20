@@ -12,6 +12,10 @@ from sqlalchemy.orm import Session
 
 load_dotenv()
 
+#lets production uses Fly secrets, and only local dev loads values from a .env/sens.env file
+if not os.getenv("FLY_APP_NAME") and not os.getenv("DISABLE_DOTENV"):
+    load_dotenv(override=False)
+
 JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY")
 JWT_ALGORITHM = os.getenv("JWT_ALGORITHM", "HS256")
 JWT_EXPIRATION_MINUTES = int(os.getenv("JWT_EXPIRATION_MINUTES", 60))

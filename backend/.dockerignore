@@ -1,6 +1,7 @@
 # Secrets / env
 .env
 .env.*
+sens.env
 
 # Venvs / caches
 .venv/

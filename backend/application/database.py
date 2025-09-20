@@ -1,26 +1,28 @@
 #sets up the database connection for FastAPI, loads environment variables, creates the SQLAlchemy engine and the session factory
 
 import os
-from urllib.parse import quote_plus
+from pathlib import Path
+from dotenv import load_dotenv
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, DeclarativeBase
-from dotenv import load_dotenv
-from pathlib import Path
 
-load_dotenv(dotenv_path=Path(__file__).resolve().parent.parent / "sens.env") #tells python where to find the environment variables e.g. DB credentials from the .env file. makes it accessible via os.environ.get()
+# Load sens.env only when running locally (not on Fly)
+if not os.getenv("FLY_APP_NAME"):
+    env_file = Path(__file__).resolve().parent.parent / "sens.env"
+    if env_file.exists():
+        load_dotenv(env_file, override=False)  # don't override real env
 
-DB_USER = os.environ.get("DB_USER")
-DB_PASSWORD = quote_plus(os.getenv("DB_PASSWORD"))
-DB_NAME = os.environ.get("DB_NAME")
-DB_HOST = os.environ.get("DB_HOST")
-DB_PORT = os.environ.get("DB_PORT")
+# Use one env var for everything
+DB_URL = os.getenv("DATABASE_URL")
+if not DB_URL:
+    raise RuntimeError("Set DATABASE_URL (via Fly secrets in prod, sens.env locally)")
 
-DATABASE_URL = (f"postgresql+psycopg2://"
-                f"{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}")
+# Neon safety: ensure TLS
+if "neon.tech" in DB_URL and "sslmode=" not in DB_URL:
+    DB_URL += ("&" if "?" in DB_URL else "?") + "sslmode=require"
 
-engine = create_engine(f"postgresql+psycopg2://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}", echo=True)
-#Base.metadata.create_all(engine)
-SessionLocal = sessionmaker(bind=engine)
+engine = create_engine(DB_URL, pool_pre_ping=True)
+SessionLocal = sessionmaker(bind=engine, autocommit=False, autoflush=False)
 
 class Base(DeclarativeBase):
     pass
