@@ -1,25 +1,35 @@
 #initialises FastAPI, configures CORS, registers routers and includes 2 routes
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from application.routers import workouts, user, user_request, auth, profile
 from fastapi.middleware.cors import CORSMiddleware
 import os
 
 app = FastAPI()  
 
-origins = [
-    os.getenv("FRONTEND_PREVIEW", "http://localhost:5173"), 
-    os.getenv("FRONTEND_PRODUCTION", "https://frontend.vercel.app"),
-    os.getenv("DOMAIN", "https://domainname.com"),
-]
-
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[o for o in origins if o], #cleans up urls by removing anything empty None or ""
-    allow_credentials=False,  #change to true if planning to use cookies
+    allow_origins=[
+        "https://fitrequest.dev",
+        "https://www.fitrequest.dev",
+        "http://localhost:5173",
+    ],
+    allow_credentials=False,   # not using cookies
     allow_methods=["*"],
-    allow_headers=["*"],    
+    allow_headers=["*"],
 )
+
+#makes sure https is used for my site
+@app.middleware("http")
+async def hsts_middleware(request: Request, call_next):
+    response = await call_next(request)
+    # only set on HTTPS production host
+    if request.url.scheme == "https" and request.headers.get("host") in {
+        "api.fitrequest.dev",
+    }:
+        # trialling 1 day first; later will use 6–12 months
+        response.headers["Strict-Transport-Security"] = "max-age=86400; includeSubDomains"
+    return response
 
 app.include_router(workouts.router)
 app.include_router(user.router)
@@ -34,3 +44,4 @@ def root():
 @app.get("/health") #health check
 def health(): 
     return {"ok": True}
+
