@@ -23,4 +23,4 @@ primary_region = 'lhr'
   cpus = 1
 
 [deploy]
-release_command = "bash -lc 'alembic upgrade head || true'"
+  release_command = "bash -lc 'alembic upgrade head'"
