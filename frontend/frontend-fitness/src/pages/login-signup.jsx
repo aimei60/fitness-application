@@ -81,7 +81,7 @@ function Login() {
             <input type="password" placeholder="Password" value={password} onChange={e => {setPassword(e.target.value);
               setError(null)}}required/>
           </div>
-          {toggle === "Sign up"?(<div></div>):(<div className="forgot-password">Forgot Password</div>)}
+          {toggle === "Sign up"?(<div></div>):(<div className="forgot-password"></div>)}
           {error && <p className="errorMsg">{error}</p>}
           <button 
           type="submit" className="submit2" disabled={loading}>{loading ? (toggle === "Sign up" ? "Creating…" : "Logging in…") : (toggle === "Sign up" ? "Create account" : "Log in")}
