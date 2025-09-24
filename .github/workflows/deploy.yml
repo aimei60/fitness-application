@@ -18,12 +18,18 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Install Alembic & driver
-        run: pip install alembic psycopg[binary]
+
+      - name: Install backend deps
+        working-directory: backend
+        run: |
+          pip install -U pip
+          pip install -r requirements.txt
+
       - name: Apply migrations
-        working-directory: backend #for alembic.ini 
+        working-directory: backend  #for alembic.ini
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          PYTHONPATH: ${{ github.workspace }}/backend
         run: alembic upgrade head
 
   deploy_api:
@@ -36,7 +42,7 @@ jobs:
       - name: Install Flyctl
         uses: superfly/flyctl-actions/setup-flyctl@master
       - name: Fly deploy
-        working-directory: backend #for fly.toml + Dockerfile
+        working-directory: backend  #for fly.toml + Dockerfile
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
         run: flyctl deploy --remote-only --strategy rolling --wait-timeout 300
@@ -48,12 +54,12 @@ jobs:
     environment: production
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4 #needed for npm/vercel
+      - uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: "npm"
       - name: Build & Deploy (Prod)
-        working-directory: frontend/frontend-fitness #run Vercel from frontend
+        working-directory: frontend/frontend-fitness
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
@@ -61,6 +67,4 @@ jobs:
         run: |
           npm i -g vercel@latest
           vercel pull --yes --environment=production --token="$VERCEL_TOKEN"
-          #let Vercel build in the vercel cloud
           vercel deploy --prod --token="$VERCEL_TOKEN"
-      
