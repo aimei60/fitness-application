@@ -57,7 +57,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - name: Build & Deploy (Prod)
+      - name: Build & Deploy (Production)
         working-directory: frontend/frontend-fitness
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
@@ -65,5 +65,5 @@ jobs:
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
         run: |
           npm i -g vercel@latest
-          vercel pull --yes --environment=production --token="$VERCEL_TOKEN"
-          vercel deploy --prod --token="$VERCEL_TOKEN"
+          vercel pull --yes --environment=production --token="$VERCEL_TOKEN" --cwd frontend/frontend-fitness
+          vercel deploy --prod --token="$VERCEL_TOKEN" --cwd frontend/frontend-fitness
