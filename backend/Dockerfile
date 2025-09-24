@@ -17,6 +17,5 @@ COPY . .
 #expose FastAPI port
 EXPOSE 8000
 
-#run migrations, then start gunicorn with uvicorn workers
-CMD ["/bin/sh", "-c", "if [ -f alembic.ini ]; then alembic upgrade head; fi && exec gunicorn main:app -k uvicorn.workers.UvicornWorker -w ${WEB_CONCURRENCY:-2} -b 0.0.0.0:${PORT:-8000} --timeout 60 --access-logfile - --error-logfile - "]
-
+#start gunicorn with uvicorn workers
+CMD ["gunicorn", "main:app", "-k", "uvicorn.workers.UvicornWorker", "-w", "2", "-b", "0.0.0.0:8000", "--timeout", "60", "--access-logfile", "-", "--error-logfile", "-"]

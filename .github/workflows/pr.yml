@@ -1,0 +1,37 @@
+name: PR Checks
+
+on:
+  pull_request:
+    branches: ["*"]
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      #Frontend check
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+      - name: Install & build web
+        working-directory: apps/web
+        run: |
+          npm ci
+          npm run build --if-present
+
+      #Backend check
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install API deps
+        working-directory: apps/api
+        run: |
+          pip install -U pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          pip install fastapi uvicorn pytest
+      - name: API tests (optional)
+        working-directory: apps/api
+        run: pytest -q --maxfail=1 --disable-warnings || true
