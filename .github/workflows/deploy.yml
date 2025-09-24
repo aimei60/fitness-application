@@ -75,5 +75,6 @@ jobs:
         run: |
           npm i -g vercel@latest
           rm -rf .vercel   #may be causing error currently so we remove it
-          vercel pull --yes --environment=production --token="$VERCEL_TOKEN" --cwd frontend/frontend-fitness
-          vercel deploy --prod --token="$VERCEL_TOKEN" --cwd frontend/frontend-fitness
+          vercel link --yes --token "$VERCEL_TOKEN" --project "$VERCEL_PROJECT_ID"
+          vercel pull --yes --environment=production --token="$VERCEL_TOKEN"
+          vercel deploy --prod --token="$VERCEL_TOKEN"
