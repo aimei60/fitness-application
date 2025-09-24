@@ -57,6 +57,15 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
+          
+      #confirm paths exist to stop errors
+      - name: Show folders
+        run: |
+          pwd
+          ls -la
+          ls -la frontend
+          ls -la frontend/frontend-fitness
+
       - name: Build & Deploy (Production)
         working-directory: frontend/frontend-fitness
         env:
