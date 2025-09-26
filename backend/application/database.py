@@ -1,4 +1,4 @@
-#sets up the database connection for FastAPI, loads environment variables, creates the SQLAlchemy engine and the session factory
+#Sets up the app’s database layer: in dev it loads sens.env (not on Fly), reads DATABASE_URL and forces TLS for Neon and creates SQLAlchemy engine/session/Base,
 
 import os
 from pathlib import Path

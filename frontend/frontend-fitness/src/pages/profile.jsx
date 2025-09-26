@@ -198,7 +198,9 @@ export default function Profile() {
                   name="Age"
                   value={form.Age}
                   onChange={onChange}
+                  required
                   min="0"
+                  max={120}
                 />
               </div>
               
@@ -209,9 +211,11 @@ export default function Profile() {
                   type="number"
                   className="input"
                   name="Height"
+                  required
+                  min={100}
+                  max={250}
                   value={form.Height}
                   onChange={onChange}
-                  min="0"
                 />
               </div>
 
@@ -222,9 +226,11 @@ export default function Profile() {
                   type="number"
                   className="input"
                   name="Weight"
+                  required
+                  min={30}
+                  max={300}
                   value={form.Weight}
                   onChange={onChange}
-                  min="0"
                 />
               </div>
 
