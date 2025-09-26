@@ -74,8 +74,12 @@ jobs:
       #Installs dependenciess with `npm ci`. Runs `vercel build` to make a prebuilt output in .vercel/output/. This lets us build in GitHub Actions instead of on Vercel’s servers
       - name: Install & build (CI)
         working-directory: frontend/frontend-fitness
+        env:
+          NPM_CONFIG_PRODUCTION: "false"   #ensure devDependencies (vite) are installed
         run: |
           npm ci
+          #prove vite is available before the Vercel build kicks in
+          npx vite --version
           npx vercel@latest build --prod
       
       #Uploads the already-built .vercel/output/ to Production. Uses `--prebuilt`, so Vercel doesn’t reinstall or rebuild—just goes live.
