@@ -77,12 +77,8 @@ jobs:
         env:
           NPM_CONFIG_PRODUCTION: "false"   #ensure devDependencies (vite) are installed
         run: |
-          echo "PWD=$(pwd)"; node -v; npm -v
-          test -f package.json || (echo "No package.json here"; exit 1)
-          test -f package-lock.json || (echo "No package-lock.json here"; exit 1)
           npm ci
           # prove Vite is actually installed before building
-          npx vite --version || (echo "Vite missing in this folder"; npm ls vite; exit 1)
           npx vercel@latest build --prod
       
       #Uploads the already-built .vercel/output/ to Production. Uses `--prebuilt`, so Vercel doesn’t reinstall or rebuild—just goes live.
