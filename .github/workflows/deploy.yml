@@ -76,7 +76,7 @@ jobs:
         working-directory: frontend/frontend-fitness
         run: |
           npm ci
-          npx vercel@latest build
+          npx vercel@latest build --prod
       
       #Uploads the already-built .vercel/output/ to Production. Uses `--prebuilt`, so Vercel doesn’t reinstall or rebuild—just goes live.
       - name: Deploy prebuilt to Vercel
