@@ -27,7 +27,7 @@ async def hsts_middleware(request: Request, call_next):
     if request.url.scheme == "https" and request.headers.get("host") in {
         "api.fitrequest.dev",
     }:
-        # trialling 1 day first; later will use 6–12 months
+        #HSTS header with 1-day max-age
         response.headers["Strict-Transport-Security"] = "max-age=86400; includeSubDomains"
     return response
 
