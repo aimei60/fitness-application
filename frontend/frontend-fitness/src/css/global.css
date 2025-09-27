@@ -7,3 +7,16 @@ header {
   padding-left: max(12px, env(safe-area-inset-left));
   padding-right: max(12px, env(safe-area-inset-right));
 }
+
+/*Stop nav links from overflowing */
+nav {
+  overflow-x: auto;
+  white-space: nowrap;
+  -webkit-overflow-scrolling: touch;
+}
+
+/*Make buttons and inputs touch-friendly */
+button, input {
+  min-height: 44px; 
+  font-size: 16px;/* Prevents Safari zoom on input */
+}
