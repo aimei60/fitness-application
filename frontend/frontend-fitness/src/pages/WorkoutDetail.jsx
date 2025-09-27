@@ -67,7 +67,9 @@ export default function WorkoutDetail() {
 
   return (
     <>
+      <header className="nav-bar">
       <NavBar />
+      </header>
       <div className="back-button-container">
         <button className="back-button" onClick={() => navigate(-1)}>
           Back to Workouts List

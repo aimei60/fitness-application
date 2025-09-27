@@ -163,7 +163,9 @@ export default function Profile() {
 
   return (
     <>
+      <header className="nav-bar">
       <NavBar />
+      </header>
       <div className="main-profile-container">
         <div className="profile-container">
           <h1 className="profile-title">Your Profile</h1>

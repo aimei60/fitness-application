@@ -76,7 +76,9 @@ function Homepage() {
   //displays all 30 workout names
   return (
     <div>
+      <header className="nav-bar">
       <NavBar />
+      </header>
       <div className="homepage-container">
         <h2 className="workout-title">Choose your workout!</h2>
         <div className="workout-list-container">

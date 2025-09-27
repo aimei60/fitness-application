@@ -114,7 +114,9 @@ export default function Settings() {
 
   return (
     <>
+      <header className="nav-bar">
       <NavBar />
+      </header>
       <h1 className="settings">Settings</h1>
       <div className="settings-container">
         <h1 className="password-change">Password Change</h1>
