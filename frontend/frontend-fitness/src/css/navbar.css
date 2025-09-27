@@ -9,6 +9,17 @@ html, body {
   overflow-x: hidden;
 }
 
+header nav {
+  display: flex;
+  overflow-x: auto; /* allow sideways scroll */
+  white-space: nowrap; /* keep items on one line */
+  -webkit-overflow-scrolling: touch; /* smooth scroll on iOS */
+}
+
+header nav::-webkit-scrollbar {
+  display: none;/* hide scrollbar */
+}
+
 .navbar {
   background-color: rgb(157, 213, 213);
   display: flex;
