@@ -76,7 +76,7 @@ function Login() {
             <input type="email" placeholder="Email Address" value={email} onChange={e => {setEmail(e.target.value);
               setError(null)}}required/>
           </div>
-          <div className="input">
+          <div className="input"> 
             <img src={passwordIcon} alt="lock to represent password"/>
             <input type="password" placeholder="Password" value={password} onChange={e => {setPassword(e.target.value);
               setError(null)}}required/>
