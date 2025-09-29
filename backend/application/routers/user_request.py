@@ -7,10 +7,11 @@ from application.crud.user_request import create_workout_request
 from application.schemas import UserWorkoutRequestCreate, UserWorkoutRequestRead, WorkoutRead, UpdateRequestStatus
 from application import Oauth2
 from application.models import User
+from application.csrf import verify_csrf
 
 router = APIRouter(tags=['User Request'])
 
 #allows the user to make a specific request
 @router.post("/users/requests", response_model=WorkoutRead)
-def create_request(request: UserWorkoutRequestCreate, db: Session = Depends(get_db), current_user: User = Depends(Oauth2.get_current_user)):
+def create_request(request: UserWorkoutRequestCreate, db: Session = Depends(get_db), current_user: User = Depends(Oauth2.get_current_user), _=Depends(verify_csrf)):
     return create_workout_request(db, current_user.ID, request)

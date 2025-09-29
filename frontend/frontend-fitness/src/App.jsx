@@ -1,8 +1,8 @@
-import Login from "./pages/login-signup";
-import Homepage from './pages/homepage';
-import WorkoutDetail from "./pages/WorkoutDetail";
-import Profile from "./pages/profile";
-import Settings from "./pages/settings";
+import Login from "./pages/login-signup.jsx";
+import Homepage from './pages/homepage.jsx';
+import WorkoutDetail from "./pages/WorkoutDetail.jsx";
+import Profile from "./pages/profile.jsx";
+import Settings from "./pages/settings.jsx";
 import { Route, Routes, Navigate } from "react-router-dom";
 
 function App() {

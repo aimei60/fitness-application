@@ -1,7 +1,6 @@
 #authentication / JWT file
 
-from fastapi import Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordBearer
+from fastapi import Depends, HTTPException, status, Cookie
 import jwt
 from jwt.exceptions import InvalidTokenError
 import os
@@ -9,6 +8,7 @@ from dotenv import load_dotenv
 from datetime import datetime, timedelta, timezone
 from application import schemas, database, models
 from sqlalchemy.orm import Session
+from typing import Optional
 
 #let production use Fly secrets; only local dev loads .env/sens.env
 if not os.getenv("FLY_APP_NAME") and not os.getenv("DISABLE_DOTENV"):
@@ -46,11 +46,9 @@ def verify_access_token(token: str, credentials_exception):
         raise credentials_exception
     return token_data
 
-#extracts token, verifies it, queries the db for the user, else 401
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/login/form")
-
+#looks for the access token cookie, verifies the jwt in cookie, finds user in db and returns authenticated user
 def get_current_user(
-    token: str = Depends(oauth2_scheme),
+    access_token: Optional[str] = Cookie(default=None),
     db: Session = Depends(database.get_db),
 ):
     credentials_exception = HTTPException(
@@ -58,7 +56,10 @@ def get_current_user(
         detail="Could not validate credentials",
         headers={"WWW-Authenticate": "Bearer"},
     )
-    token_data = verify_access_token(token, credentials_exception)
+    if not access_token:
+        raise credentials_exception
+
+    token_data = verify_access_token(access_token, credentials_exception)
     user = db.query(models.User).filter(models.User.ID == int(token_data.id)).first()
     if not user:
         raise credentials_exception

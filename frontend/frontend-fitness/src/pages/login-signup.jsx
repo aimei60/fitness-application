@@ -4,8 +4,9 @@ import "../css/loginsignup.css";
 import emailIcon from '../assets/email.png'
 import passwordIcon from '../assets/password.png'
 import { useState } from "react";
-import { api, setToken } from "../api";
+import { login, apiPost, apiGet } from "../api";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 function Login() {
 
@@ -17,13 +18,12 @@ function Login() {
   
   const navigate = useNavigate();
   const isSignup = toggle === "Sign up";
-  //sends login request to backend. if successful saves the jwt token with setToken and sends the user to the homepage else if failed shows error
   async function handleLogin() {
     setError(null);
     setLoading(true);
     try {
-      const { data } = await api.post("/login", { Email: email, Password: password });
-      setToken(data.access_token);           
+      await login(email, password); // server sets cookies; no local token       
+      await apiGet("/me")    
       navigate("/homepage", { replace: true });   
     } catch (e) {
       console.error("Signup error:", e)
@@ -35,12 +35,10 @@ function Login() {
     }
   }
 
-  //sign up function. If successful saves the jwt token with setToken and sends the user to the homepage else if failed shows error
   async function handleSignup() {
     setError(null); setLoading(true);
     try {
-      const { data } = await api.post("/signup", { Email: email, Password: password });
-      setToken(data.access_token);    
+      await apiPost("/signup", { Email: email, Password: password });   
       navigate("/homepage", { replace: true }); 
     } catch (e) {
       console.error("Signup error:", e)

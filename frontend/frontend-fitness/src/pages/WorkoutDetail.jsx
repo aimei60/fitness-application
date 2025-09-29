@@ -4,8 +4,7 @@ import "../css/workoutdetail.css";
 import NavBar from "../components/Navbar";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-
-const BASE = import.meta.env.VITE_API_URL || "";
+import { apiGet } from "../api"; // uses baseURL=/api and withCredentials:true
 
 export default function WorkoutDetail() {
   const { name: Name } = useParams();
@@ -15,45 +14,33 @@ export default function WorkoutDetail() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = localStorage.getItem("access_token");
-    if (!token) {
-      navigate("/login", { replace: true });
-      return;
-    }
+    let isMounted = true;
 
     async function load() {
       setLoading(true);
       setErr(null);
       try {
-        const res = await fetch(`${BASE}/workouts/${Name}`, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        if (res.status === 401) {
-          localStorage.removeItem("access_token");
+        const res = await apiGet(`/workouts/${encodeURIComponent(Name)}`); // sends cookies
+        if (isMounted) setWorkout(res.data);
+      } catch (e) {
+        const status = e?.response?.status;
+        if (status === 401) {
           navigate("/login", { replace: true });
-          return;
-        }
-        if (res.status === 404) {
+        } else if (status === 404) {
           setErr("Workout not found");
           setWorkout(null);
-          return;
+        } else {
+          setErr(e?.response?.data?.detail || e.message || "Failed to load workout");
         }
-        if (!res.ok) throw new Error(`Error ${res.status}`);
-
-        const data = await res.json();
-        setWorkout(data);
-      } catch (e) {
-        setErr(e.message || "Failed to load workout");
       } finally {
-        setLoading(false);
+        if (isMounted) setLoading(false);
       }
     }
 
     load();
+    return () => {
+      isMounted = false;
+    };
   }, [Name, navigate]);
 
   if (loading) return <p>Loading workout…</p>;

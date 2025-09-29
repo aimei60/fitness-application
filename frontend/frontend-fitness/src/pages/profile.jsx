@@ -1,11 +1,9 @@
 //profile page
-
 import "../css/profile.css";
 import NavBar from "../components/Navbar";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
-const BASE = (import.meta.env.VITE_API_URL || "").replace(/\/+$/, "");
+import { apiGet, apiPost, apiPatch } from "../api"; // axios helpers (cookies + CSRF)
 
 export default function Profile() {
   const navigate = useNavigate();
@@ -25,33 +23,33 @@ export default function Profile() {
   const [saving, setSaving] = useState(false);
   const [msg, setMsg] = useState(null);
 
-  // check the user is logged in or send user to login page
   useEffect(() => {
-    const token = localStorage.getItem("access_token");
-    if (!token) {
-      navigate("/login", { replace: true });
-      return;
-    }
+    let isMounted = true;
 
-    //loads, fetches and displays profile page using saved token. 
-    //if token is invalid, send to login page
-    //else display error message.
     async function load() {
       setLoading(true);
       setMsg(null);
       try {
-        const res = await fetch(`${BASE}/profile`, {
-          headers: {"Content-Type": "application/json", Authorization: `Bearer ${token}`},
+        const res = await apiGet("/profile"); // sends cookies
+        const data = res.data;
+        if (!isMounted) return;
+        setForm({
+          FullName: data.FullName || "",
+          Age: data.Age ?? "",
+          Height: data.HeightCM ?? "",
+          Weight: data.WeightKG ?? "",
+          FitnessLevel: data.FitnessLevel || "",
+          Goal: data.Goal || "",
+          InjuriesOrLimitations: data.InjuriesOrLimitations || "",
         });
-
-        if (res.status === 401) {
-          localStorage.removeItem("access_token");
+        setMode("update");
+      } catch (e) {
+        const status = e?.response?.status;
+        if (status === 401) {
           navigate("/login", { replace: true });
           return;
         }
-
-        if (res.status === 404) {
-          // if no profile yet then create show empty form
+        if (status === 404) {
           setMode("create");
           setForm({
             FullName: "",
@@ -62,34 +60,20 @@ export default function Profile() {
             Goal: "",
             InjuriesOrLimitations: "",
           });
-          return;
+        } else {
+          setMsg(e?.response?.data?.detail || e.message || "Failed to load profile");
         }
-        if (!res.ok) throw new Error(`Error ${res.status}`);
-
-        // allows user to enter profile details
-        const data = await res.json();
-        setForm({
-          FullName: data.FullName || "",
-          Age: data.Age ?? "",
-          Height: data.HeightCM ?? "",
-          Weight: data.WeightKG ?? "",
-          FitnessLevel: data.FitnessLevel || "",
-          Goal: data.Goal || "",
-          InjuriesOrLimitations: data.InjuriesOrLimitations || "",
-        });
-        //allows user to update if needed
-        setMode("update");
-      } catch (e) {
-        setMsg(e.message || "Failed to load profile");
       } finally {
-        setLoading(false);
+        if (isMounted) setLoading(false);
       }
     }
 
     load();
+    return () => {
+      isMounted = false;
+    };
   }, [navigate]);
 
-   // updates form state as the user types e.g FullName: "" to FullName: "John"
   function onChange(e) {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
@@ -97,52 +81,28 @@ export default function Profile() {
 
   async function onSubmit(e) {
     e.preventDefault();
-    const token = localStorage.getItem("access_token");
-    if (!token) {navigate("/login", { replace: true });
-      return;
-    }
 
     setSaving(true);
     setMsg(null);
-    
-    // decide create or update
-    try {
-      const method = mode === "create" ? "POST" : "PATCH";
 
-      // gets the data ready
+    try {
       const toNum = (v) => (v === "" ? undefined : Number(v));
       const payload = {
         FullName: form.FullName,
         Age: toNum(form.Age),
-        Height: toNum(form.Height), 
-        Weight: toNum(form.Weight), // 
+        Height: toNum(form.Height),
+        Weight: toNum(form.Weight),
         FitnessLevel: form.FitnessLevel,
         Goal: form.Goal,
         InjuriesOrLimitations: form.InjuriesOrLimitations,
       };
 
-      // checks again if token expired or not
-      const res = await fetch(`${BASE}/profile`, {
-        method,
-        headers: {"Content-Type": "application/json", Authorization: `Bearer ${token}`},
-        body: JSON.stringify(payload),
-      });
+      const res =
+        mode === "create"
+          ? await apiPost("/profile", payload)
+          : await apiPatch("/profile", payload);
 
-      if (res.status === 401) {
-        localStorage.removeItem("access_token");
-        navigate("/login", { replace: true });
-        return;
-      }
-      if (!res.ok) {
-        let detail = "";
-        try {
-          const j = await res.json();
-          detail = j?.detail;
-        } catch {}
-        throw new Error(detail || `Failed to save profile (${res.status})`);
-      }
-
-      const data = await res.json();
+      const data = res.data;
       setForm({
         FullName: data.FullName || "",
         Age: data.Age ?? "",
@@ -155,7 +115,13 @@ export default function Profile() {
       setMode("update");
       setMsg("Profile saved!");
     } catch (e) {
-      setMsg(e.message || "Failed to save profile");
+      const status = e?.response?.status;
+      if (status === 401) {
+        navigate("/login", { replace: true });
+      } else {
+        const detail = e?.response?.data?.detail;
+        setMsg(detail || e.message || "Failed to save profile");
+      }
     } finally {
       setSaving(false);
     }

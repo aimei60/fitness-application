@@ -8,12 +8,13 @@ from application import Oauth2
 from application.schemas import UserProfileCreate, UserProfileUpdate, UserProfileRead
 from application.crud.profile import create_user_profile, read_user_profile, update_user_profile
 from application.models import User
+from application.csrf import verify_csrf
 
 router = APIRouter(tags=['Profile'])
 
 #allows user to create their profile section
 @router.post("/profile", response_model=UserProfileRead)
-def create_profile(profile: UserProfileCreate, db: Session = Depends(get_db), current_user: User = Depends(Oauth2.get_current_user)):
+def create_profile(profile: UserProfileCreate, db: Session = Depends(get_db), current_user: User = Depends(Oauth2.get_current_user), _=Depends(verify_csrf)):
     return create_user_profile(db, current_user.ID, profile)
 
 #returns the user's profile
@@ -27,7 +28,7 @@ def return_user_profile(db: Session = Depends(get_db), current_user: User = Depe
 
 #allows user to update the their profile details
 @router.patch("/profile", response_model=UserProfileRead)
-def update_profile(input: UserProfileUpdate, db: Session = Depends(get_db), current_user: User = Depends(Oauth2.get_current_user)):
+def update_profile(input: UserProfileUpdate, db: Session = Depends(get_db), current_user: User = Depends(Oauth2.get_current_user), _=Depends(verify_csrf)):
     updated = update_user_profile(db, current_user.ID, input)
     
     if updated is None:

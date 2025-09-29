@@ -18,4 +18,4 @@ COPY . .
 EXPOSE 8000
 
 #start gunicorn with uvicorn workers
-CMD ["bash", "-lc", "gunicorn main:app -k uvicorn.workers.UvicornWorker -w 1 -b 0.0.0.0:${PORT:-8000} --timeout 60 --access-logfile - --error-logfile -"]
+CMD ["bash", "-lc", "gunicorn main:app -k uvicorn.workers.UvicornWorker -w 1 -b 0.0.0.0:${PORT:-8000} --timeout 60 --access-logfile - --error-logfile - --forwarded-allow-ips='*'"]

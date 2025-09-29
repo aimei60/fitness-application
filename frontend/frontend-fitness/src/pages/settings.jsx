@@ -1,11 +1,9 @@
 //settings
-
 import "../css/settings.css";
 import NavBar from "../components/Navbar";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-
-const BASE = (import.meta.env.VITE_API_URL || "").replace(/\/+$/, "");
+import { apiGet, apiPost } from "../api"; // axios helpers (cookies + CSRF)
 
 export default function Settings() {
   const navigate = useNavigate();
@@ -16,101 +14,54 @@ export default function Settings() {
   const [newPassword, setNewPassword] = useState("");
   const [message, setMessage] = useState("");
 
-  // Load user email and active status. if no acess token, take them back to login page
+  //Load user email and active status (cookie session)
   useEffect(() => {
-    const token = localStorage.getItem("access_token");
-    if (!token) {
-      navigate("/login", { replace: true });
-      return;
-    }
-
-    fetch(`${BASE}/me`, {
-      headers: {
-        "Content-Type": "application/json", Authorization: `Bearer ${token}`,},})
+    apiGet("/me")
       .then((res) => {
-        if (res.status === 401) {
-          localStorage.removeItem("access_token");
+        const d = res.data || {};
+        setEmail(d.Email || d.email || "");
+        setIsActive(d.IsActive ?? d.is_active ?? false);
+      })
+      .catch((e) => {
+        if (e?.response?.status === 401) {
           navigate("/login", { replace: true });
-          return;
+        } else {
+          setMessage("Failed to load user info.");
         }
-        return res.json();
-      })
-      .then((data) => {
-        if (data) {
-          setEmail(data.Email || data.email || "");
-          setIsActive(data.IsActive ?? data.is_active ?? false);
-        }
-      })
-      .catch(() => setMessage("Failed to load user info."));
+      });
   }, [navigate]);
 
   //password change
   async function handleChangePassword(e) {
     e.preventDefault();
-    const token = localStorage.getItem("access_token");
-    if (!token) return navigate("/login", { replace: true });
 
     if (!currentPassword || !newPassword) {
-        setMessage("Please fill in both password fields.");
-        return;
+      setMessage("Please fill in both password fields.");
+      return;
     }
     if (newPassword.length < 8) {
-        setMessage("New password must be at least 8 characters.");
-        return;
+      setMessage("New password must be at least 8 characters.");
+      return;
     }
 
     try {
-        const res = await fetch(`${BASE}/user/change-password`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-            current_password: currentPassword,
-            new_password: newPassword,
-        }),
-        });
+      await apiPost("/user/change-password", {
+        current_password: currentPassword,
+        new_password: newPassword,
+      }); 
 
-        if (res.status === 401) {
-        localStorage.removeItem("access_token");
+      setMessage("Password changed successfully!");
+      setCurrentPassword("");
+      setNewPassword("");
+    } catch (e) {
+      if (e?.response?.status === 401) {
         navigate("/login", { replace: true });
-        return;
-        }
-        if (!res.ok) {
-        // make FastAPI errors readable
-        let msg = `Failed to change password (${res.status})`;
-
-        try {
-        const data = await res.json();
-
-        // FastAPI usually sends error info in "detail"
-        if (data.detail) {
-            if (Array.isArray(data.detail)) {
-            // e.g. [{"loc": ["body","new_password"], "msg": "Field required"}]
-            msg = data.detail
-                .map(err => `${err.loc[1]}: ${err.msg}`) // "new_password: Field required"
-                .join("; ");
-            } else if (typeof data.detail === "string") {
-            // e.g. "Invalid token"
-            msg = data.detail;
-            }
-        }
-        } catch (error) {
-        //default msg
-        }
-
-        throw new Error(msg);
+      } else {
+        const detail = e?.response?.data?.detail;
+        setMessage(detail || e.message || "Something went wrong.");
+      }
     }
-
-        setMessage("Password changed successfully!");
-        setCurrentPassword("");
-        setNewPassword("");
-    } catch (err) {
-        setMessage(err.message || "Something went wrong.");
-    }
-    }
-
+  }
 
   return (
     <>

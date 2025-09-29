@@ -7,12 +7,13 @@ from application.crud.user import create_user, get_user_email_and_active_status,
 from application.schemas import UserCreate, UserRead, UserPasswordChange
 from application import Oauth2
 from application.models import User
+from application.csrf import verify_csrf
 
 router = APIRouter(tags=['User'])
 
 #creates the user
 @router.post("/users", response_model=UserRead)
-def create_user_route(user: UserCreate, db: Session = Depends(get_db)):
+def create_user_route(user: UserCreate, db: Session = Depends(get_db), _=Depends(verify_csrf)):
     return create_user(db, user)
 
 #returns the user's email address and active status
@@ -22,5 +23,5 @@ def get_user_summary(current_user: User = Depends(Oauth2.get_current_user)):
 
 #router function to update the user's password
 @router.post("/user/change-password")
-def change_password(input: UserPasswordChange, db: Session = Depends(get_db), current_user = Depends(Oauth2.get_current_user)):
+def change_password(input: UserPasswordChange, db: Session = Depends(get_db), current_user = Depends(Oauth2.get_current_user), _=Depends(verify_csrf)):
     return update_user_password(db, input, current_user)

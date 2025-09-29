@@ -1,12 +1,9 @@
 //homepage
-
 import "../css/homepage.css";
 import NavBar from "../components/Navbar";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
-//exporting api
-const BASE = import.meta.env.VITE_API_URL || "";
+import { apiGet } from "../api"; // uses baseURL=/api and withCredentials:true
 
 function Homepage() {
   const [workouts, setWorkouts] = useState([]); 
@@ -16,56 +13,31 @@ function Homepage() {
 
   //check the user is logged in or send user to login page
   useEffect(() => {
-    const token = localStorage.getItem("access_token");
-    if (!token) {
-      navigate("/login", { replace: true });
-      return;
-    }
+    let isMounted = true;
 
-    if (!BASE) {
-      setErr("API base URL is not set");
-      setLoading(false);
-      return;
-    }
-
-    const ac = new AbortController();
-
-    //loads, fetches and displays workouts using saved token. 
-    //if token is invalid, send to login page
-    //else display error message.
     async function load() {
       setLoading(true);
       setErr(null);
       try {
-        const res = await fetch(`${BASE}/workouts`, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          signal: ac.signal,
-        });
-
-        if (res.status === 401) {
-          // token invalid or expired, force logout and send to login page
-          localStorage.removeItem("access_token");
-          navigate("/login", { replace: true });
-          return;
-        }
-
-        if (!res.ok) throw new Error(`Error ${res.status}`);
-        const data = await res.json();
-        setWorkouts(Array.isArray(data) ? data : []);
+        const res = await apiGet("/workouts"); // cookie-based session
+        const data = res.data;
+        if (isMounted) setWorkouts(Array.isArray(data) ? data : []);
       } catch (e) {
-        if (e.name !== "AbortError") {
-          setErr(e.message || "Failed to load workouts");
+        const status = e?.response?.status;
+        if (status === 401) {
+          navigate("/login", { replace: true });
+        } else {
+          setErr(e?.response?.data?.detail || e.message || "Failed to load workouts");
         }
       } finally {
-        setLoading(false);
+        if (isMounted) setLoading(false);
       }
     }
 
     load();
-    return () => ac.abort();
+    return () => {
+      isMounted = false;
+    };
   }, [navigate]);
 
   //directs user to the workout page with the workout details they picked
