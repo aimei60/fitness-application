@@ -4,11 +4,11 @@ from fastapi import FastAPI, Request, Header, Cookie, HTTPException
 from application.routers import workouts, user, user_request, auth, profile
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware import Middleware
-from uvicorn.middleware.proxy_headers import ProxyHeadersMiddleware
+from starlette.middleware.proxy_headers import ProxyHeadersMiddleware  # use Starlette's proxy headers
 from slowapi.middleware import SlowAPIMiddleware
 from application.rate_limit import limiter
- 
-app = FastAPI(middleware=[Middleware(ProxyHeadersMiddleware, trusted_hosts=["*"])])
+
+app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
@@ -17,10 +17,12 @@ app.add_middleware(
         "https://www.fitrequest.dev",
         "http://localhost:5173",
     ],
-    allow_credentials=True, #using cookies
-    allow_methods=["GET","POST","PUT","PATCH","DELETE", "OPTIONS"],
-    allow_headers=["Content-Type", "Authorization", "X-CSRF-Token", "Accept"],
+    allow_credentials=True,  # using cookies 
+    allow_headers=["*"],
 )
+
+# Make to see the real client IP when behind a proxy (Fly/Gunicorn/Uvicorn/etc.)
+app.add_middleware(ProxyHeadersMiddleware, trusted_hosts="*")
 
 # Security headers + HSTS (only on production HTTPS)
 @app.middleware("http")
@@ -36,7 +38,15 @@ async def sec_headers(request: Request, call_next):
 
 # Add SlowAPI rate limiting (global default: 100/min/IP)
 app.state.limiter = limiter
-app.add_middleware(SlowAPIMiddleware)
+
+class SkipOptionsSlowAPIMiddleware(SlowAPIMiddleware):
+    async def dispatch(self, request, call_next):
+        if request.method == "OPTIONS":
+            # let CORSMiddleware handle the preflight and pass straight through
+            return await call_next(request)
+        return await super().dispatch(request, call_next)
+
+app.add_middleware(SkipOptionsSlowAPIMiddleware)
 
 app.include_router(workouts.router)
 app.include_router(user.router)
@@ -51,4 +61,3 @@ def root():
 @app.get("/health") #health check
 def health(): 
     return {"ok": True}
-

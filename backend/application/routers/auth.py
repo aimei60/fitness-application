@@ -10,17 +10,39 @@ from application.schemas import UserLogin, UserSignup
 from application.crud.auth import get_user_by_email, create_user
 from application import Oauth2, models
 from application.rate_limit import limiter
+import os
 
 router = APIRouter(tags=['Authentication'])
 
+ENV = os.getenv("ENV", "development").lower()
+IS_PROD = ENV in {"prod", "production"}
+
 #Central cookie
-COOKIE_KW = dict(httponly=True, secure=True, samesite="lax")
+COOKIE_DOMAIN = os.getenv("COOKIE_DOMAIN", ".fitrequest.dev" if IS_PROD else "")
+COOKIE_KW = dict(
+    httponly=True,
+    secure=IS_PROD,      
+    samesite=("none" if IS_PROD else "lax"), 
+    path="/",
+    **({"domain": COOKIE_DOMAIN} if COOKIE_DOMAIN else {})
+)
 
 #stores jwt securely in a cookie that js cannot access and creates and stores a CSRF token in a separate cookie that js can read
 def set_auth_cookies(response: Response, access_jwt: str):
+    # httpOnly auth cookie (browser sends it automatically to the API origin)
     response.set_cookie("access_token", access_jwt, **COOKIE_KW)
+
+    # CSRF token for your frontend to read and echo back in a header
     csrf = secrets.token_urlsafe(32)
-    response.set_cookie("csrf_token", csrf, httponly=False, secure=True, samesite="lax")
+    response.set_cookie(
+        "csrf_token",
+        csrf,
+        httponly=False,       
+        secure=IS_PROD,
+        samesite=("none" if IS_PROD else "lax"),       
+        path="/",
+        **({"domain": COOKIE_DOMAIN} if COOKIE_DOMAIN else {})
+    )
     return csrf
 
 #user sign up: checks if email already exists, if not creates a new user and issues a new token
