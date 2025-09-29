@@ -4,7 +4,7 @@ from fastapi import FastAPI, Request, Header, Cookie, HTTPException
 from application.routers import workouts, user, user_request, auth, profile
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware import Middleware
-from starlette.middleware.proxy_headers import ProxyHeadersMiddleware  # use Starlette's proxy headers
+from uvicorn.middleware.proxy_headers import ProxyHeadersMiddleware  # use Starlette's proxy headers
 from slowapi.middleware import SlowAPIMiddleware
 from application.rate_limit import limiter
 
@@ -18,6 +18,7 @@ app.add_middleware(
         "http://localhost:5173",
     ],
     allow_credentials=True,  # using cookies 
+    allow_methods=["*"],
     allow_headers=["*"],
 )
 
@@ -38,6 +39,8 @@ async def sec_headers(request: Request, call_next):
 
 # Add SlowAPI rate limiting (global default: 100/min/IP)
 app.state.limiter = limiter
+
+#Only add SlowAPI middleware if it's installed
 
 class SkipOptionsSlowAPIMiddleware(SlowAPIMiddleware):
     async def dispatch(self, request, call_next):

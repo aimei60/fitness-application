@@ -90,6 +90,3 @@ def user_login(user_credentials: UserLogin, request: Request, db: Session = Depe
 def read_me(current_user: models.User = Depends(Oauth2.get_current_user)):
     return {"id": current_user.ID, "email": current_user.Email}
 
-@router.options("/login")
-def login_preflight():
-    return Response(status_code=204)
