@@ -14,13 +14,11 @@ function Login() {
 
   if (maintenance) {
     return (
-      <div className="mx-auto mt-12 max-w-md rounded-2xl border p-6 text-center">
-        <h2 className="text-xl font-semibold mb-2">
-          Under Maintenance
-        </h2>
-        <p className="opacity-80">{msg}</p>
+      <div style={{margin: "3rem auto", maxWidth: "28rem", borderRadius: "1rem", border: "1px solid #ccc", padding: "1.5rem", textAlign: "center"}}>
+      <h2 style={{fontSize: "1.25rem", fontWeight: 600, marginBottom: "0.5rem"}}>Under Maintenance</h2>
+      <p style={{opacity: 0.8}}>{msg}</p>
       </div>
-    );
+        );
   }
 
   const [toggle, setToggle] = useState("Sign up"); //to switch between sign up and login states
