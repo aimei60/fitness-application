@@ -6,9 +6,22 @@ import passwordIcon from '../assets/password.png'
 import { useState } from "react";
 import { login, apiPost, apiGet } from "../api";
 import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
 
 function Login() {
+
+  const maintenance = import.meta.env.VITE_MAINTENANCE_MODE === "true";
+  const msg = import.meta.env.VITE_MAINTENANCE_MSG || "Under maintenance";
+
+  if (maintenance) {
+    return (
+      <div className="mx-auto mt-12 max-w-md rounded-2xl border p-6 text-center">
+        <h2 className="text-xl font-semibold mb-2">
+          Under Maintenance
+        </h2>
+        <p className="opacity-80">{msg}</p>
+      </div>
+    );
+  }
 
   const [toggle, setToggle] = useState("Sign up"); //to switch between sign up and login states
   const [email, setEmail] = useState(""); //user input

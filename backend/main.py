@@ -7,8 +7,19 @@ from starlette.middleware import Middleware
 from uvicorn.middleware.proxy_headers import ProxyHeadersMiddleware  # use Starlette's proxy headers
 from slowapi.middleware import SlowAPIMiddleware
 from application.rate_limit import limiter
+from starlette.responses import JSONResponse
+import os
 
 app = FastAPI()
+
+MAINTENANCE_MODE = os.getenv("MAINTENANCE_MODE", "false").lower() == "true"
+MAINTENANCE_MSG = os.getenv("MAINTENANCE_MSG", "Sign in is temporarily disabled for maintenance.")
+
+@app.middleware("http")
+async def maintenance_auth_gate(request: Request, call_next):
+    if MAINTENANCE_MODE and request.url.path.startswith(("/auth", "/login", "/signup")):
+        return JSONResponse({"detail": MAINTENANCE_MSG}, status_code=503)
+    return await call_next(request)
 
 app.add_middleware(
     CORSMiddleware,
