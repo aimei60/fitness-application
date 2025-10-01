@@ -12,12 +12,13 @@ import os
 
 app = FastAPI()
 
+#website under maintenance blocking login/sign up routes
 MAINTENANCE_MODE = os.getenv("MAINTENANCE_MODE", "false").lower() == "true"
 MAINTENANCE_MSG = os.getenv("MAINTENANCE_MSG", "Sign in is temporarily disabled for maintenance.")
 
 @app.middleware("http")
 async def maintenance_auth_gate(request: Request, call_next):
-    if MAINTENANCE_MODE and request.url.path.startswith(("/auth", "/login", "/signup")):
+    if MAINTENANCE_MODE and request.url.path.startswith(("/login", "/signup")):
         return JSONResponse({"detail": MAINTENANCE_MSG}, status_code=503)
     return await call_next(request)
 
