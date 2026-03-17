@@ -1,10 +1,8 @@
 #user request crud functions
-
 from sqlalchemy.orm import Session
-from typing import Optional
 from fastapi import HTTPException, status
 from application.models import workouts, UserWorkoutRequest, workouts
-from application.schemas import UserWorkoutRequestCreate, RequestStatusEnum, RequestTypeEnum
+from application.schemas import UserWorkoutRequestCreate, RequestTypeEnum
 from application.crud.workouts import get_workout_with_sections_and_routines
 
 #allows the user to create a workout request and updates the request with a selected workout
@@ -47,5 +45,4 @@ def read_workout_request(db: Session, user_id: int, status: Optional[str] = None
     if status:
         query = query.filter(UserWorkoutRequest.Status == status)
     return query.all()
-
 """

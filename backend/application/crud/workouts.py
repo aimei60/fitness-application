@@ -1,5 +1,4 @@
 #workouts crud functions
-
 from sqlalchemy.orm import Session, joinedload
 from application.models import workouts, workout_sections
 

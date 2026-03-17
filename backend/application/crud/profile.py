@@ -1,8 +1,7 @@
 #profile crud functions
-
 from sqlalchemy.orm import Session
 from application.models import UserProfile
-from application.schemas import UserProfileCreate, UserProfileRead, UserProfileUpdate
+from application.schemas import UserProfileCreate, UserProfileUpdate
 from fastapi import HTTPException, status
 
 #allows the user to create their profile on the application and enter details such as name, age, fitness level etc.

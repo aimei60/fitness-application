@@ -1,5 +1,4 @@
 #user crud functions
-
 from sqlalchemy.orm import Session
 from application.models import User
 from application.schemas import UserCreate, UserRead, UserPasswordChange

@@ -1,9 +1,6 @@
 #auth crud functions
-
 from sqlalchemy.orm import Session
 from application.models import User
-from application.schemas import UserCreate
-from application.utilities.security import get_password_hash
 
 #retrieves user emails
 def get_user_by_email(db: Session, email: str):

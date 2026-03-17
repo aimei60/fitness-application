@@ -1,4 +1,4 @@
-#scehmas file
+#schemas file
 
 from pydantic import BaseModel, Field, EmailStr, ConfigDict
 from typing import List, Optional

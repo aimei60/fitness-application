@@ -1,5 +1,4 @@
 #authentication / JWT file
-
 from fastapi import Depends, HTTPException, status, Cookie
 import jwt
 from jwt.exceptions import InvalidTokenError
@@ -17,7 +16,6 @@ if not os.getenv("FLY_APP_NAME") and not os.getenv("DISABLE_DOTENV"):
 JWT_SECRET = (
     os.getenv("JWT_SECRET")
     or os.getenv("JWT_SECRET_KEY")
-    or os.getenv("SECRET_KEY")
 )
 if not JWT_SECRET:
     raise ValueError("Set JWT secret in env (JWT_SECRET or JWT_SECRET_KEY).")

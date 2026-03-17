@@ -1,5 +1,4 @@
 #auth router functions
-
 from fastapi import APIRouter, Depends, status, HTTPException, Response, Request
 import secrets
 from fastapi.security.oauth2 import OAuth2PasswordRequestForm

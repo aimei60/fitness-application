@@ -1,5 +1,4 @@
 #sets up rate limiting for API to prevent abuse e.g. DDoS attacks or brute-force attempts
-
 from slowapi import Limiter
 from slowapi.util import get_remote_address
 

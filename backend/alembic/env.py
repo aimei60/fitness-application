@@ -1,4 +1,4 @@
-# alembic/env.py
+# alembic/env.py - connecting db and running migrations
 import os
 import sys
 from pathlib import Path

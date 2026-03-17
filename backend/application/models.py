@@ -1,5 +1,4 @@
 #includes ORM models (tables) for the fitness application. Includes core tables for the fitness application e.g. workouts, workout_sections etc.
-
 from sqlalchemy import ForeignKey, String, Integer
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from .database import Base
