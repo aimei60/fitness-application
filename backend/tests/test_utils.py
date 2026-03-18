@@ -16,9 +16,7 @@ def insert_sample_entire_workout(db):
     db.commit()
     db.refresh(workout)
     
-    section = workout_sections(SectionName = "Test Section",
-                               SectionOrder=1,
-                               WOID=workout.ID)
+    section = workout_sections(SectionName = "Test Section", SectionOrder=1, WOID=workout.ID)
     db.add(section)
     db.commit()
     db.refresh(section)

@@ -13,11 +13,11 @@ import os
 
 router = APIRouter(tags=['Authentication'])
 
-ENV = os.getenv("ENV", "development").lower()
-IS_PROD = ENV in {"prod", "production"}
+IS_PROD = os.getenv("ENV", "development").lower() in {"prod", "production"}
 
 #Central cookie
-COOKIE_DOMAIN = os.getenv("COOKIE_DOMAIN", ".fitrequest.dev" if IS_PROD else "")
+COOKIE_DOMAIN = os.getenv("COOKIE_DOMAIN", ".fitrequest.dev" if IS_PROD else None)
+
 COOKIE_KW = dict(
     httponly=True,
     secure=IS_PROD,      
@@ -31,7 +31,7 @@ def set_auth_cookies(response: Response, access_jwt: str):
     # httpOnly auth cookie (browser sends it automatically to the API origin)
     response.set_cookie("access_token", access_jwt, **COOKIE_KW)
 
-    # CSRF token for your frontend to read and echo back in a header
+    # CSRF token for frontend to read and echo back in a header
     csrf = secrets.token_urlsafe(32)
     response.set_cookie(
         "csrf_token",
@@ -46,7 +46,8 @@ def set_auth_cookies(response: Response, access_jwt: str):
 
 #user sign up: checks if email already exists, if not creates a new user and issues a new token
 @router.post("/signup")
-def signup(user: UserSignup, db: Session = Depends(get_db), response: Response = None):
+@limiter.limit("3/minute")
+def signup(request: Request, user: UserSignup, response: Response, db: Session = Depends(get_db), ):
     if get_user_by_email(db, user.Email):
         raise HTTPException(status_code=400, detail="Email already registered")
 
@@ -62,7 +63,8 @@ def signup(user: UserSignup, db: Session = Depends(get_db), response: Response =
 #for Swagger UI
 #authenticates the user and verifies their password and if correct, generates and returns a JWT access token
 @router.post('/login/form')
-def dev_login(user_credentials: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db), response: Response = None):
+@limiter.limit("5/minute")
+def dev_login(request: Request, response: Response,user_credentials: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
     user = get_user_by_email(db, user_credentials.username)
     
     if not user or not security.verify_password(user_credentials.password, user.HashedPassword):
@@ -74,7 +76,7 @@ def dev_login(user_credentials: OAuth2PasswordRequestForm = Depends(), db: Sessi
 #Json based login route for users
 @router.post('/login')
 @limiter.limit("5/minute")  #5 login attempts per minute per IP
-def user_login(user_credentials: UserLogin, request: Request, db: Session = Depends(get_db), response: Response = None):
+def user_login(user_credentials: UserLogin, request: Request, response: Response, db: Session = Depends(get_db)):
     user = get_user_by_email(db, user_credentials.Email)
     
     if not user or not security.verify_password(user_credentials.Password, user.HashedPassword):

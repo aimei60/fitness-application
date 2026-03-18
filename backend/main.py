@@ -1,5 +1,4 @@
 #initialises FastAPI, configures CORS, registers routers and includes 2 routes
-
 from fastapi import FastAPI, Request, Header, Cookie, HTTPException
 from application.routers import workouts, user, user_request, auth, profile
 from fastapi.middleware.cors import CORSMiddleware
@@ -41,8 +40,8 @@ app.add_middleware(ProxyHeadersMiddleware, trusted_hosts="*")
 @app.middleware("http")
 async def sec_headers(request: Request, call_next):
     response = await call_next(request)
-    response.headers["X-Content-Type-Options"] = "nosniff"
-    response.headers["X-Frame-Options"] = "DENY"
+    response.headers["X-Content-Type-Options"] = "nosniff" #prevents browsers from guessing file types
+    response.headers["Content-Security-Policy"] = "frame-ancestors 'none';" #stops my site being embeddeded in iframes
     
     if request.url.scheme == "https" and request.headers.get("host") in {"api.fitrequest.dev"}:
         #testing for 1 day first
@@ -52,16 +51,17 @@ async def sec_headers(request: Request, call_next):
 # Add SlowAPI rate limiting (global default: 100/min/IP)
 app.state.limiter = limiter
 
-#Only add SlowAPI middleware if it's installed
-
-class SkipOptionsSlowAPIMiddleware(SlowAPIMiddleware):
+#the below doesnt limit browser's permission check requests
+class SkipOptionsRateLimitMiddleware(SlowAPIMiddleware):
     async def dispatch(self, request, call_next):
+        #if it's a browser request, skip rate limiting
         if request.method == "OPTIONS":
-            # let CORSMiddleware handle the preflight and pass straight through
             return await call_next(request)
+
+        #otherwise, apply normal rate limiting
         return await super().dispatch(request, call_next)
 
-app.add_middleware(SkipOptionsSlowAPIMiddleware)
+app.add_middleware(SkipOptionsRateLimitMiddleware)
 
 app.include_router(workouts.router)
 app.include_router(user.router)

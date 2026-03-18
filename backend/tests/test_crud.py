@@ -1,5 +1,4 @@
 #tests all the crud functions
-
 import pytest
 from unittest.mock import MagicMock
 from fastapi import status, HTTPException

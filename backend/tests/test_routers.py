@@ -1,5 +1,4 @@
 #tests the router functions
-
 from fastapi.testclient import TestClient
 from main import app
 from application.database import get_db
