@@ -32,9 +32,10 @@ function Login() {
         body: JSON.stringify({Email: email, Password: password})
       });
 
+    const data = await res.json();
     if (!res.ok) {
-      throw new Error("Login failed");
-      }     
+      throw new Error(data.detail || "Sign up failed");
+    }     
  
       navigate("/homepage", { replace: true });   
     } catch (e) {
@@ -61,9 +62,10 @@ function Login() {
         })
     })
 
+    const data = await res.json();
     if (!res.ok) {
-      throw new Error("Sign up failed");
-    } 
+      throw new Error(data.detail || "Sign up failed");
+    }
 
       navigate("/homepage", { replace: true }); 
     } catch (e) {
