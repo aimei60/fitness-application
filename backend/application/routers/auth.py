@@ -26,33 +26,18 @@ COOKIE_KW = dict(
     **({"domain": COOKIE_DOMAIN} if COOKIE_DOMAIN else {})
 )
 
-#stores jwt securely in a cookie that js cannot access and creates and stores a CSRF token in a separate cookie that js can read
 def set_auth_cookies(response: Response, access_jwt: str):
     # httpOnly auth cookie (browser sends it automatically to the API origin)
     response.set_cookie("access_token", access_jwt, **COOKIE_KW)
 
-    # CSRF token for frontend to read and echo back in a header
-    csrf = secrets.token_urlsafe(32)
-    response.set_cookie(
-        "csrf_token",
-        csrf,
-        httponly=False,       
-        secure=IS_PROD,
-        samesite=("none" if IS_PROD else "lax"),       
-        path="/",
-        **({"domain": COOKIE_DOMAIN} if COOKIE_DOMAIN else {})
-    )
-    return csrf
-
 #user sign up: checks if email already exists, if not creates a new user and issues a new token
 @router.post("/signup")
 @limiter.limit("3/minute")
-def signup(request: Request, user: UserSignup, response: Response, db: Session = Depends(get_db), ):
+def signup(request: Request, user: UserSignup, response: Response, db: Session = Depends(get_db)):
     if get_user_by_email(db, user.Email):
         raise HTTPException(status_code=400, detail="Email already registered")
 
     hashed_pw = security.get_password_hash(user.Password)
-
     new_user = create_user(db, email=user.Email, hashed_password=hashed_pw)
 
     access_token = Oauth2.create_access_token({"user_id": new_user.ID})

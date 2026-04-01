@@ -3,7 +3,6 @@ import "../css/profile.css";
 import NavBar from "../components/Navbar";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { apiGet, apiPost, apiPatch } from "../api"; // axios helpers (cookies + CSRF)
 
 export default function Profile() {
   const navigate = useNavigate();
@@ -24,15 +23,28 @@ export default function Profile() {
   const [msg, setMsg] = useState(null);
 
   useEffect(() => {
-    let isMounted = true;
-
     async function load() {
       setLoading(true);
       setMsg(null);
+
       try {
-        const res = await apiGet("/profile"); // sends cookies
-        const data = res.data;
-        if (!isMounted) return;
+        const res = await fetch("/api/profile", {
+          method: "GET",
+          credentials: "include"
+        });
+
+        if (res.status === 401) {
+          navigate("/login", { replace: true });
+          return;
+        }
+
+        if (res.status === 404) {
+          setMode("create")
+          return
+        }
+
+        const data = await res.json();
+
         setForm({
           FullName: data.FullName || "",
           Age: data.Age ?? "",
@@ -43,35 +55,14 @@ export default function Profile() {
           InjuriesOrLimitations: data.InjuriesOrLimitations || "",
         });
         setMode("update");
-      } catch (e) {
-        const status = e?.response?.status;
-        if (status === 401) {
-          navigate("/login", { replace: true });
-          return;
-        }
-        if (status === 404) {
-          setMode("create");
-          setForm({
-            FullName: "",
-            Age: "",
-            Height: "",
-            Weight: "",
-            FitnessLevel: "",
-            Goal: "",
-            InjuriesOrLimitations: "",
-          });
-        } else {
-          setMsg(e?.response?.data?.detail || e.message || "Failed to load profile");
-        }
+
+      } catch {
+        setMsg("Failed to load profile");
       } finally {
-        if (isMounted) setLoading(false);
+        setLoading(false);
       }
     }
-
     load();
-    return () => {
-      isMounted = false;
-    };
   }, [navigate]);
 
   function onChange(e) {
@@ -81,50 +72,95 @@ export default function Profile() {
 
   async function onSubmit(e) {
     e.preventDefault();
-
     setSaving(true);
     setMsg(null);
 
     try {
-      const toNum = (v) => (v === "" ? undefined : Number(v));
+      const csrfRes = await fetch("/api/csrf-token", {
+        credentials: "include"
+      });
+
+      const csrfData = await csrfRes.json();
+      const csrfToken = csrfData.csrfToken;
+
+      let ageValue = undefined;
+      if (form.Age !== "") {
+        ageValue = Number(form.Age);
+      }
+
+      let heightValue = undefined;
+      if (form.Height !== "") {
+        heightValue = Number(form.Height);
+      }
+
+      let weightValue = undefined;
+      if (form.Weight !== "") {
+        weightValue = Number(form.Weight);
+      }
+
       const payload = {
         FullName: form.FullName,
-        Age: toNum(form.Age),
-        Height: toNum(form.Height),
-        Weight: toNum(form.Weight),
+        Age: ageValue,
+        Height: heightValue,
+        Weight: weightValue,
         FitnessLevel: form.FitnessLevel,
         Goal: form.Goal,
         InjuriesOrLimitations: form.InjuriesOrLimitations,
       };
 
-      const res =
-        mode === "create"
-          ? await apiPost("/profile", payload)
-          : await apiPatch("/profile", payload);
+      let method = "POST";
+      if (mode === "update") {
+        method = "PATCH";
+      }
 
-      const data = res.data;
+      const res = await fetch("/api/profile", {
+        method: method,
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRF-Token": csrfToken
+        },
+        body: JSON.stringify(payload)
+      });
+
+      if (res.status === 401) {
+        navigate("/login", { replace: true });
+        return;
+      }
+
+      const data = await res.json();
+
       setForm({
         FullName: data.FullName || "",
-        Age: data.Age ?? "",
-        Height: data.HeightCM ?? "",
-        Weight: data.WeightKG ?? "",
+        Age: data.Age || "",
+        Height: data.HeightCM || "",
+        Weight: data.WeightKG || "",
         FitnessLevel: data.FitnessLevel || "",
         Goal: data.Goal || "",
         InjuriesOrLimitations: data.InjuriesOrLimitations || "",
       });
+
       setMode("update");
       setMsg("Profile saved!");
-    } catch (e) {
-      const status = e?.response?.status;
-      if (status === 401) {
-        navigate("/login", { replace: true });
-      } else {
-        const detail = e?.response?.data?.detail;
-        setMsg(detail || e.message || "Failed to save profile");
-      }
+    } catch {
+      setMsg("Failed to save profile");
     } finally {
       setSaving(false);
     }
+  }
+
+  let msgClass = "msg-error";
+  if (msg === "Profile saved!") {
+    msgClass = "msg-success";
+  }
+
+  let buttonText = "Update profile";
+  if (mode === "create") {
+    buttonText = "Create profile";
+  }
+
+  if (saving) {
+    buttonText = "Saving…";
   }
 
   return (
@@ -135,14 +171,7 @@ export default function Profile() {
       <div className="main-profile-container">
         <div className="profile-container">
           <h1 className="profile-title">Your Profile</h1>
-
-          {/* success or error message*/}
-          {msg && (
-            <p className={`msg ${msg === "Profile saved!" ? "msg-success" : "msg-error"}`}>
-              {msg}
-            </p>
-          )}
-
+          {msg && (<p className={"msg " + msgClass}>{msg}</p>)}
           <form onSubmit={onSubmit} className="form">
             {/* Full Name */}
             <div className="field">
@@ -155,7 +184,6 @@ export default function Profile() {
                 required
               />
             </div>
-
             {/* Age */}
             <div className="grid">
               <div className="field">
@@ -171,7 +199,6 @@ export default function Profile() {
                   max={120}
                 />
               </div>
-              
               {/* Height */}
               <div className="field">
                 <label className="label">Height (cm)</label>
@@ -186,7 +213,6 @@ export default function Profile() {
                   onChange={onChange}
                 />
               </div>
-
               {/* Weight */}
               <div className="field">
                 <label className="label">Weight (kg)</label>
@@ -201,7 +227,6 @@ export default function Profile() {
                   onChange={onChange}
                 />
               </div>
-
               {/* Fitness Level */}
               <div className="field">
                 <label className="label">Fitness level</label>
@@ -214,7 +239,6 @@ export default function Profile() {
                 />
               </div>
             </div>
-
             {/* Goal */}
             <div className="field">
               <label className="label">Goal</label>
@@ -226,7 +250,6 @@ export default function Profile() {
                 placeholder="Lose weight, gain muscle, etc."
               />
             </div>
-
             {/* Injuries / limitations */}
             <div className="field">
               <label className="label">Injuries or limitations</label>
@@ -238,10 +261,9 @@ export default function Profile() {
                 onChange={onChange}
               />
             </div>
-
             {/* Submit button */}
             <button type="submit" className="btn" disabled={saving}>
-              {saving ? "Saving…" : mode === "create" ? "Create profile" : "Update profile"}
+              {buttonText}
             </button>
           </form>
         </div>

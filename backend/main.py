@@ -1,19 +1,22 @@
 #initialises FastAPI, configures CORS, registers routers and includes 2 routes
-from fastapi import FastAPI, Request, Header, Cookie, HTTPException
+from fastapi import FastAPI, Request, Response
 from application.routers import workouts, user, user_request, auth, profile
 from fastapi.middleware.cors import CORSMiddleware
-from starlette.middleware import Middleware
 from uvicorn.middleware.proxy_headers import ProxyHeadersMiddleware  # use Starlette's proxy headers
 from slowapi.middleware import SlowAPIMiddleware
 from application.rate_limit import limiter
 from starlette.responses import JSONResponse
 import os
+import secrets
 
 app = FastAPI()
 
 #website under maintenance blocking login/sign up routes
 MAINTENANCE_MODE = os.getenv("MAINTENANCE_MODE", "false").lower() == "true"
 MAINTENANCE_MSG = os.getenv("MAINTENANCE_MSG", "Sign in is temporarily disabled for maintenance.")
+IS_PROD = os.getenv("ENV", "development").lower() in {"prod", "production"}
+#Central cookie
+COOKIE_DOMAIN = os.getenv("COOKIE_DOMAIN", ".fitrequest.dev" if IS_PROD else None)
 
 @app.middleware("http")
 async def maintenance_auth_gate(request: Request, call_next):
@@ -62,6 +65,23 @@ class SkipOptionsRateLimitMiddleware(SlowAPIMiddleware):
         return await super().dispatch(request, call_next)
 
 app.add_middleware(SkipOptionsRateLimitMiddleware)
+
+#csrf route to create csrf token
+@app.get("/api/csrf-token")
+def get_csrf_token(response: Response):
+    token = secrets.token_urlsafe(32)
+    
+    response.set_cookie(
+        key="csrf_token",
+        value=token,
+        httponly=True,
+        secure=IS_PROD,
+        samesite="none" if IS_PROD else "lax",
+        path="/",
+        **({"domain": COOKIE_DOMAIN} if COOKIE_DOMAIN else {})
+    )
+    
+    return {"csrfToken": token}
 
 app.include_router(workouts.router)
 app.include_router(user.router)

@@ -1,10 +1,8 @@
 //login / sign up page
-
 import "../css/loginsignup.css";
 import emailIcon from '../assets/email.png'
 import passwordIcon from '../assets/password.png'
 import { useState } from "react";
-import { login, apiPost, apiGet } from "../api";
 import { useNavigate } from "react-router-dom";
 
 function Login() {
@@ -28,33 +26,61 @@ function Login() {
   const [loading, setLoading] = useState(false); //error message if something is amiss
   
   const navigate = useNavigate();
-  const isSignup = toggle === "Sign up";
+
+  let isSignup = false;
+  if (toggle === "Sign up") {
+    isSignup = true;
+  }
+
   async function handleLogin() {
     setError(null);
     setLoading(true);
+
     try {
-      await login(email, password); // server sets cookies; no local token       
-      await apiGet("/me")    
+      const res = await fetch("/api/login", {
+        method: "POST",
+        credentials: "include",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({Email: email, Password: password})
+      });
+
+    if (!res.ok) {
+      throw new Error("Login failed");
+      }     
+ 
       navigate("/homepage", { replace: true });   
     } catch (e) {
-      console.error("Signup error:", e)
-      //optional chaining for cleaner code
-      const msg = e?.response?.data?.detail || "Login failed";
-      setError(msg); // 
+      console.error(e)
+      setError("Login failed");
     } finally {
       setLoading(false);
     }
   }
 
   async function handleSignup() {
-    setError(null); setLoading(true);
+    setError(null); 
+    setLoading(true);
     try {
-      await apiPost("/signup", { Email: email, Password: password });   
+      const res = await fetch("/api/signup", {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          Email: email,
+          Password: password,
+        })
+    })
+
+    if (!res.ok) {
+      throw new Error("Sign up failed");
+    } 
+
       navigate("/homepage", { replace: true }); 
     } catch (e) {
       console.error("Signup error:", e)
-      const msg = e?.response?.data?.detail || "Signup failed";
-      setError(msg);
+      setError(e.message || "Signup failed")
     } finally {
       setLoading(false);
     }
@@ -65,6 +91,39 @@ function Login() {
     e.preventDefault();
     if (isSignup) await handleSignup();
     else await handleLogin();
+  }
+
+  //signup/login logic
+  let forgotPasswordSection = null;
+  if (toggle !== "Sign up") {
+    forgotPasswordSection = <div className="forgot-password"></div>;
+  }
+
+  let errorSection = null;
+  if (error) {
+    errorSection = <p className="errorMsg">{error}</p>;
+  }
+
+  let buttonText = "Log in";
+  if (toggle === "Sign up") {
+    buttonText = "Create account";
+  }
+
+  if (loading) {
+    buttonText = "Logging in...";
+    if (toggle === "Sign up") {
+      buttonText = "Creating…";
+    }
+  }
+
+  let signUpButtonClass = "submit";
+  if (toggle === "Login") {
+    signUpButtonClass = "submit gray";
+  }
+
+  let loginButtonClass = "submit";
+  if (toggle === "Sign up") {
+    loginButtonClass = "submit gray";
   }
 
   //code for the login/sign up page
@@ -90,14 +149,12 @@ function Login() {
             <input type="password" placeholder="Password" value={password} onChange={e => {setPassword(e.target.value);
               setError(null)}}required/>
           </div>
-          {toggle === "Sign up"?(<div></div>):(<div className="forgot-password"></div>)}
-          {error && <p className="errorMsg">{error}</p>}
-          <button 
-          type="submit" className="submit2" disabled={loading}>{loading ? (toggle === "Sign up" ? "Creating…" : "Logging in…") : (toggle === "Sign up" ? "Create account" : "Log in")}
-          </button>
+          {forgotPasswordSection}
+          {errorSection}
+          <button type="submit" className="submit2" disabled={loading}>{buttonText}</button>
           <div className="submit-container">
-            <button type="button" className={toggle === "Login"?"submit gray":"submit"}onClick={() => { setToggle("Sign up");}}>Sign Up Section</button>
-            <button type="button" className={toggle === "Sign up"?"submit gray":"submit"}onClick={() => { setToggle("Login");}}>Login Section</button>
+            <button type="button" className={signUpButtonClass}onClick={() => {setToggle("Sign up");}}>Sign Up Section</button>
+            <button type="button" className={loginButtonClass}onClick={() => {setToggle("Login");}}>Login Section</button>
           </div>
         </form>
         </div>

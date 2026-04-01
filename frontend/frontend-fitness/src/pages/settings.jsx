@@ -3,7 +3,6 @@ import "../css/settings.css";
 import NavBar from "../components/Navbar";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { apiGet, apiPost } from "../api"; // axios helpers (cookies + CSRF)
 
 export default function Settings() {
   const navigate = useNavigate();
@@ -14,21 +13,35 @@ export default function Settings() {
   const [newPassword, setNewPassword] = useState("");
   const [message, setMessage] = useState("");
 
-  //Load user email and active status (cookie session)
   useEffect(() => {
-    apiGet("/me")
-      .then((res) => {
-        const d = res.data || {};
-        setEmail(d.Email || d.email || "");
-        setIsActive(d.IsActive ?? d.is_active ?? false);
-      })
-      .catch((e) => {
-        if (e?.response?.status === 401) {
+    async function loadUser() {
+      setMessage("");
+
+      try {
+        const res = await fetch("/api/me", {
+          method: "GET",
+          credentials: "include"
+        });
+
+        if (res.status === 401) {
           navigate("/login", { replace: true });
-        } else {
-          setMessage("Failed to load user info.");
+          return;
         }
-      });
+
+        if (!res.ok) {
+          throw new Error("Failed to load your information.");
+        }
+
+        const d = await res.json();;
+
+        setEmail(d.Email || "");
+        setIsActive(d.IsActive);
+
+      } catch {
+        setMessage("Failed to load your information.");
+      }
+    }
+    loadUser();
   }, [navigate]);
 
   //password change
@@ -45,24 +58,66 @@ export default function Settings() {
     }
 
     try {
-      await apiPost("/user/change-password", {
-        current_password: currentPassword,
-        new_password: newPassword,
+      const csrfRes = await fetch("/api/csrf-token", {
+        method: "GET",
+        credentials: "include"
       }); 
+
+      if (!csrfRes.ok) {
+        throw new Error("Failed to get CSRF token.");
+      }
+
+      const csrfData = await csrfRes.json();
+      const csrfToken = csrfData.csrfToken;
+
+      const res = await fetch("/api/user/change-password", {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRF-Token": csrfToken
+        },
+        body: JSON.stringify({
+          current_password: currentPassword,
+          new_password: newPassword
+        })
+      });
+
+      if (res.status === 401) {
+        navigate("/login", { replace: true });
+        return;
+      }
+
+      if (!res.ok) {
+        let detail = "Something went wrong.";
+
+        try {
+          const errorData = await res.json();
+          if (errorData.detail) {
+            detail = errorData.detail;
+          }
+        } catch {
+        }
+
+        throw new Error(detail);
+      }
 
       setMessage("Password changed successfully!");
       setCurrentPassword("");
       setNewPassword("");
     } catch (e) {
-      if (e?.response?.status === 401) {
-        navigate("/login", { replace: true });
+      if (e.message) {
+        setMessage(e.message);
       } else {
-        const detail = e?.response?.data?.detail;
-        setMessage(detail || e.message || "Something went wrong.");
+        setMessage("Something went wrong");
       }
     }
   }
 
+  let statusText = "Inactive";
+  if (isActive) {
+    statusText = "Active";
+  }
   return (
     <>
       <header className="nav-bar">
@@ -71,15 +126,12 @@ export default function Settings() {
       <h1 className="settings">Settings</h1>
       <div className="settings-container">
         <h1 className="password-change">Password Change</h1>
-
         {message && <p>{message}</p>}
-
         {/* User Info */}
         <div>
           <p className="email">Email: {email}</p>
-          <p className="status">Status: {isActive ? "Active" : "Inactive"}</p>
+          <p className="status">Status: {statusText}</p>
         </div>
-
         {/* Change Password */}
         <form onSubmit={handleChangePassword}>
           <div>

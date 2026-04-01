@@ -1,51 +1,67 @@
 //workout details page
-
 import "../css/workoutdetail.css";
 import NavBar from "../components/Navbar";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { apiGet } from "../api"; // uses baseURL=/api and withCredentials:true
 
 export default function WorkoutDetail() {
-  const { name: Name } = useParams();
+  const params = useParams();
+  const Name = params.name;
   const [workout, setWorkout] = useState(null);
-  const [err, setErr] = useState(null);
+  const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
-    let isMounted = true;
-
     async function load() {
       setLoading(true);
-      setErr(null);
+      setError(null);
+
       try {
-        const res = await apiGet(`/workouts/${encodeURIComponent(Name)}`); // sends cookies
-        if (isMounted) setWorkout(res.data);
-      } catch (e) {
-        const status = e?.response?.status;
-        if (status === 401) {
+        const res = await fetch("/api/workouts/" + encodeURIComponent(Name), {
+          method: "GET",
+          credentials: "include"
+        });
+
+        if (res.status === 401) {
           navigate("/login", { replace: true });
-        } else if (status === 404) {
-          setErr("Workout not found");
+          return;
+        }
+
+        if (res.status === 404) {
+          setError("Workout not found");
           setWorkout(null);
+          return;
+        }
+
+        if (!res.ok) {
+          throw new Error("Failed to load workout");
+        }
+
+        const data = await res.json();
+        setWorkout(data);
+
+      } catch (e) {
+        if (e.message) {
+          setError(e.message);
         } else {
-          setErr(e?.response?.data?.detail || e.message || "Failed to load workout");
+          setError("Failed to load workout");
         }
       } finally {
-        if (isMounted) setLoading(false);
+        setLoading(false);
       }
     }
 
     load();
-    return () => {
-      isMounted = false;
-    };
   }, [Name, navigate]);
 
-  if (loading) return <p>Loading workout…</p>;
-  if (err) return <p style={{ color: "red" }}>{err}</p>;
-  if (!workout) return null;
+  if (loading) {
+    return <p>Loading workout…</p>; 
+  }
+
+  if (err) {
+    return <p style={{ color: "red" }}>{err}</p>;
+  }
 
   // displays the specific chosen workout details
   const title = workout.Name || workout.name;
@@ -54,51 +70,34 @@ export default function WorkoutDetail() {
 
   return (
     <>
-      <header className="nav-bar">
-      <NavBar />
-      </header>
+      <header className="nav-bar"><NavBar /></header>
       <div className="back-button-container">
-        <button className="back-button" onClick={() => navigate(-1)}>
-          Back to Workouts List
-        </button>
+        <button className="back-button" onClick={() => navigate(-1)}>Back to Workouts List</button>
       </div>
       <div className="workout-container">
         <div className="workout-detail">
           <h2 className="workout-title">{title}</h2>
           <p className="workout-description">{description}</p>
-
-          {sections.length === 0 ? (
-            <p>No sections found!</p>
-          ) : (
+          {sections.length === 0 && <p>No sections found!</p>}
+          {/* Sections */}
+          {sections.length > 0 && (
             <div className="sections-container">
               {sections.map((section) => {
                 const sectionName = section.SectionName || "Untitled Section";
                 const routines = section.Routines || [];
-
                 return (
                   <div key={section.ID} className="section-card">
                     <h3 className="section-title">{sectionName}</h3>
-
-                    {routines.length === 0 ? (
-                      <p>No routines found!</p>
-                    ) : (
-                      <ul className="routine-list">
-                        {routines.map((routine) => (
+                    {/* No routines */}
+                    {routines.length === 0 && <p>No routines found!</p>}
+                    {/* Routines */}
+                    {routines.length > 0 && (<ul className="routine-list">{routines.map((routine) => (
                           <li key={routine.ID} className="routine-item">
-                            <div>
-                              <div className="routine-row">
-                                <span className="routine-name">{routine.Name}</span>
-                                {routine.RepsDuration && (
-                                  <span className="routine-duration">
-                                    {" "}
-                                    - {routine.RepsDuration}
-                                  </span>
-                                )}
-                              </div>
+                            <div className="routine-row">
+                              <span className="routine-name">{routine.Name}</span>
+                              {routine.RepsDuration && (<span className="routine-duration">{" - "}{routine.RepsDuration}</span>)}
                             </div>
-                            {routine.RoutineDescription && (
-                              <p className="routine-desc">{routine.RoutineDescription}</p>
-                            )}
+                            {routine.RoutineDescription && (<p className="routine-desc">{routine.RoutineDescription}</p>)}
                           </li>
                         ))}
                       </ul>
