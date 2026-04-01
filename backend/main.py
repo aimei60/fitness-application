@@ -11,18 +11,9 @@ import secrets
 
 app = FastAPI()
 
-#website under maintenance blocking login/sign up routes
-MAINTENANCE_MODE = os.getenv("MAINTENANCE_MODE", "false").lower() == "true"
-MAINTENANCE_MSG = os.getenv("MAINTENANCE_MSG", "Sign in is temporarily disabled for maintenance.")
 IS_PROD = os.getenv("ENV", "development").lower() in {"prod", "production"}
 #Central cookie
 COOKIE_DOMAIN = os.getenv("COOKIE_DOMAIN", ".fitrequest.dev" if IS_PROD else None)
-
-@app.middleware("http")
-async def maintenance_auth_gate(request: Request, call_next):
-    if MAINTENANCE_MODE and request.url.path.startswith(("/login", "/signup")):
-        return JSONResponse({"detail": MAINTENANCE_MSG}, status_code=503)
-    return await call_next(request)
 
 app.add_middleware(
     CORSMiddleware,

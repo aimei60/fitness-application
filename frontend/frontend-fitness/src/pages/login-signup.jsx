@@ -6,18 +6,6 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 function Login() {
-  //maintenance site
-  const maintenance = import.meta.env.VITE_MAINTENANCE_MODE === "true";
-  const msg = import.meta.env.VITE_MAINTENANCE_MSG || "Under maintenance";
-
-  if (maintenance) {
-    return (
-      <div style={{margin: "3rem auto", maxWidth: "28rem", borderRadius: "1rem", border: "1px solid #ccc", padding: "1.5rem", textAlign: "center"}}>
-      <h2 style={{fontSize: "1.25rem", fontWeight: 600, marginBottom: "0.5rem"}}>Under Maintenance</h2>
-      <p style={{opacity: 0.8}}>{msg}</p>
-      </div>
-        );
-  }
 
   const [toggle, setToggle] = useState("Sign up"); //to switch between sign up and login states
   const [email, setEmail] = useState(""); //user input

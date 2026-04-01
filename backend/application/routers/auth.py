@@ -10,6 +10,7 @@ from application.crud.auth import get_user_by_email, create_user
 from application import Oauth2, models
 from application.rate_limit import limiter
 import os
+import traceback
 
 router = APIRouter(tags=['Authentication'])
 
@@ -34,15 +35,31 @@ def set_auth_cookies(response: Response, access_jwt: str):
 @router.post("/signup")
 @limiter.limit("3/minute")
 def signup(request: Request, user: UserSignup, response: Response, db: Session = Depends(get_db)):
-    if get_user_by_email(db, user.Email):
-        raise HTTPException(status_code=400, detail="Email already registered")
+    try: 
+        if get_user_by_email(db, user.Email):
+            print("Signup route hit")
+            print("Incoming email:", user.Email)
+            raise HTTPException(status_code=400, detail="Email already registered")
+        
+        print("Hashing password")
+        hashed_pw = security.get_password_hash(user.Password)
+            
+        print("Creating user")
+        new_user = create_user(db, email=user.Email, hashed_password=hashed_pw)
 
-    hashed_pw = security.get_password_hash(user.Password)
-    new_user = create_user(db, email=user.Email, hashed_password=hashed_pw)
+        print("User created:", new_user)
 
-    access_token = Oauth2.create_access_token({"user_id": new_user.ID})
-    set_auth_cookies(response, access_token)
-    return {"ok": True}
+        print("Creating token")
+        access_token = Oauth2.create_access_token({"user_id": new_user.ID})
+        print("Setting cookies")
+        set_auth_cookies(response, access_token)
+        return {"ok": True}
+    
+    except HTTPException:
+        raise
+    except Exception as e:
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 #for Swagger UI
