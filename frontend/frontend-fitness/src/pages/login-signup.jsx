@@ -37,7 +37,8 @@ function Login() {
     });
   }, []);
 
-  async function handleLogin() {
+  async function handleLogin(e) {
+    e.preventDefault();
     setError(null);
     setLoading(true);
 
@@ -64,7 +65,8 @@ function Login() {
     }
   }
 
-  async function handleSignup() {
+  async function handleSignup(e) {
+    e.preventDefault();
     setError(null); 
     setLoading(true);
     try {
