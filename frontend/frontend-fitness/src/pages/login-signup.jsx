@@ -16,6 +16,8 @@ function Login() {
 
   const navigate = useNavigate();
 
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
   let isSignup = false;
   if (toggle === "Sign up") {
     isSignup = true;
@@ -42,7 +44,7 @@ function Login() {
     setLoading(true);
 
     try {
-      const res = await fetch("/api/login", {
+      const res = await fetch(`${API_BASE_URL}/api/login`, {
         method: "POST",
         credentials: "include",
         headers: {"Content-Type": "application/json"},
@@ -68,7 +70,7 @@ function Login() {
     setError(null); 
     setLoading(true);
     try {
-      const res = await fetch("/api/signup", {
+      const res = await fetch(`${API_BASE_URL}/api/signup`, {
         method: "POST",
         credentials: "include",
         headers: {
