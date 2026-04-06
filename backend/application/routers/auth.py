@@ -16,7 +16,7 @@ router = APIRouter(tags=['Authentication'])
 IS_PROD = os.getenv("ENV", "development").lower() in {"prod", "production"}
 
 #Central cookie
-COOKIE_DOMAIN = os.getenv("COOKIE_DOMAIN", ".fitrequest.dev" if IS_PROD else None)
+COOKIE_DOMAIN = None
 
 COOKIE_KW = dict(
     httponly=True,
@@ -77,7 +77,7 @@ def user_login(user_credentials: UserLogin, request: Request, response: Response
     return {"ok": True}
 
 #helper function to check login flow 
-@router.get("/me")
+@router.get("/api/me")
 def read_me(current_user: models.User = Depends(Oauth2.get_current_user)):
     return {"id": current_user.ID, "email": current_user.Email}
 
