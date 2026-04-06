@@ -20,7 +20,7 @@ export default function WorkoutDetail() {
       setError(null);
 
       try {
-        const res = await fetch(`${API_BASE_URL}/apiworkouts/` + encodeURIComponent(Name), {
+        const res = await fetch(`${API_BASE_URL}/api/workouts/` + encodeURIComponent(Name), {
           method: "GET",
           credentials: "include"
         });
