@@ -55,7 +55,7 @@ if not db_url:
 
 #Neon safety: ensure TLS
 if "neon.tech" in db_url and "sslmode=" not in db_url:
-    db_url += ("&" if "?" in db_url else "?") + "sslmode=disable"
+    db_url += ("&" if "?" in db_url else "?") + "sslmode=require"
 
 #Escape % so ConfigParser doesn't interpolate
 escaped_url = db_url.replace("%", "%%")
