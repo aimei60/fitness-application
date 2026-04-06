@@ -39,9 +39,8 @@ export default function WorkoutDetail() {
         if (!res.ok) {
           throw new Error("Failed to load workout");
         }
-        console.log("response status:", res.status);
+
         const data = await res.json();
-        console.log("data:", data);
         setWorkout(data);
 
       } catch (e) {
