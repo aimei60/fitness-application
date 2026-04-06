@@ -7,6 +7,8 @@ import { useNavigate } from "react-router-dom";
 export default function Profile() {
   const navigate = useNavigate();
 
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
   const [form, setForm] = useState({
     FullName: "",
     Age: "",
@@ -28,7 +30,7 @@ export default function Profile() {
       setMsg(null);
 
       try {
-        const res = await fetch("/api/profile", {
+        const res = await fetch(`${API_BASE_URL}/api/profile`, {
           method: "GET",
           credentials: "include"
         });
@@ -80,7 +82,7 @@ export default function Profile() {
     setMsg(null);
 
     try {
-      const csrfRes = await fetch("/api/csrf-token", {
+      const csrfRes = await fetch(`${API_BASE_URL}/api/csrf-token`, {
         credentials: "include"
       });
 
@@ -117,7 +119,7 @@ export default function Profile() {
         method = "PATCH";
       }
 
-      const res = await fetch("/api/profile", {
+      const res = await fetch(`${API_BASE_URL}/api/profile`, {
         method: method,
         credentials: "include",
         headers: {

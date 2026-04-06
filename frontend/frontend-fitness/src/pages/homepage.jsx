@@ -10,6 +10,8 @@ function Homepage() {
   const [error, setError] = useState(null);
   const navigate = useNavigate(); 
 
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
   //check the user is logged in or send user to login page
   useEffect(() => {
     async function load() {
@@ -17,7 +19,7 @@ function Homepage() {
       setError(null);
 
       try {
-        const res = await fetch("/api/workouts", {
+        const res = await fetch(`${API_BASE_URL}/api/workouts`, {
           method: "GET",
           credentials: "include"
         });

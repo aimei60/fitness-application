@@ -12,13 +12,15 @@ export default function WorkoutDetail() {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
   useEffect(() => {
     async function load() {
       setLoading(true);
       setError(null);
 
       try {
-        const res = await fetch("/api/workouts/" + encodeURIComponent(Name), {
+        const res = await fetch(`${API_BASE_URL}/apiworkouts/` + encodeURIComponent(Name), {
           method: "GET",
           credentials: "include"
         });

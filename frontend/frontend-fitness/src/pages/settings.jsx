@@ -13,12 +13,14 @@ export default function Settings() {
   const [newPassword, setNewPassword] = useState("");
   const [message, setMessage] = useState("");
 
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
   useEffect(() => {
     async function loadUser() {
       setMessage("");
 
       try {
-        const res = await fetch("/api/me", {
+        const res = await fetch(`${API_BASE_URL}/api/me`, {
           method: "GET",
           credentials: "include"
         });
@@ -58,7 +60,7 @@ export default function Settings() {
     }
 
     try {
-      const csrfRes = await fetch("/api/csrf-token", {
+      const csrfRes = await fetch(`${API_BASE_URL}/api/csrf-token`, {
         method: "GET",
         credentials: "include"
       }); 
@@ -70,7 +72,7 @@ export default function Settings() {
       const csrfData = await csrfRes.json();
       const csrfToken = csrfData.csrfToken;
 
-      const res = await fetch("/api/user/change-password", {
+      const res = await fetch(`${API_BASE_URL}/api/user/change-password`, {
         method: "POST",
         credentials: "include",
         headers: {
