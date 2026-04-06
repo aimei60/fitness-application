@@ -43,13 +43,17 @@ export default function Profile() {
           return
         }
 
+        if (!res.ok) {
+          throw new Error("Failed to load profile");
+        }
+
         const data = await res.json();
 
         setForm({
           FullName: data.FullName || "",
-          Age: data.Age ?? "",
-          Height: data.HeightCM ?? "",
-          Weight: data.WeightKG ?? "",
+          Age: data.Age || "",
+          Height: data.HeightCM || "",
+          Weight: data.WeightKG || "",
           FitnessLevel: data.FitnessLevel || "",
           Goal: data.Goal || "",
           InjuriesOrLimitations: data.InjuriesOrLimitations || "",
@@ -128,6 +132,10 @@ export default function Profile() {
         return;
       }
 
+      if (!res.ok) {
+        throw new Error("Failed to save profile");
+      }
+
       const data = await res.json();
 
       setForm({
@@ -161,6 +169,10 @@ export default function Profile() {
 
   if (saving) {
     buttonText = "Saving…";
+  }
+
+  if (loading) {
+    return <p>Loading profile...</p>;
   }
 
   return (

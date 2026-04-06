@@ -59,8 +59,8 @@ export default function WorkoutDetail() {
     return <p>Loading workout…</p>; 
   }
 
-  if (err) {
-    return <p style={{ color: "red" }}>{err}</p>;
+  if (error) {
+    return <p style={{ color: "red" }}>{error}</p>;
   }
 
   // displays the specific chosen workout details

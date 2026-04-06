@@ -2,7 +2,7 @@
 import "../css/loginsignup.css";
 import emailIcon from '../assets/email.png'
 import passwordIcon from '../assets/password.png'
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 function Login() {
@@ -12,13 +12,30 @@ function Login() {
   const [password, setPassword] = useState(""); //user input
   const [error, setError] = useState(null); //status of the request
   const [loading, setLoading] = useState(false); //error message if something is amiss
-  
+  const [captchaToken, setCaptchaToken] = useState(""); //captchs
+
   const navigate = useNavigate();
 
   let isSignup = false;
   if (toggle === "Sign up") {
     isSignup = true;
   }
+
+  useEffect(() => {
+    if (!window.turnstile) return;
+
+    //stops 2 cloudflare turnstiles showing up
+    const container = document.getElementById("turnstile-widget");
+    if (!container) return;
+    container.innerHTML = "";
+
+    window.turnstile.render("#turnstile-widget", {
+      sitekey: import.meta.env.VITE_TURNSTILE_SITE_KEY,
+      callback: function (token) {
+        setCaptchaToken(token);
+      },
+    });
+  }, []);
 
   async function handleLogin() {
     setError(null);
@@ -32,9 +49,10 @@ function Login() {
         body: JSON.stringify({Email: email, Password: password})
       });
 
+    
     const data = await res.json();
     if (!res.ok) {
-      throw new Error(data.detail || "Sign up failed");
+      throw new Error(data.detail || "Login failed");
     }     
  
       navigate("/homepage", { replace: true });   
@@ -56,16 +74,14 @@ function Login() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          Email: email,
-          Password: password,
+        body: JSON.stringify({Email: email, Password: password, CaptchaToken: captchaToken
         })
     })
 
     const data = await res.json();
     if (!res.ok) {
-      throw new Error(data.detail || "Sign up failed");
-    }
+      throw new Error(data.detail || "Login failed");
+    }  
 
       navigate("/homepage", { replace: true }); 
     } catch (e) {
@@ -139,9 +155,10 @@ function Login() {
             <input type="password" placeholder="Password" value={password} onChange={e => {setPassword(e.target.value);
               setError(null)}}required/>
           </div>
-          {forgotPasswordSection}
+          {/*forgotPasswordSection*/}
           {errorSection}
           <button type="submit" className="submit2" disabled={loading}>{buttonText}</button>
+           <div className="turnstile" id="turnstile-widget"></div>
           <div className="submit-container">
             <button type="button" className={signUpButtonClass}onClick={() => {setToggle("Sign up");}}>Sign Up Section</button>
             <button type="button" className={loginButtonClass}onClick={() => {setToggle("Login");}}>Login Section</button>

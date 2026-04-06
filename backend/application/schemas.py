@@ -115,6 +115,7 @@ class UserLogin(BaseModel):
 class UserSignup(BaseModel):
     Email: EmailStr
     Password: str
+    CaptchaToken: str
 
 #schema for token  
 class Token(BaseModel): #output sent to user after login

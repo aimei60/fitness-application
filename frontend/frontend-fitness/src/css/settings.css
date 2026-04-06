@@ -1,28 +1,27 @@
-/* Container for the entire settings page */
 .settings-container { 
   max-width: 400px;
   margin: 2rem auto; 
   padding: 1.5rem;
-  background-color: #f9f9f9;
+  background-color: #ffdddd;
   border-radius: 10px;
   border: 1px solid #ddd;
   font-family: Arial, sans-serif;
 }
 
 .settings {
-    font-size: 1.5rem; 
-    font-weight: 600;
-    margin-bottom: 6rem;
-    color: #096a60;
-    margin-left: 1.5rem;
+  font-size: 1.5rem; 
+  font-weight: 600;
+  margin-bottom: 6rem;
+  color: #4A4A4AFC;
+  margin-left: 1.5rem;
 }
 
 .password-change{
-  color: #096a60 !important;
+  color: #4A4A4AFC !important;
 }
 
 .email, .status {
-    font-weight: bold;
+  font-weight: bold;
 }
 
 .settings-container h1 {
@@ -76,7 +75,7 @@ form input {
 form button {
   width: 100%;
   padding: 0.6rem;
-  background-color: #36ab8c;
+  background-color: #a24444;
   color: white;
   font-size: 1rem;
   font-weight: bold;
@@ -86,5 +85,5 @@ form button {
 }
 
 form button:hover {
-  background-color: #417cda !important;
+  background-color: #ff0000 !important;
 }

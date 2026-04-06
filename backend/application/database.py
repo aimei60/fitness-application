@@ -7,7 +7,7 @@ from sqlalchemy.orm import sessionmaker, DeclarativeBase
 
 # Load sens.env only when running locally (not on Fly)
 if not os.getenv("FLY_APP_NAME"):
-    load_dotenv("sens.env", override=False)  # don't override real env
+    load_dotenv("sens.env", override=True)  #override real env
 
 # Use one env var for everything
 DB_URL = os.getenv("DATABASE_URL")

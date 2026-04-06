@@ -12,12 +12,12 @@ from application.csrf import verify_csrf
 router = APIRouter(tags=['Profile'])
 
 #allows user to create their profile section
-@router.post("/profile", response_model=UserProfileRead)
+@router.post("/api/profile", response_model=UserProfileRead)
 def create_profile(profile: UserProfileCreate, db: Session = Depends(get_db), current_user: User = Depends(Oauth2.get_current_user), _=Depends(verify_csrf)):
     return create_user_profile(db, current_user.ID, profile)
 
 #returns the user's profile
-@router.get("/profile", response_model=UserProfileRead)
+@router.get("/api/profile", response_model=UserProfileRead)
 def return_user_profile(db: Session = Depends(get_db), current_user: User = Depends(Oauth2.get_current_user)):
     profile = read_user_profile(db, current_user.ID)
     
@@ -26,7 +26,7 @@ def return_user_profile(db: Session = Depends(get_db), current_user: User = Depe
     return profile
 
 #allows user to update the their profile details
-@router.patch("/profile", response_model=UserProfileRead)
+@router.patch("/api/profile", response_model=UserProfileRead)
 def update_profile(input: UserProfileUpdate, db: Session = Depends(get_db), current_user: User = Depends(Oauth2.get_current_user), _=Depends(verify_csrf)):
     updated = update_user_profile(db, current_user.ID, input)
     
