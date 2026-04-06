@@ -62,7 +62,7 @@ function Homepage() {
         <h2 className="workout-title">Choose your workout!</h2>
         <div className="workout-list-container">
           {loading && <p>Loading workouts...</p>}
-          {!loading && error && <p style={{ color: "crimson" }}>{err}</p>}
+          {!loading && error && <p style={{ color: "crimson" }}>{error}</p>}
           {!loading && !error && workouts.length === 0 && (
             <p>No workouts found!</p>
           )}
