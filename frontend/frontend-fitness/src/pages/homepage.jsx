@@ -51,7 +51,7 @@ function Homepage() {
 
   //directs user to the workout page with the workout details they picked
   const handleSelect = (name) => {
-    navigate(`/workouts/${encodeURIComponent(name)}`);
+    navigate(`${API_BASE_URL}/api/workouts/${encodeURIComponent(name)}`);
   };
   
   //displays all 30 workout names

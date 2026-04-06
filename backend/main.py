@@ -13,7 +13,7 @@ app = FastAPI()
 
 IS_PROD = os.getenv("ENV", "development").lower() in {"prod", "production"}
 #Central cookie
-COOKIE_DOMAIN = os.getenv("COOKIE_DOMAIN", ".fitrequest.dev" if IS_PROD else None)
+COOKIE_DOMAIN = None
 
 app.add_middleware(
     CORSMiddleware,
