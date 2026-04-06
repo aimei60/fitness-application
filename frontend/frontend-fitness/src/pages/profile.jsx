@@ -23,8 +23,7 @@ export default function Profile() {
   const [msg, setMsg] = useState(null);
 
   useEffect(() => {
-    async function load(e) {
-      e.preventDefault();
+    async function load() {
       setLoading(true);
       setMsg(null);
 
