@@ -67,6 +67,32 @@ function Login() {
     }
   }
 
+  async function handleDemoLogin() {
+    setError(null);
+    setLoading(true)
+
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/login`, {
+        method: "POST",
+        credentials: "include",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({Email: "demo@gmail.com", Password: "password1234"})
+      });
+
+    
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.detail || "Login failed");
+    }     
+ 
+      navigate("/homepage", { replace: true });   
+    } catch (e) {
+      setError("Login failed");
+    } finally {
+      setLoading(false);
+    }
+  }
+
   async function handleSignup() {
     setError(null); 
     setLoading(true);
@@ -169,6 +195,7 @@ function Login() {
           {errorSection}
           <button type="submit" className="submit2" disabled={loading}>{buttonText}</button>
            {isSignup && <div className="turnstile" id="turnstile-widget"></div>}
+           <button type="button" className="demo-login" onClick={handleDemoLogin}>Login as Demo</button>
           <div className="submit-container">
             <button type="button" className={signUpButtonClass}onClick={() => {setToggle("Sign up");}}>Sign Up Section</button>
             <button type="button" className={loginButtonClass}onClick={() => {setToggle("Login");}}>Login Section</button>

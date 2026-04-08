@@ -77,7 +77,8 @@
     margin: 0rem auto;
 }
 
-.submit {
+.submit, 
+.demo-login {
     display: flex;
     justify-content: center;
     align-items: center;
