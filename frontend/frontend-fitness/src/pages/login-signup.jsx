@@ -24,6 +24,7 @@ function Login() {
   }
 
   useEffect(() => {
+    if (!isSignup) return;
     if (!window.turnstile) return;
 
     //stops 2 cloudflare turnstiles showing up
@@ -37,7 +38,7 @@ function Login() {
         setCaptchaToken(token);
       },
     });
-  }, []);
+  }, [toggle]);
 
   async function handleLogin() {
     setError(null);
@@ -69,6 +70,13 @@ function Login() {
   async function handleSignup() {
     setError(null); 
     setLoading(true);
+
+    if (!captchaToken) {
+      setError("Please complete the captcha");
+      setLoading(false);
+      return;
+    }
+    
     try {
       const res = await fetch(`${API_BASE_URL}/api/signup`, {
         method: "POST",
@@ -83,7 +91,7 @@ function Login() {
     const data = await res.json();
     if (!res.ok) {
       throw new Error(data.detail || "Login failed");
-    }  
+    } 
 
       navigate("/homepage", { replace: true }); 
     } catch (e) {
@@ -160,7 +168,7 @@ function Login() {
           {/*forgotPasswordSection*/}
           {errorSection}
           <button type="submit" className="submit2" disabled={loading}>{buttonText}</button>
-           <div className="turnstile" id="turnstile-widget"></div>
+           {isSignup && <div className="turnstile" id="turnstile-widget"></div>}
           <div className="submit-container">
             <button type="button" className={signUpButtonClass}onClick={() => {setToggle("Sign up");}}>Sign Up Section</button>
             <button type="button" className={loginButtonClass}onClick={() => {setToggle("Login");}}>Login Section</button>
