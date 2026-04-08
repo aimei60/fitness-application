@@ -127,15 +127,24 @@ export default function Profile() {
         weightValue = Number(form.Weight);
       }
 
-      const payload = {
-        FullName: form.FullName,
-        Age: ageValue,
-        Height: heightValue,
-        Weight: weightValue,
-        FitnessLevel: form.FitnessLevel,
-        Goal: form.Goal,
-        InjuriesOrLimitations: form.InjuriesOrLimitations,
-      };
+      let payload;
+      if (email === "demo@gmail.com") {
+        payload = {
+          Age: ageValue,
+          Height: heightValue,
+          Weight: weightValue
+        };
+      } else {
+        payload = {
+          FullName: form.FullName,
+          Age: ageValue,
+          Height: heightValue,
+          Weight: weightValue,
+          FitnessLevel: form.FitnessLevel,
+          Goal: form.Goal,
+          InjuriesOrLimitations: form.InjuriesOrLimitations,
+        };
+      }
 
       let method = "POST";
       if (mode === "update") {

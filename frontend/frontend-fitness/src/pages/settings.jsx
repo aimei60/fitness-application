@@ -160,7 +160,7 @@ export default function Settings() {
           </div>
           <button type="submit">Change Password</button>
           </form>)}
-          {email === "demo@gmail.com" && (<p className="demo-account">Demo account cannot update password.</p>)}
+          {email === "demo@gmail.com" && (<p className="demo-account">Demo account - cannot update password.</p>)}
       </div>
     </>
   );
