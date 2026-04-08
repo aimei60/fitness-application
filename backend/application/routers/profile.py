@@ -11,6 +11,8 @@ from application.csrf import verify_csrf
 
 router = APIRouter(tags=['Profile'])
 
+Demo_email = "demo@gmail.com"
+
 #allows user to create their profile section
 @router.post("/api/profile", response_model=UserProfileRead)
 def create_profile(profile: UserProfileCreate, db: Session = Depends(get_db), current_user: User = Depends(Oauth2.get_current_user), _=Depends(verify_csrf)):
@@ -28,6 +30,10 @@ def return_user_profile(db: Session = Depends(get_db), current_user: User = Depe
 #allows user to update the their profile details
 @router.patch("/api/profile", response_model=UserProfileRead)
 def update_profile(input: UserProfileUpdate, db: Session = Depends(get_db), current_user: User = Depends(Oauth2.get_current_user), _=Depends(verify_csrf)):
+    if current_user.Email == Demo_email:
+        if input.FullName or input.FitnessLevel or input.Goal or input.InjuriesOrLimitations:
+            raise HTTPException(status_code=403, detail="Demo account can only update Age, Weight, Height")
+    
     updated = update_user_profile(db, current_user.ID, input)
     
     if updated is None:

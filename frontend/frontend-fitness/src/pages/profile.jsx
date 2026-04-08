@@ -23,6 +23,29 @@ export default function Profile() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [msg, setMsg] = useState(null);
+  const [email, setEmail] = useState("");
+  const isDemo = email === "demo@gmail.com";
+
+  useEffect(() => {
+    async function getUser() {
+      try {
+          const res = await fetch(`${API_BASE_URL}/api/me`, {
+            method: "GET",
+            credentials: "include"
+          });
+
+          if (!res.ok) {
+            throw new Error("Failed to load user");
+          }
+          const data = await res.json();
+          setEmail(data.Email || "")
+
+        } catch {
+          setMsg("Failed to load user details");
+        }
+      }
+      getUser();
+    }, []);
 
   useEffect(() => {
     async function load() {
@@ -180,11 +203,12 @@ export default function Profile() {
   return (
     <>
       <header className="nav-bar">
-      <NavBar />
+        <NavBar />
       </header>
       <div className="main-profile-container">
         <div className="profile-container">
           <h1 className="profile-title">Your Profile</h1>
+          <p className="demo-update">Demo account – you can only update age, height, and weight</p>
           {msg && (<p className={"msg " + msgClass}>{msg}</p>)}
           <form onSubmit={onSubmit} className="form">
             {/* Full Name */}
@@ -196,6 +220,7 @@ export default function Profile() {
                 value={form.FullName}
                 onChange={onChange}
                 required
+                disabled={isDemo}
               />
             </div>
             {/* Age */}
@@ -250,6 +275,7 @@ export default function Profile() {
                   value={form.FitnessLevel}
                   onChange={onChange}
                   placeholder="Beginner / Intermediate / Advanced"
+                  disabled={isDemo}
                 />
               </div>
             </div>
@@ -262,6 +288,7 @@ export default function Profile() {
                 value={form.Goal}
                 onChange={onChange}
                 placeholder="Lose weight, gain muscle, etc."
+                disabled={isDemo}
               />
             </div>
             {/* Injuries / limitations */}
@@ -273,6 +300,7 @@ export default function Profile() {
                 rows="3"
                 value={form.InjuriesOrLimitations}
                 onChange={onChange}
+                disabled={isDemo}
               />
             </div>
             {/* Submit button */}

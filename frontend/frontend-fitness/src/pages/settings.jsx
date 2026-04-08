@@ -50,6 +50,11 @@ export default function Settings() {
   async function handleChangePassword(e) {
     e.preventDefault();
 
+    if (email === "demo@gmail.com") {
+      setMessage("Demo account cannot change password.");
+      return;
+    }
+
     if (!currentPassword || !newPassword) {
       setMessage("Please fill in both password fields.");
       return;
@@ -123,7 +128,7 @@ export default function Settings() {
   return (
     <>
       <header className="nav-bar">
-      <NavBar />
+        <NavBar />
       </header>
       <h1 className="settings">Settings</h1>
       <div className="settings-container">
@@ -135,7 +140,8 @@ export default function Settings() {
           <p className="status">Status: {statusText}</p>
         </div>
         {/* Change Password */}
-        <form onSubmit={handleChangePassword}>
+        {email !== "demo@gmail.com" && (
+          <form onSubmit={handleChangePassword}>
           <div>
             <label>Current Password</label>
             <input
@@ -153,7 +159,8 @@ export default function Settings() {
             />
           </div>
           <button type="submit">Change Password</button>
-        </form>
+          </form>)}
+          {email === "demo@gmail.com" && (<p className="demo-account">Demo account cannot update password.</p>)}
       </div>
     </>
   );

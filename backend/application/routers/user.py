@@ -1,5 +1,5 @@
 #user router functions
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from application.database import get_db
 from application.crud.user import create_user, get_user_email_and_active_status, update_user_password
@@ -9,6 +9,8 @@ from application.models import User
 from application.csrf import verify_csrf
 
 router = APIRouter(tags=['User'])
+
+Demo_email = "demo@gmail.com"
 
 #creates the user
 @router.post("/api/users", response_model=UserRead)
@@ -23,4 +25,7 @@ def get_user_summary(current_user: User = Depends(Oauth2.get_current_user)):
 #router function to update the user's password
 @router.post("/api/user/change-password")
 def change_password(input: UserPasswordChange, db: Session = Depends(get_db), current_user = Depends(Oauth2.get_current_user), _=Depends(verify_csrf)):
+    if current_user.Email == Demo_email:
+        raise HTTPException(status_code=403, detail="Demo account cannot change password")
+    
     return update_user_password(db, input, current_user)

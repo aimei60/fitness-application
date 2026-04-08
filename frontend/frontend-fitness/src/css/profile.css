@@ -100,3 +100,7 @@
   opacity: 0.6;
   cursor: not-allowed;
 }
+
+.demo-update {
+  color: #ff0000;
+}
