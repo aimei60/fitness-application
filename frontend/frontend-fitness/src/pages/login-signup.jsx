@@ -194,7 +194,7 @@ function Login() {
           {/*forgotPasswordSection*/}
           {errorSection}
           <button type="submit" className="submit2" disabled={loading}>{buttonText}</button>
-          <button type="button" className="demo-login" onClick={handleDemoLogin}>Login as Demo</button>
+          <button type="button" className="demo-login" onClick={handleDemoLogin}>Try Demo Account</button>
            {isSignup && <div className="turnstile" id="turnstile-widget"></div>}
           <div className="submit-container">
             <button type="button" className={signUpButtonClass}onClick={() => {setToggle("Sign up");}}>Sign Up Section</button>
