@@ -11,7 +11,8 @@ import secrets
 
 app = FastAPI()
 
-IS_PROD = os.getenv("ENV", "development").lower() in {"prod", "production"}
+IS_PROD = os.getenv("IS_PRODUCTION") == "true"
+
 #Central cookie
 COOKIE_DOMAIN = None
 
