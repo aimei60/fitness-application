@@ -217,7 +217,7 @@ export default function Profile() {
       <div className="main-profile-container">
         <div className="profile-container">
           <h1 className="profile-title">Your Profile</h1>
-          <p className="demo-update">Demo account – you can only update age, height, and weight</p>
+          {isDemo && (<p className="demo-update">Demo account – you can only update age, height, and weight.</p>)}
           {msg && (<p className={"msg " + msgClass}>{msg}</p>)}
           <form onSubmit={onSubmit} className="form">
             {/* Full Name */}
