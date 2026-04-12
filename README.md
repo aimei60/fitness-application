@@ -35,8 +35,9 @@ The application includes user authentication, workouts for the user to browse de
 - Vercel (frontend deployment)
 - Fly.io (backend deployment)
 
-### CI
+### CI/CD
 - Automated builds and testing
+- Automated backend deployment to Fly.io
 
 ## Technical Decisions
 
@@ -52,7 +53,7 @@ The application includes user authentication, workouts for the user to browse de
 
 - To set up a **secure** backend, I implemented JWT authentication stored in secure HttpOnly cookies, CSRF protection, bcrypt password hashing, rate limiting, input validation with Pydantic schemas, secure HTTP headers (preventing MIME-type sniffing and iframe embedding), and strict CORS configuration.
 
-- **GitHub Actions** was used to run continuous integration (CI), automate testing and build processes on each commit.
+- **GitHub Actions** was used to run continuous integration (CI), automate testing and build processes on each commit. Continuous Development (CD) was added for Fly.io as it does not provide automatic deployments by default.
 
 - Neon, Fly.io, and Vercel were used to separate the database, backend, and frontend which gave me experience **managing distributed systems** and improve scalability if needed.
 
