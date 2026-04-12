@@ -36,8 +36,7 @@ The application includes user authentication, workouts for the user to browse de
 - Fly.io (backend deployment)
 
 ### CI/CD
-- Automated builds and testing
-- Automated backend deployment to Fly.io
+- Github Actions for automated builds and testing and automated backend deployment to Fly.io
 
 ## Technical Decisions
 
