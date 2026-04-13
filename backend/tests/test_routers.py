@@ -203,7 +203,7 @@ def test_change_password_wrong_current_password():
 
     passwords = {"current_password": "wrongpassword", "new_password": "test1234!"}
 
-    response = client.post("/api/user/change-password", json=passwords, headers=auth_header(db))
+    response = client.post("/api/user/change-password", json=passwords)
 
     assert response.status_code == 403
     assert response.json()["detail"] == "status_code=status.HTTP_403_FORBIDDEN"
