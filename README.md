@@ -68,8 +68,7 @@ Here is a preview of the website
 ![Screenshot of my website](screenshots/s2.png)
 ![Screenshot of my website](screenshots/s3.png)
 ![Screenshot of my website](screenshots/s4.png)
-![Screenshot of my website](screenshots/s5.png)
-![Screenshot of my website](screenshots/s6.png)
+
 
 ## Running locally 
 
