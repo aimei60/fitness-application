@@ -66,12 +66,6 @@ def login_user(db, email="test@example.com", password="test"):
     assert response.status_code == 200
     return user
 
-#function to create token and authenticate user for the below tests    
-def auth_header(db):
-    user = ensure_test_user(db)
-    token = Oauth2.create_access_token({"user_id": user.ID})
-    return {"Authorization": f"Bearer {token}"}
-
 #WORKOUTS.PY ROUTER FUNCTION TESTS
 
 #tests the retrieval of all of the workouts by adding fake workout.
