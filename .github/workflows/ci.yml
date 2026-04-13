@@ -23,6 +23,11 @@ jobs:
         working-directory: backend
         env:
           PYTHONPATH: ${{ github.workspace }}/backend
+          DB_USER: ${{ secrets.DB_USER }} 
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }} 
+          DB_HOST: ${{ secrets.DB_HOST }} 
+          DB_PORT: ${{ secrets.DB_PORT }} 
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: pytest
 
       - name: Set up Node
