@@ -5,6 +5,7 @@ from sqlalchemy.orm import sessionmaker
 import os
 from dotenv import load_dotenv
 from urllib.parse import quote_plus
+from application.database import Base 
 
 load_dotenv("sens.env")
 
@@ -24,6 +25,8 @@ from application.models import (
     UserWorkoutRequest,
     UserProfile,
 )
+
+Base.metadata.create_all(bind=engine)  
 
 def get_db():
     db = SessionLocal()

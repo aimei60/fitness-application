@@ -2,10 +2,27 @@
 from fastapi.testclient import TestClient
 from main import app
 from application.database import get_db
-from backend.sqlalchemy_test.app.testing_database import SessionLocal
+from sqlalchemy_test.app.testing_database import SessionLocal
 from application.models import workouts, User, UserWorkoutRequest, UserProfile
 from application import Oauth2
 from application.crud.user import pwd_context
+import pytest
+from application.rate_limit import limiter 
+from unittest.mock import AsyncMock, patch
+from application.csrf import verify_csrf 
+
+def fake_verify_csrf():
+    return None
+
+app.dependency_overrides[verify_csrf] = fake_verify_csrf 
+
+#disable rate limiter
+@pytest.fixture(autouse=True)
+def disable_rate_limit():
+    old_value = limiter.enabled
+    limiter.enabled = False
+    yield
+    limiter.enabled = old_value
 
 #test override db
 def override_get_db():
@@ -32,6 +49,23 @@ def ensure_test_user(db, email="test@example.com", password="test"):
         db.refresh(user)
     return user
 
+#login helper
+def login_user(db, email="test@example.com", password="test"):
+    user = ensure_test_user(db, email=email, password=password)
+
+    # make sure password matches what we will log in with
+    user.HashedPassword = pwd_context.hash(password)
+    db.commit()
+    db.refresh(user)
+
+    response = client.post(
+        "/api/login",
+        json={"Email": email, "Password": password}
+    )
+
+    assert response.status_code == 200
+    return user
+
 #function to create token and authenticate user for the below tests    
 def auth_header(db):
     user = ensure_test_user(db)
@@ -40,7 +74,7 @@ def auth_header(db):
 
 #WORKOUTS.PY ROUTER FUNCTION TESTS
 
-#tests the retrieval of all of the workouts by adding fake workouts, having a test user sign in - creating a token and confirming the test data is added in there.
+#tests the retrieval of all of the workouts by adding fake workout.
 def test_read_all_workouts():
     db = SessionLocal()
     
@@ -49,17 +83,16 @@ def test_read_all_workouts():
     db.add(w1)
     db.add(w2)
     db.commit()
-    db.refresh(w1)
-    db.refresh(w2)
     
-    auth = client.get("/workouts", headers=auth_header(db))
+    login_user(db)
+    response = client.get("/api/workouts")
     
-    assert auth.status_code == 200
-    data = auth.json()
+    assert response.status_code == 200
+    data = response.json()
     
-    names = set()
+    names = []
     for w in data:
-        names.add(w["Name"])
+        names.append(w["Name"])
         
     assert "HIIT Workout" in names 
     assert "Athlete Workout" in names
@@ -78,7 +111,8 @@ def test_specific_workout():
     db.commit()
     db.refresh(w)
     
-    response = client.get(f"/workouts/{w.Name}", headers=auth_header(db))
+    login_user(db)
+    response = client.get(f"/api/workouts/{w.Name}")
   
     assert response.status_code == 200
     data = response.json()
@@ -92,7 +126,8 @@ def test_specific_workout():
 def test_error_workout_retrieval():
     db = SessionLocal()
 
-    response = client.get("/workouts/error-workout", headers=auth_header(db))
+    login_user(db)
+    response = client.get("/api/workouts/error-workout") 
 
     assert response.status_code == 404
     data = response.json()
@@ -109,10 +144,11 @@ def test_create_user():
     user = {
         "Email": "newuser2@example.com",
         "Password": "password098",
-        "IsActive": "True"
+        "CaptchaToken": "test-token"
     }
 
-    response = client.post("/users", json=user)
+    with patch("application.routers.auth.verify_turnstile", new=AsyncMock(return_value=True)):
+        response = client.post("/api/users", json=user)
     
     assert response.status_code == 200 
     data = response.json()
@@ -129,7 +165,9 @@ def test_create_user():
 def test_get_user_details():
     db = SessionLocal()
 
-    response = client.get("/me", headers=auth_header(db))
+    login_user(db)
+    response = client.get("/api/me")
+    
     assert response.status_code == 200
     data = response.json()
     assert data["Email"] == "test@example.com"
@@ -145,10 +183,11 @@ def test_change_password_success():
     user.HashedPassword = pwd_context.hash("test")
     db.commit()
     db.refresh(user)
-
+    
+    login_user(db, email="test@example.com", password="test")
     passwords = {"current_password": "test", "new_password": "test1234!"}
-    response = client.post("/user/change-password", json=passwords, headers=auth_header(db))
-
+    response = client.post("/api/user/change-password", json=passwords)
+    
     assert response.status_code == 200
     assert response.json()["message"] == "Password updated successfully"
 
@@ -165,10 +204,12 @@ def test_change_password_wrong_current_password():
     user.HashedPassword = pwd_context.hash("test")
     db.commit()
     db.refresh(user)
+    
+    login_user(db, email="test@example.com", password="test")
 
     passwords = {"current_password": "wrongpassword", "new_password": "test1234!"}
 
-    response = client.post("/user/change-password", json=passwords, headers=auth_header(db))
+    response = client.post("/api/user/change-password", json=passwords, headers=auth_header(db))
 
     assert response.status_code == 403
     assert response.json()["detail"] == "status_code=status.HTTP_403_FORBIDDEN"
@@ -182,9 +223,12 @@ def test_create_request_new_workout_success():
     db = SessionLocal()
     
     w = workouts(Name="Everyday movement Workout", Description="workout")
-    db.add(w); db.commit(); db.refresh(w)
+    db.add(w); 
+    db.commit(); 
+    db.refresh(w)
 
-    response = client.post("/users/requests", json={"request_type": "new_workout"}, headers=auth_header(db))
+    login_user(db)
+    response = client.post("/api/users/requests", json={"request_type": "new_workout"})
     
     assert response.status_code == 200
     data = response.json()
@@ -214,7 +258,8 @@ def test_create_request_repeat_workout_success():
     db.add(request2) 
     db.commit()
 
-    response = client.post("/users/requests", json={"request_type": "repeat_workout"}, headers=auth_header(db))
+    login_user(db)
+    response = client.post("/api/users/requests", json={"request_type": "repeat_workout"})
     assert response.status_code == 200
     data = response.json()
     assert data["Name"] == "Athlete1 workout"
@@ -229,10 +274,8 @@ def test_create_request_repeat_workout_success():
 def test_create_request_error():
     db = SessionLocal()
 
-    db.query(workouts).filter(workouts.Name == "Endurance Workout").delete()
-    db.commit()
-
-    response = client.post("/users/requests", json={"request_type": "upgrade_level"}, headers=auth_header(db))
+    login_user(db)
+    response = client.post("/api/users/requests", json={"request_type": "upgrade_level"})
 
     assert response.status_code == 404
     assert response.json()["detail"] == "Workout not found for request type"
@@ -259,7 +302,8 @@ def test_create_profile_success():
         "InjuriesOrLimitations": "None"
     }
 
-    response = client.post("/profile", json=profile_details, headers=auth_header(db))
+    login_user(db)
+    response = client.post("/api/profile", json=profile_details)
     assert response.status_code == 200, response.json()
     data = response.json()
         
@@ -280,6 +324,10 @@ def test_create_profile_duplicate_user():
     db = SessionLocal()
 
     user = ensure_test_user(db)
+    
+    db.query(UserProfile).filter(UserProfile.UserID == user.ID).delete()
+    db.commit()
+    
     existing = UserProfile(
             UserID=user.ID, 
             FullName="Existing", 
@@ -304,7 +352,8 @@ def test_create_profile_duplicate_user():
         "InjuriesOrLimitations": ""
     }
     
-    response = client.post("/profile", json=additional_profile , headers=auth_header(db))
+    login_user(db)
+    response = client.post("/api/profile", json=additional_profile)
     assert response.status_code == 400
     assert response.json()["detail"] == "User profile already exists."
 
@@ -317,6 +366,9 @@ def test_return_user_profile_details():
     db = SessionLocal()
 
     user = ensure_test_user(db)
+    
+    db.query(UserProfile).filter(UserProfile.UserID == user.ID).delete()  # CHANGED
+    db.commit()
 
     profile = UserProfile(
         UserID=user.ID,
@@ -331,8 +383,9 @@ def test_return_user_profile_details():
     db.add(profile)
     db.commit()
     db.refresh(profile)
-
-    response = client.get("/profile/summary", headers=auth_header(db))
+    
+    login_user(db)
+    response = client.get("/api/profile")
     assert response.status_code == 200
     data = response.json()
 
@@ -351,8 +404,11 @@ def test_return_user_profile_details():
 #successfully updates the user's profile when the user wants to update certain information
 def test_update_profile_success():
     db = SessionLocal()
-
     user = ensure_test_user(db)
+    
+    db.query(UserProfile).filter(UserProfile.UserID == user.ID).delete()
+    db.commit()
+    
     profile = UserProfile(
         UserID=user.ID,
         FullName="Robert Smith",
@@ -366,13 +422,17 @@ def test_update_profile_success():
     db.add(profile)
     db.commit()
     db.refresh(profile)
-
+    
+    login_user(db) 
+    
     update_details = {
         "FullName": "Rob Smith",
         "Weight": 72,               
         "FitnessLevel": "Intermediate",
     }
-    response = client.post("/profile/update-profile", json=update_details, headers=auth_header(db))
+    
+    response = client.patch("/api/profile", json=update_details)
+    print(response.json())
 
     assert response.status_code == 200
     data = response.json()
@@ -394,9 +454,12 @@ def test_update_profile_not_found_error():
     user = ensure_test_user(db)
     db.query(UserProfile).filter(UserProfile.UserID == user.ID).delete()
     db.commit()
+    
+    login_user(db)
 
     profile = {"FullName": "Angela Smith"}
-    response = client.post("/profile/update-profile", json=profile, headers=auth_header(db))
+    response = client.patch("/api/profile", json=profile)
+    print(response.json())
 
     assert response.status_code == 404
     assert response.json()["detail"] == "User profile not found"
@@ -421,12 +484,10 @@ def test_login_form_success():
     db.commit()
     db.refresh(new_user)
 
-    response = client.post("/login/form", data={"username": email, "password": plain_pw})
+    response = client.post("/api/login/form", data={"username": email, "password": plain_pw})
 
     assert response.status_code == 200
-    data = response.json()
-    assert "access_token" in data
-    assert data["token_type"] == "bearer"
+    assert response.json()["ok"] == True
 
     db.delete(new_user)
     db.commit()
@@ -448,7 +509,7 @@ def test_login_form_wrong_password():
     db.commit()
     db.refresh(user)
 
-    response = client.post("/login/form", data={"username": email, "password": "wrongpass"})
+    response = client.post("/api/login/form", data={"username": email, "password": "wrongpass"})
 
     assert response.status_code == 403
     assert response.json()["detail"] == "Invalid Username or Password"
@@ -473,12 +534,10 @@ def test_login_success():
     db.commit()
     db.refresh(new_user)
 
-    response = client.post("/login", json={"Email": email, "Password": plain_pw})
+    response = client.post("/api/login", json={"Email": email, "Password": plain_pw})
 
     assert response.status_code == 200
-    data = response.json()
-    assert "access_token" in data
-    assert data["token_type"] == "bearer"
+    assert response.json()["ok"] == True 
 
     db.delete(new_user)
     db.commit()
@@ -500,7 +559,7 @@ def test_login_wrong_password():
     db.commit()
     db.refresh(user)
 
-    response = client.post("/login", json={"Email": email, "Password": "test1"})
+    response = client.post("/api/login", json={"Email": email, "Password": "test1"})
 
     assert response.status_code == 403
     assert response.json()["detail"] == "Invalid Username or Password"

@@ -3,7 +3,7 @@
 import sys
 print("PYTHONPATH:", sys.path)
 
-from backend.sqlalchemy_test.app.testing_database import SessionLocal
+from sqlalchemy_test.app.testing_database import SessionLocal
 from application.models import workouts, workout_sections, workoutRoutine, User
 from application.utilities.security import get_password_hash
 from application.crud.profile import create_user_profile
