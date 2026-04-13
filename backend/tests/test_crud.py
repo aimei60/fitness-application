@@ -2,7 +2,7 @@
 import pytest
 from unittest.mock import MagicMock
 from fastapi import status, HTTPException
-from sqlalchemy_test.app.test_database import SessionLocal
+from backend.sqlalchemy_test.app.testing_database import SessionLocal
 from application.models import workouts, User, UserWorkoutRequest, UserProfile
 from application.crud.workouts import get_all_workouts, get_workout_with_sections_and_routines
 from tests.test_utils import insert_sample_entire_workout, insert_sample_user

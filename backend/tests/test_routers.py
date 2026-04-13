@@ -2,7 +2,7 @@
 from fastapi.testclient import TestClient
 from main import app
 from application.database import get_db
-from sqlalchemy_test.app.test_database import SessionLocal
+from backend.sqlalchemy_test.app.testing_database import SessionLocal
 from application.models import workouts, User, UserWorkoutRequest, UserProfile
 from application import Oauth2
 from application.crud.user import pwd_context

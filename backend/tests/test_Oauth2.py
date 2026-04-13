@@ -3,7 +3,7 @@
 import pytest
 import jwt
 from fastapi import status, HTTPException
-from sqlalchemy_test.app.test_database import SessionLocal
+from backend.sqlalchemy_test.app.testing_database import SessionLocal
 from datetime import datetime, timedelta, timezone
 from application import Oauth2
 from application.models import User
