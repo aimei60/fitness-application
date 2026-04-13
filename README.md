@@ -58,7 +58,7 @@ The application includes user authentication, workouts for the user to browse de
 
 ## Live Demo
 
-[**View the live site here**](https://www.fitrequest.dev/)
+View the Live site here:[**www.fitrequest.dev**](https://www.fitrequest.dev/)
 
 ## Preview
 
