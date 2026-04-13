@@ -1,8 +1,7 @@
 #tests db models for correct insertion, retrieval, and integrity enforcement.
-
 import pytest
 from sqlalchemy.exc import IntegrityError
-from backend.sqlalchemy_test.app.testing_database import Base, engine, SessionLocal
+from backend.sqlalchemy_test.app.testing_database import engine, SessionLocal
 from application.models import workouts, workout_sections, workoutRoutine, User, UserWorkoutRequest, UserProfile
 
 #tests correct data insertion and retrieval for workouts table
