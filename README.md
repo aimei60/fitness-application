@@ -54,7 +54,7 @@ The application includes user authentication, workouts for the user to browse de
 
 - **GitHub Actions** was used to run continuous integration (CI), automate testing and build processes on each commit. Continuous Development (CD) was added for Fly.io as it does not provide automatic deployments by default.
 
-- Neon, Fly.io, and Vercel were used to separate the database, backend, and frontend which gave me experience **managing distributed systems** and improve scalability if needed.
+- Neon, Fly.io, and Vercel were used to separate the database, backend, and frontend which gave me experience **managing distributed systems** and provides a foundation for improving scalability in the future.
 
 ## Live Demo
 
