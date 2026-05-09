@@ -28,10 +28,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Make to see the real client IP when behind a proxy (Fly/Gunicorn/Uvicorn/etc.)
+#fastapi sees the real client IP + know og request was https when behind a proxy (Fly/Gunicorn/Uvicorn/etc.)
 app.add_middleware(ProxyHeadersMiddleware, trusted_hosts="*")
 
-# Security headers + HSTS (only on production HTTPS)
+#Security headers + HSTS (only on production HTTPS)
 @app.middleware("http")
 async def sec_headers(request: Request, call_next):
     response = await call_next(request)
@@ -46,7 +46,7 @@ async def sec_headers(request: Request, call_next):
 # Add SlowAPI rate limiting (global default: 100/min/IP)
 app.state.limiter = limiter
 
-#the below doesnt limit browser's permission check requests
+#Skips rate limiting for browser checking permissions: CORS preflight options requests
 class SkipOptionsRateLimitMiddleware(SlowAPIMiddleware):
     async def dispatch(self, request, call_next):
         #if it's a browser request, skip rate limiting

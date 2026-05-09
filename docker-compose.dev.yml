@@ -14,8 +14,9 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - ./backend:/app
+      - ./backend:/app #local backend folder insdie the container
     command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+    #reload - automatically restart server when code changes
 
 
 #used for local development
